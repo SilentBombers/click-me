@@ -3,9 +3,11 @@ package clickme.clickme.repository;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnMissingBean(HeartRepository.class)
 public class HeartMemoryRepository implements HeartRepository {
 
     private static final Map<String, Long> MAP =  new ConcurrentHashMap<>();

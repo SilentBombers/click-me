@@ -1,11 +1,14 @@
 package clickme.clickme.repository;
 
+import clickme.clickme.config.RedisConnectionCondition;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Conditional(RedisConnectionCondition.class)
 @RequiredArgsConstructor
 public class HeartRedisRepository implements HeartRepository {
 
