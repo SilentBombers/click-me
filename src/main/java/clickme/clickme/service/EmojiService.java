@@ -25,8 +25,6 @@ public class EmojiService {
             "🥳", "🤗",
             "🤓", "🤑");
 
-//        private static final List<String> EMOJIS = List.of("\\U+1F600");
-
     private final HeartService heartService;
 
     public byte[] serveImage(final String URI) {
@@ -62,7 +60,6 @@ public class EmojiService {
         Collections.shuffle(randomIndexes);
 
         return EMOJIS.get(randomIndexes.get(0));
-//        return EMOJIS.get(0);
     }
 
     private BufferedImage convertEmojiCountToImage(String emoji, String count) {
@@ -99,12 +96,7 @@ public class EmojiService {
         assert baseImage != null;
         // Draw a heart shape as overlay
 
-//        "🥰9999+";
-//        for (int i = 0; i < 100; i++) {
-//            getClickCount("test");
-//        }
         final String count = getClickCount("test");
-//final String count="99999+";
         // Convert the overlay image to bytes
         Font font = new Font("Arial", Font.BOLD, 34);
         BufferedImage image = new BufferedImage(WidthPolicy.getWidth(count), HeightPolicy.TOTAL_HEIGHT,
@@ -136,6 +128,5 @@ public class EmojiService {
         Collections.shuffle(randomIndexes);
 
         return randomIndexes.get(0);
-//        return EMOJIS.get(0);
     }
 }
