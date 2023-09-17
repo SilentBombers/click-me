@@ -50,11 +50,11 @@ public class EmojiService {
     }
 
     private String getClickCount(String URI) {
-        String count = heartService.addAndGetCount(URI);
-        if (Integer.parseInt(count) > 99999) {
-            count = "99999+";
+        Long count = heartService.addAndGetCount(URI);
+        if (count > 99999) {
+            return  "99999+";
         }
-        return count;
+        return String.valueOf(count);
     }
 
     private String getRandomEmoji() {
