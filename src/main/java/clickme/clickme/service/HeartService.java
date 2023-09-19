@@ -10,9 +10,12 @@ public class HeartService {
 
     private final HeartRepository heartRepository;
 
-    public String addAndGetCount(String URI) {
-        heartRepository.addCount(URI);
-        System.out.println(heartRepository.getCount(URI));
-        return heartRepository.getCount(URI);
+    public Long addAndGetCount(String URI) {
+        Long count = heartRepository.findById(URI);
+        if (count == 0L) {
+            heartRepository.add(URI);
+        }
+        heartRepository.increaseCount(URI);
+        return count + 1L;
     }
 }

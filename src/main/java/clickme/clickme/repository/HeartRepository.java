@@ -2,7 +2,9 @@ package clickme.clickme.repository;
 
 public interface HeartRepository {
 
-    void addCount(String URI);
+    void increaseCount(String id);
 
-    String getCount(String URI);
+    void add(String id);
+
+    Long findById(String id);
 }
