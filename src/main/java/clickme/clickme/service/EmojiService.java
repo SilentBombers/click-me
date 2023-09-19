@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +80,7 @@ public class EmojiService {
         return image;
     }
 
-    public byte[] heart() throws IOException {
+    public byte[] heart(String id) throws IOException {
         int randomIndex = getRandomIndex();
 
         String imagePath =
@@ -96,7 +99,7 @@ public class EmojiService {
         assert baseImage != null;
         // Draw a heart shape as overlay
 
-        final String count = getClickCount("test");
+        final String count = getClickCount(id);
         // Convert the overlay image to bytes
         Font font = new Font("Arial", Font.BOLD, 34);
         BufferedImage image = new BufferedImage(WidthPolicy.getWidth(count), HeightPolicy.TOTAL_HEIGHT,
@@ -121,6 +124,19 @@ public class EmojiService {
         }
         throw new IllegalStateException();
 
+    }
+
+    public String heart2(String id) {
+        String svgTemplate;
+
+        try {
+            svgTemplate = new String(Files.readAllBytes(Paths.get("src/main/resources/static/images/template.svg")));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load SVG template", e);
+        }
+
+        // 카운트 값으로 placeholder 대체
+        return svgTemplate.replace("{count}", getClickCount(id));
     }
 
     private int getRandomIndex() {
