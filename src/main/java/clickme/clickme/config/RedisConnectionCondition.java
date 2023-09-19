@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-
 public class RedisConnectionCondition implements Condition {
 
     @Override
@@ -17,14 +16,32 @@ public class RedisConnectionCondition implements Condition {
                 .withHost(context.getEnvironment().getProperty("spring.data.redis.host"))
                 .withPort(Integer.parseInt(context.getEnvironment().getProperty("spring.data.redis.port")))
                 .build();
-        RedisClient redisClient = RedisClient.create(redisURI);
-        try (StatefulRedisConnection<String, String> connection = redisClient.connect()) {
+
+        try (CloseableRedisClient closeableRedis = new CloseableRedisClient(redisURI);
+             StatefulRedisConnection<String, String> connection = closeableRedis.getClient().connect()
+        ) {
             String result = connection.sync().ping();
             return "PONG".equals(result);
         } catch (Exception e) {
             return false;
-        } finally {
-            redisClient.shutdown();
+        }
+    }
+
+    static class CloseableRedisClient implements AutoCloseable {
+
+        private final RedisClient client;
+
+        public CloseableRedisClient(RedisURI redisURI) {
+            this.client = RedisClient.create(redisURI);
+        }
+
+        public RedisClient getClient() {
+            return client;
+        }
+
+        @Override
+        public void close() {
+            client.shutdown();
         }
     }
 }
