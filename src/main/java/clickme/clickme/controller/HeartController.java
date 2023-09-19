@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -46,71 +47,5 @@ public class HeartController {
     @ResponseBody
     public byte[] stringToImage() {
         return emojiService.serveImage("test");
-    }
-
-    @GetMapping(value = "/justImage", produces = MediaType.IMAGE_PNG_VALUE)
-    @ResponseBody
-    public ResponseEntity<byte[]> justImage() throws IOException {
-        CacheControl cacheControl = CacheControl.noCache();
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .body(emojiService.heart());
-    }
-
-    @GetMapping(value = "/new/justImage", produces = MediaType.IMAGE_PNG_VALUE)
-    @ResponseBody
-    public ResponseEntity<byte[]> justImage2() throws IOException {
-        CacheControl cacheControl = CacheControl.noCache();
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .body(emojiService.heart());
-    }
-
-    @GetMapping(value = "/test1/justImage", produces = MediaType.IMAGE_PNG_VALUE)
-    @ResponseBody
-    public ResponseEntity<byte[]> test1() throws IOException {
-        CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.SECONDS);
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .body(emojiService.heart());
-    }
-
-    @GetMapping(value = "/test2/justImage", produces = MediaType.IMAGE_PNG_VALUE)
-    @ResponseBody
-    public ResponseEntity<byte[]> test2() throws IOException {
-        CacheControl cacheControl = CacheControl.maxAge(2, TimeUnit.SECONDS);
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .body(emojiService.heart());
-    }
-
-    @GetMapping(value = "/emoji", produces = MediaType.IMAGE_PNG_VALUE)
-    @ResponseBody
-    public byte[] emoji(@RequestParam String idx) {
-         List<String> EMOJIS = List.of("🥰", "🥺", "😍", "😎", "😵", "😘", "😴", "🤩", "😋", "😃", "🤣",
-                "🥳", "🤗",
-                "🤓", "🤑");
-         int idex = Integer.parseInt(idx);
-         String emogi = EMOJIS.get(idex);
-        Font font = new Font(null, Font.BOLD, 36);
-        BufferedImage image = new BufferedImage(40, 45,
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
-        g2d.setFont(font);
-        g2d.setColor(Color.WHITE);
-        g2d.setColor(Color.BLACK);
-        g2d.drawString(emogi, 0, 35);
-        g2d.dispose();
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            byte[] imageBytes = baos.toByteArray();
-            baos.close();
-            return imageBytes;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalStateException();
     }
 }
