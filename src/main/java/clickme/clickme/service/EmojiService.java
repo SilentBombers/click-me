@@ -2,6 +2,11 @@ package clickme.clickme.service;
 
 import clickme.clickme.domain.HeightPolicy;
 import clickme.clickme.domain.WidthPolicy;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -12,10 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.imageio.ImageIO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +78,7 @@ public class EmojiService {
         return image;
     }
 
-    public byte[] heart() throws IOException {
+    public byte[] heart(String id) throws IOException {
         int randomIndex = getRandomIndex();
 
         String imagePath =
@@ -96,7 +97,7 @@ public class EmojiService {
         assert baseImage != null;
         // Draw a heart shape as overlay
 
-        final String count = getClickCount("test");
+        final String count = getClickCount(id);
         // Convert the overlay image to bytes
         Font font = new Font("Arial", Font.BOLD, 34);
         BufferedImage image = new BufferedImage(WidthPolicy.getWidth(count), HeightPolicy.TOTAL_HEIGHT,
