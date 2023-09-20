@@ -2,6 +2,11 @@ package clickme.clickme.service;
 
 import clickme.clickme.domain.HeightPolicy;
 import clickme.clickme.domain.WidthPolicy;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -9,16 +14,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.imageio.ImageIO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -124,19 +122,6 @@ public class EmojiService {
         }
         throw new IllegalStateException();
 
-    }
-
-    public String heart2(String id) {
-        String svgTemplate;
-
-        try {
-            svgTemplate = new String(Files.readAllBytes(Paths.get("src/main/resources/static/images/template.svg")));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load SVG template", e);
-        }
-
-        // 카운트 값으로 placeholder 대체
-        return svgTemplate.replace("{count}", getClickCount(id));
     }
 
     private int getRandomIndex() {
