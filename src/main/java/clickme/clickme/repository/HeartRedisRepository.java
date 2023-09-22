@@ -1,47 +1,49 @@
 package clickme.clickme.repository;
 
 import clickme.clickme.config.RedisConnectionCondition;
-import jakarta.annotation.PostConstruct;
 
 import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
+
+import java.util.Set;
 
 @Repository
 @Conditional(RedisConnectionCondition.class)
 public class HeartRedisRepository implements HeartRepository {
 
-    private static final String TOPIC = "click:count:";
+    private static final String KEY = "clicks";
 
-    private final RedisTemplate<String, Long> redisTemplate;
-    private ValueOperations<String, Long> valueOperations;
+    private final ZSetOperations<String, String> zSet;
 
-    public HeartRedisRepository(RedisTemplate<String, Long> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    @PostConstruct
-    private void init() {
-        valueOperations = redisTemplate.opsForValue();
+    public HeartRedisRepository(RedisTemplate<String, String> redisTemplate) {
+        this.zSet = redisTemplate.opsForZSet();
     }
 
     @Override
     public void increaseCount(String id) {
-        valueOperations.increment(createTopic(id));
+        zSet.incrementScore(KEY, id, 1);
     }
 
     @Override
     public void add(String id) {
-        valueOperations.set(createTopic(id), 0L);
+        zSet.add(KEY, id, 0);
     }
 
+    @Override
     public Long findById(String id) {
-        Long count = valueOperations.get(createTopic(id));
-        return count == null ? 0L : count;
+        Double count = zSet.score(KEY, id);
+        return count == null ? 0L : count.longValue();
     }
 
-    private String createTopic(String id) {
-        return TOPIC + id;
+    @Override
+    public Long findRankByClicks(String id) {
+        return zSet.reverseRank(KEY, id) + 1;
+    }
+
+    @Override
+    public Set<String> findRealTimeRanking(int start, int end) {
+        return zSet.reverseRange(KEY, start, end);
     }
 }

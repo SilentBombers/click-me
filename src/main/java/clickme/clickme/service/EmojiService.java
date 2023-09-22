@@ -141,4 +141,12 @@ public class EmojiService {
 
         return randomIndexes.get(0);
     }
+
+    public Long findRankByClicks(String id) {
+        return heartRepository.findRankByClicks(id);
+    }
+
+    public Set<String> findRealTimeRanking(int start, int end) {
+        return heartRepository.findRealTimeRanking(start, end);
+    }
 }
