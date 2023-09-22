@@ -2,6 +2,7 @@ package clickme.clickme.service;
 
 import clickme.clickme.domain.HeightPolicy;
 import clickme.clickme.domain.WidthPolicy;
+import clickme.clickme.repository.HeartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class EmojiService {
             "🥳", "🤗",
             "🤓", "🤑");
 
-    private final HeartService heartService;
+    private final HeartRepository heartRepository;
 
     public byte[] serveImage(final String URI) {
         final String emoji = getRandomEmoji();
@@ -49,11 +51,20 @@ public class EmojiService {
     }
 
     private String getClickCount(String URI) {
-        Long count = heartService.addAndGetCount(URI);
+        Long count = addAndGetCount(URI);
         if (count > 99999) {
             return  "99999+";
         }
         return String.valueOf(count);
+    }
+
+    private Long addAndGetCount(String URI) {
+        Long count = heartRepository.findById(URI);
+        if (count == 0L) {
+            heartRepository.add(URI);
+        }
+        heartRepository.increaseCount(URI);
+        return count + 1L;
     }
 
     private String getRandomEmoji() {
