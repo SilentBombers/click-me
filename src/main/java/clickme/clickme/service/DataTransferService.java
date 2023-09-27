@@ -3,8 +3,8 @@ package clickme.clickme.service;
 import clickme.clickme.domain.Member;
 import clickme.clickme.repository.MemberRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -13,39 +13,49 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class DataTransferService {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private static final int BATCH_SIZE = 1000;
+    private static final String KEY = "clicks";
+
+    private final ZSetOperations<String, String> zSetOperations;
     private final MemberRepository memberRepository;
+
+    public DataTransferService(RedisTemplate<String, String> redisTemplate, MemberRepository memberRepository) {
+        this.zSetOperations = redisTemplate.opsForZSet();
+        this.memberRepository = memberRepository;
+    }
 
     @Scheduled(fixedRate = 7200000)
     @Transactional
     public void transferData() {
-        int start = 0;
-        int batchSize = 1000;
+        long startIndex = 0;
 
         while (true) {
-            Set<String> nicknameBatch = redisTemplate.opsForZSet().range("clicks", start, start + batchSize - 1);
+            Set<String> nicknameBatch = zSetOperations.range(KEY, startIndex, startIndex + BATCH_SIZE - 1);
             if (nicknameBatch.isEmpty()) {
                 break;
             }
 
             List<Member> memberBatch = new ArrayList<>();
             for (String nickname : nicknameBatch) {
-                Long clickCount = redisTemplate.opsForZSet().score("clicks", nickname).longValue();
-                Member exsistingMember = memberRepository.findByNickname(nickname);
-                if (exsistingMember != null) {
-                    exsistingMember.updateClickCount(clickCount);
-                    memberBatch.add(exsistingMember);
-                } else {
-                    Member newMember = new Member(nickname, clickCount);
-                    memberBatch.add(newMember);
-                }
+                addFoundMember(nickname, memberBatch);
             }
 
             memberRepository.saveAll(memberBatch);
-            start += batchSize;
+            startIndex += BATCH_SIZE;
         }
+    }
+
+    private void addFoundMember(String nickname, List<Member> memberBatch) {
+        Long clickCount = zSetOperations.score(KEY, nickname).longValue();
+        Member exsistingMember = memberRepository.findByNickname(nickname);
+        if (exsistingMember != null) {
+            exsistingMember.updateClickCount(clickCount);
+            memberBatch.add(exsistingMember);
+            return;
+        }
+        Member newMember = new Member(nickname, clickCount);
+        memberBatch.add(newMember);
     }
 }
