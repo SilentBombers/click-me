@@ -1,4 +1,5 @@
 <svg id="emoji" viewBox="0 0 200 200" width="500" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect id="my-rect" fill="#e5f9ff" x="0" y="0" rx="20" ry="20"></rect>
   <g id="color">
     <path fill="#FCEA2B" d="m36.29 12c-13.08 0-24.29 10.74-24.29 23.94s10.33 24.06 24.29 24.06c13.08 0 23.71-10.86 23.71-24.06s-10.64-23.94-23.71-23.94z"/>
     <path fill="#fff" d="m33.25 30.85c0 3.452-2.802 6.25-6.25 6.25s-6.25-2.798-6.25-6.25c0-3.448 2.802-6.25 6.25-6.25s6.25 2.802 6.25 6.25"/>
@@ -23,4 +24,5 @@
     <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" d="m22.57 64.32c-1.208-3.956-0.9131-2.154-1.359-4.899 0.3878-1.364 0.8299-3.474 0.6628-5.992-0.131-1.973-2.418-3.208-2.841-7.757-0.4175-4.077-0.4286-5.896-1.137-5.899-1.271-0.0062-3.125 4.327-3.762 8.028-0.6764 3.93 1.667 9.391 1.667 9.391l-1.365 4.535"/>
     <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" d="m51.48 24c-1-1-4.998-5.603-11-1.002"/>
   </g>
+  <text id="my-text" x="63" y="45" font-size="22"></text>
 </svg>

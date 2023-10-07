@@ -43,14 +43,11 @@ public class EmojiService {
 
         String svgPath = createEmojiPath();
         Document doc = createDocument(svgPath, factory);
-        Element element = doc.getDocumentElement();
 
         String count = getClickCount(id);
-        Element textElement = drawText(doc, element, count);
-        Element rectElement = drawRect(doc, element);
-        calculateSizeBasedOnCountLength(count, rectElement);
+        drawText(doc, count);
+        calculateSizeBasedOnCountLength(doc, count);
 
-        appendElement(element, rectElement, textElement);
         StringWriter writer = new StringWriter();
         TransformerFactory.newInstance()
                 .newTransformer()
@@ -78,39 +75,21 @@ public class EmojiService {
         return String.valueOf(count);
     }
 
-    private static Element drawText(Document doc, Element element, String count) {
-        Element textElement = doc.createElementNS(element.getNamespaceURI(), "text");
-        textElement.setAttributeNS(null, "x", "63");
-        textElement.setAttributeNS(null, "y", "45");
-        textElement.setAttributeNS(null, "font-size", "22");
+    private void drawText(Document doc, String count) {
+        Element textElement = doc.getElementById("my-text");
         textElement.setTextContent(count);
-        return textElement;
     }
 
-    private Element drawRect(Document doc, Element element) {
-        Element rectElement = doc.createElementNS(element.getNamespaceURI(), "rect");
-        rectElement.setAttributeNS(null, "fill", "#e5f9ff");
-        rectElement.setAttributeNS(null, "x", "0");
-        rectElement.setAttributeNS(null, "y", "0");
-        rectElement.setAttributeNS(null, "rx", "20");
-        rectElement.setAttributeNS(null, "ry", "20");
-        return rectElement;
-    }
-
-    private void calculateSizeBasedOnCountLength(String count, Element element) {
+    private void calculateSizeBasedOnCountLength(Document doc, String count) {
+        Element rectElement = doc.getElementById("my-rect");
         if (count.length() <= 4) {
-            element.setAttributeNS(null,"width", "120");
-            element.setAttributeNS(null,"height", "70");
+            rectElement.setAttributeNS(null,"width", "120");
+            rectElement.setAttributeNS(null,"height", "70");
         }
         if (count.length() > 4) {
-            element.setAttributeNS(null,"with", "140");
-            element.setAttributeNS(null,"height", "70");
+            rectElement.setAttributeNS(null,"with", "140");
+            rectElement.setAttributeNS(null,"height", "70");
         }
-    }
-
-    private static void appendElement(Element element, Element rectElement, Element textElement) {
-        element.insertBefore(rectElement, element.getFirstChild());
-        element.appendChild(textElement);
     }
 
     private int getRandomIndex() {
