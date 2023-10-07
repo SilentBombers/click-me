@@ -26,6 +26,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class EmojiService {
 
+    private static final String EMOJI_PATH = "classpath:static/images/emoji_";
+    private static final String EMOJI_FORMAT = ".svg";
+
     private final HeartRepository heartRepository;
     private final ResourceLoader resourceLoader;
 
@@ -58,7 +61,7 @@ public class EmojiService {
     }
 
     private String createEmojiPath() {
-        return "classpath:static/images/emoji_" + getRandomIndex() + ".svg";
+        return EMOJI_PATH + getRandomIndex() + EMOJI_FORMAT;
     }
 
     private Document createDocument(String svgPath, SAXSVGDocumentFactory factory) throws IOException {
