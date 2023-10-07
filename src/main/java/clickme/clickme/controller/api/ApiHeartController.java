@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -23,10 +25,11 @@ public class ApiHeartController {
 
     private final EmojiService emojiService;
 
-    @GetMapping(value = "/count", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> findClickCount(@RequestParam String id) throws IOException {
+    @GetMapping(value = "/count")
+    public ResponseEntity<String> findClickCount(@RequestParam String id) throws IOException, TransformerException {
         CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.SECONDS);
         return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("image/svg+xml"))
                 .cacheControl(cacheControl)
                 .body(emojiService.heart(id));
     }
