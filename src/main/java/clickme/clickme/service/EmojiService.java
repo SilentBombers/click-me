@@ -1,5 +1,6 @@
 package clickme.clickme.service;
 
+import clickme.clickme.domain.CountLengthCategory;
 import clickme.clickme.repository.HeartRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
@@ -82,14 +83,10 @@ public class EmojiService {
 
     private void calculateSizeBasedOnCountLength(Document doc, String count) {
         Element rectElement = doc.getElementById("my-rect");
-        if (count.length() <= 4) {
-            rectElement.setAttributeNS(null,"width", "120");
-            rectElement.setAttributeNS(null,"height", "70");
-        }
-        if (count.length() > 4) {
-            rectElement.setAttributeNS(null,"with", "140");
-            rectElement.setAttributeNS(null,"height", "70");
-        }
+        CountLengthCategory category = CountLengthCategory.findCategory(Integer.parseInt(count));
+
+        rectElement.setAttributeNS(null, "width", category.getWidth());
+        rectElement.setAttributeNS(null, "height", category.getHeight());
     }
 
     private int getRandomIndex() {
