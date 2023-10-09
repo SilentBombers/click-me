@@ -1,20 +1,22 @@
 package clickme.clickme.service;
 
-import clickme.clickme.domain.HeightPolicy;
-import clickme.clickme.domain.WidthPolicy;
+import clickme.clickme.domain.CountLengthCategory;
 import clickme.clickme.repository.HeartRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
+import org.apache.batik.util.XMLResourceDescriptor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,39 +26,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class EmojiService {
 
-    private static final List<String> EMOJIS = List.of("🥰", "🥺", "😍", "😎", "😵", "😘", "😴", "🤩", "😋", "😃", "🤣",
-            "🥳", "🤗",
-            "🤓", "🤑");
+    private static final String EMOJI_PATH = "classpath:static/images/emoji_";
+    private static final String EMOJI_FORMAT = ".svg";
 
     private final HeartRepository heartRepository;
-
-    public byte[] serveImage(final String URI) {
-        final String emoji = getRandomEmoji();
-        final String count = getClickCount(URI);
-        final BufferedImage image = convertEmojiCountToImage(emoji, count);
-        System.out.println(emoji + count);
-        System.out.println(image);
-
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            byte[] imageBytes = baos.toByteArray();
-            baos.close();
-            return imageBytes;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalStateException();
-    }
-
-    private String getClickCount(String URI) {
-        Long count = addAndGetCount(URI);
-        if (count > 99999) {
-            return  "99999+";
-        }
-        return String.valueOf(count);
-    }
+    private final ResourceLoader resourceLoader;
 
     private Long addAndGetCount(String URI) {
         Long count = heartRepository.findById(URI);
@@ -67,72 +41,55 @@ public class EmojiService {
         return count + 1L;
     }
 
-    private String getRandomEmoji() {
-        final List<Integer> randomIndexes = new ArrayList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14));
-        Collections.shuffle(randomIndexes);
+    public String heart(String id) throws IOException, TransformerException {
+        String parser = XMLResourceDescriptor.getXMLParserClassName();
+        SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
 
-        return EMOJIS.get(randomIndexes.get(0));
+        String svgPath = createEmojiPath();
+        Document doc = createDocument(svgPath, factory);
+
+        String count = getClickCount(id);
+        drawText(doc, count);
+        calculateSizeBasedOnCountLength(doc, count);
+
+        StringWriter writer = new StringWriter();
+        TransformerFactory.newInstance()
+                .newTransformer()
+                .transform(new DOMSource(doc), new StreamResult(writer));
+
+        return writer.toString();
     }
 
-    private BufferedImage convertEmojiCountToImage(String emoji, String count) {
-        Font font = new Font(null, Font.BOLD, 36);
-        BufferedImage image = new BufferedImage(WidthPolicy.getWidth(count), HeightPolicy.TOTAL_HEIGHT,
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
-        g2d.setFont(font);
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, WidthPolicy.getWidth(count), HeightPolicy.TOTAL_HEIGHT);
-        g2d.setColor(Color.BLACK);
-        g2d.drawString(emoji, WidthPolicy.EMOJI_START_WIDTH, HeightPolicy.STRING_HEIGHT);
-        g2d.drawString(count, WidthPolicy.NUMBER_START_WIDTH, HeightPolicy.STRING_HEIGHT);
-        g2d.dispose();
-        return image;
+    private String createEmojiPath() {
+        return EMOJI_PATH + getRandomIndex() + EMOJI_FORMAT;
     }
 
-    public byte[] heart(String id) throws IOException {
-        int randomIndex = getRandomIndex();
+    private Document createDocument(String svgPath, SAXSVGDocumentFactory factory) throws IOException {
+        Resource resource = resourceLoader.getResource(svgPath);
+        String uri = resource.getURI().toString();
+        Document doc = factory.createDocument(uri);
+        return doc;
+    }
 
-        String imagePath =
-                "./static/images/emoji_" + String.valueOf(randomIndex) + ".png"; // 이미지 파일의 실제 경로에 맞게 수정해야 합니다.
-        // ClassPathResource를 사용하여 이미지 파일을 읽어옵니다.
-        ClassPathResource resource = new ClassPathResource(imagePath);
-        InputStream baseImageStream = resource.getInputStream();
-        BufferedImage baseImage = null;
-        try {
-            baseImage = ImageIO.read(baseImageStream);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private String getClickCount(String URI) {
+        Long count = addAndGetCount(URI);
+        if (count > 99999) {
+            return  "99999+";
         }
+        return String.valueOf(count);
+    }
 
-        // Create a new image with the same dimensions as the base image
-        assert baseImage != null;
-        // Draw a heart shape as overlay
+    private void drawText(Document doc, String count) {
+        Element textElement = doc.getElementById("my-text");
+        textElement.setTextContent(count);
+    }
 
-        final String count = getClickCount(id);
-        // Convert the overlay image to bytes
-        Font font = new Font("Arial", Font.BOLD, 34);
-        BufferedImage image = new BufferedImage(WidthPolicy.getWidth(count), HeightPolicy.TOTAL_HEIGHT,
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
-        g2d.setFont(font);
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, WidthPolicy.getWidth(count), HeightPolicy.TOTAL_HEIGHT);
-        g2d.setColor(Color.BLACK);
-        g2d.drawImage(baseImage, WidthPolicy.EMOJI_START_WIDTH, 7, null);
-        g2d.drawString(count, WidthPolicy.NUMBER_START_WIDTH, HeightPolicy.STRING_HEIGHT);
-        g2d.dispose();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            byte[] imageBytes = baos.toByteArray();
-            baos.close();
-            return imageBytes;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalStateException();
+    private void calculateSizeBasedOnCountLength(Document doc, String count) {
+        Element rectElement = doc.getElementById("my-rect");
+        CountLengthCategory category = CountLengthCategory.findCategory(Integer.parseInt(count));
 
+        rectElement.setAttributeNS(null, "width", category.getWidth());
+        rectElement.setAttributeNS(null, "height", category.getHeight());
     }
 
     private int getRandomIndex() {
