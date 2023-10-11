@@ -1,6 +1,7 @@
 package clickme.clickme.service;
 
 import clickme.clickme.repository.HeartRepository;
+import clickme.clickme.util.EmojiRandomIndexGenerator;
 import clickme.clickme.util.SvgDocumentManipulator;
 import lombok.RequiredArgsConstructor;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
@@ -16,9 +17,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -52,7 +50,7 @@ public class EmojiService {
     }
 
     private String createEmojiPath() {
-        return EMOJI_PATH + getRandomIndex() + EMOJI_FORMAT;
+        return EMOJI_PATH + EmojiRandomIndexGenerator.getRandomNumber() + EMOJI_FORMAT;
     }
 
     private Document createDocument(String svgPath, SAXSVGDocumentFactory factory) throws IOException {
@@ -77,13 +75,6 @@ public class EmojiService {
         }
         heartRepository.increaseCount(URI);
         return count + 1L;
-    }
-
-    private int getRandomIndex() {
-        final List<Integer> randomIndexes = new ArrayList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14));
-        Collections.shuffle(randomIndexes);
-
-        return randomIndexes.get(0);
     }
 
     public Long findRankByClicks(String id) {
