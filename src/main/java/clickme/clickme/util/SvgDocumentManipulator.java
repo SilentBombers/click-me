@@ -16,11 +16,11 @@ public class SvgDocumentManipulator {
     public void drawText(Document doc, String count) {
         Element textElement = doc.getElementById("my-text");
         textElement.setTextContent(count);
-        // font-size="24" font-family="Sans,Arial" font-weight="bold"
+
         textElement.setAttributeNS(null, "font-size", "24");
         textElement.setAttributeNS(null, "font-family", "Arial, Helvetica, sans-serif");
         textElement.setAttributeNS(null, "font-weight", "bold");
-        //x="63" y="45"
+        
         textElement.setAttributeNS(null, "x", TEXT_X_POSITION);
         textElement.setAttributeNS(null, "y", TEXT_Y_POSITION);
     }
