@@ -1,7 +1,7 @@
 package clickme.clickme.service;
 
-import clickme.clickme.domain.CountLengthCategory;
 import clickme.clickme.repository.HeartRepository;
+import clickme.clickme.util.SvgDocumentManipulator;
 import lombok.RequiredArgsConstructor;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
@@ -9,7 +9,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -31,15 +30,7 @@ public class EmojiService {
 
     private final HeartRepository heartRepository;
     private final ResourceLoader resourceLoader;
-
-    private Long addAndGetCount(String URI) {
-        Long count = heartRepository.findById(URI);
-        if (count == 0L) {
-            heartRepository.add(URI);
-        }
-        heartRepository.increaseCount(URI);
-        return count + 1L;
-    }
+    private final SvgDocumentManipulator svgDocumentManipulator;
 
     public String heart(String id) throws IOException, TransformerException {
         String parser = XMLResourceDescriptor.getXMLParserClassName();
@@ -49,8 +40,8 @@ public class EmojiService {
         Document doc = createDocument(svgPath, factory);
 
         String count = getClickCount(id);
-        drawText(doc, count);
-        calculateSizeBasedOnCountLength(doc, count);
+        svgDocumentManipulator.drawText(doc, count);
+        svgDocumentManipulator.calculateSizeBasedOnCountLength(doc, count);
 
         StringWriter writer = new StringWriter();
         TransformerFactory.newInstance()
@@ -79,17 +70,13 @@ public class EmojiService {
         return String.valueOf(count);
     }
 
-    private void drawText(Document doc, String count) {
-        Element textElement = doc.getElementById("my-text");
-        textElement.setTextContent(count);
-    }
-
-    private void calculateSizeBasedOnCountLength(Document doc, String count) {
-        Element rectElement = doc.getElementById("my-rect");
-        CountLengthCategory category = CountLengthCategory.findCategory(Integer.parseInt(count));
-
-        rectElement.setAttributeNS(null, "width", category.getWidth());
-        rectElement.setAttributeNS(null, "height", category.getHeight());
+    private Long addAndGetCount(String URI) {
+        Long count = heartRepository.findById(URI);
+        if (count == 0L) {
+            heartRepository.add(URI);
+        }
+        heartRepository.increaseCount(URI);
+        return count + 1L;
     }
 
     private int getRandomIndex() {
