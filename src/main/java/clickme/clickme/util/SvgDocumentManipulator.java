@@ -10,30 +10,37 @@ import org.w3c.dom.Element;
 @RequiredArgsConstructor
 public class SvgDocumentManipulator {
 
+    private static final String TEXT_ELEMENT_ID = "my-text";
+    private static final String RECT_ELEMENT_ID = "my-rect";
+    private static final String EMOJI_ELEMENT_ID = "emoji";
     private static final String TEXT_X_POSITION = "70";
     private static final String TEXT_Y_POSITION = "45";
 
     public void drawText(Document doc, String count) {
-        Element textElement = doc.getElementById("my-text");
+        Element textElement = doc.getElementById(TEXT_ELEMENT_ID);
         textElement.setTextContent(count);
 
-        textElement.setAttributeNS(null, "font-size", "24");
-        textElement.setAttributeNS(null, "font-family", "Arial, Helvetica, sans-serif");
-        textElement.setAttributeNS(null, "font-weight", "bold");
-        
-        textElement.setAttributeNS(null, "x", TEXT_X_POSITION);
-        textElement.setAttributeNS(null, "y", TEXT_Y_POSITION);
+        setAttribute(textElement, "font-size", "24");
+        setAttribute(textElement, "font-family", "Arial, Helvetica, sans-serif");
+        setAttribute(textElement, "font-weight", "bold");
+
+        setAttribute(textElement, "x", TEXT_X_POSITION);
+        setAttribute(textElement, "y", TEXT_Y_POSITION);
     }
 
     public void calculateSizeBasedOnCountLength(Document doc, String count) {
-        Element rectElement = doc.getElementById("my-rect");
+        Element rectElement = doc.getElementById(RECT_ELEMENT_ID);
         CountLengthCategory category = CountLengthCategory.findCategory(Integer.parseInt(count));
 
-        rectElement.setAttributeNS(null, "width", category.getWidth());
-        rectElement.setAttributeNS(null, "height", category.getHeight());
+        setAttribute(rectElement, "width", category.getWidth());
+        setAttribute(null, "height", category.getHeight());
 
-        Element emojiElement = doc.getElementById("emoji");
-        emojiElement.setAttributeNS(null, "width", category.getWidth());
-        emojiElement.setAttributeNS(null, "height", category.getHeight());
+        Element emojiElement = doc.getElementById(EMOJI_ELEMENT_ID);
+        setAttribute(emojiElement, "width", category.getWidth());
+        setAttribute(emojiElement, "height", category.getHeight());
+    }
+
+    private void setAttribute(Element element, String attributeName, String value) {
+        element.setAttributeNS(null, attributeName, value);
     }
 }
