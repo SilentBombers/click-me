@@ -2,7 +2,6 @@ package clickme.clickme.controller.api;
 
 import clickme.clickme.service.EmojiService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Set;
