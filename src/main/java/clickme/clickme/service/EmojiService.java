@@ -25,6 +25,8 @@ public class EmojiService {
 
     private static final String EMOJI_PATH = "classpath:static/images/emoji_";
     private static final String EMOJI_FORMAT = ".svg";
+    private static final String MAX_COUNT = "99999+";
+    private static final long MAX_COUNT_VALUE = 99999L;
 
     private final HeartRepository heartRepository;
     private final ResourceLoader resourceLoader;
@@ -41,12 +43,7 @@ public class EmojiService {
         final Document textDrawnDoc = svgDocumentManipulator.drawText(doc, count);
         final Document sizeChangedDoc = svgDocumentManipulator.calculateSizeBasedOnCountLength(textDrawnDoc, count);
 
-        final StringWriter writer = new StringWriter();
-        TransformerFactory.newInstance()
-                .newTransformer()
-                .transform(new DOMSource(sizeChangedDoc), new StreamResult(writer));
-
-        return writer.toString();
+        return transformSvgToString(sizeChangedDoc);
     }
 
     private String createEmojiPath() {
@@ -62,8 +59,8 @@ public class EmojiService {
 
     private String getClickCount(final String URI) {
         final Long count = addAndGetCount(URI);
-        if (count > 99999) {
-            return "99999+";
+        if (count > MAX_COUNT_VALUE) {
+            return MAX_COUNT;
         }
         return String.valueOf(count);
     }
@@ -75,6 +72,15 @@ public class EmojiService {
         }
         heartRepository.increaseCount(URI);
         return count + 1L;
+    }
+
+    private String transformSvgToString(final Document doc) throws TransformerException {
+        StringWriter writer = new StringWriter();
+        TransformerFactory.newInstance()
+                .newTransformer()
+                .transform(new DOMSource(doc), new StreamResult(writer));
+
+        return transformSvgToString(doc);
     }
 
     public Long findRankByClicks(final String id) {
