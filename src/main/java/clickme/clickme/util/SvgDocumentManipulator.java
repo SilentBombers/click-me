@@ -16,8 +16,9 @@ public class SvgDocumentManipulator {
     private static final String TEXT_X_POSITION = "70";
     private static final String TEXT_Y_POSITION = "45";
 
-    public void drawText(Document doc, String count) {
-        Element textElement = doc.getElementById(TEXT_ELEMENT_ID);
+    public Document drawText(final Document doc, final String count) {
+        Document copyDoc = (Document) doc.cloneNode(true);
+        Element textElement = copyDoc.getElementById(TEXT_ELEMENT_ID);
         textElement.setTextContent(count);
 
         setAttribute(textElement, "font-size", "24");
@@ -26,18 +27,23 @@ public class SvgDocumentManipulator {
 
         setAttribute(textElement, "x", TEXT_X_POSITION);
         setAttribute(textElement, "y", TEXT_Y_POSITION);
+
+        return copyDoc;
     }
 
-    public void calculateSizeBasedOnCountLength(Document doc, String count) {
+    public Document calculateSizeBasedOnCountLength(final Document doc, final String count) {
+        Document copyDoc = (Document) doc.cloneNode(true);
         Element rectElement = doc.getElementById(RECT_ELEMENT_ID);
         CountLengthCategory category = CountLengthCategory.findCategory(Integer.parseInt(count));
 
         setAttribute(rectElement, "width", category.getWidth());
-        setAttribute(null, "height", category.getHeight());
+        setAttribute(rectElement, "height", category.getHeight());
 
         Element emojiElement = doc.getElementById(EMOJI_ELEMENT_ID);
         setAttribute(emojiElement, "width", category.getWidth());
         setAttribute(emojiElement, "height", category.getHeight());
+
+        return copyDoc;
     }
 
     private void setAttribute(Element element, String attributeName, String value) {

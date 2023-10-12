@@ -30,21 +30,21 @@ public class EmojiService {
     private final ResourceLoader resourceLoader;
     private final SvgDocumentManipulator svgDocumentManipulator;
 
-    public String heart(String id) throws IOException, TransformerException {
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
+    public String heart(final String id) throws IOException, TransformerException {
+        final String parser = XMLResourceDescriptor.getXMLParserClassName();
+        final SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
 
-        String svgPath = createEmojiPath();
-        Document doc = createDocument(svgPath, factory);
+        final String svgPath = createEmojiPath();
+        final Document doc = createDocument(svgPath, factory);
 
-        String count = getClickCount(id);
-        svgDocumentManipulator.drawText(doc, count);
-        svgDocumentManipulator.calculateSizeBasedOnCountLength(doc, count);
+        final String count = getClickCount(id);
+        final Document textDrawnDoc = svgDocumentManipulator.drawText(doc, count);
+        final Document sizeChangedDoc = svgDocumentManipulator.calculateSizeBasedOnCountLength(textDrawnDoc, count);
 
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         TransformerFactory.newInstance()
                 .newTransformer()
-                .transform(new DOMSource(doc), new StreamResult(writer));
+                .transform(new DOMSource(sizeChangedDoc), new StreamResult(writer));
 
         return writer.toString();
     }
@@ -53,23 +53,23 @@ public class EmojiService {
         return EMOJI_PATH + EmojiRandomIndexGenerator.getRandomNumber() + EMOJI_FORMAT;
     }
 
-    private Document createDocument(String svgPath, SAXSVGDocumentFactory factory) throws IOException {
-        Resource resource = resourceLoader.getResource(svgPath);
-        String uri = resource.getURI().toString();
-        Document doc = factory.createDocument(uri);
-        return doc;
+    private Document createDocument(final String svgPath, final SAXSVGDocumentFactory factory) throws IOException {
+        final Resource resource = resourceLoader.getResource(svgPath);
+        final String uri = resource.getURI()
+                .toString();
+        return factory.createDocument(uri);
     }
 
-    private String getClickCount(String URI) {
-        Long count = addAndGetCount(URI);
+    private String getClickCount(final String URI) {
+        final Long count = addAndGetCount(URI);
         if (count > 99999) {
-            return  "99999+";
+            return "99999+";
         }
         return String.valueOf(count);
     }
 
-    private Long addAndGetCount(String URI) {
-        Long count = heartRepository.findById(URI);
+    private Long addAndGetCount(final String URI) {
+        final Long count = heartRepository.findById(URI);
         if (count == 0L) {
             heartRepository.add(URI);
         }
@@ -77,11 +77,11 @@ public class EmojiService {
         return count + 1L;
     }
 
-    public Long findRankByClicks(String id) {
+    public Long findRankByClicks(final String id) {
         return heartRepository.findRankByClicks(id);
     }
 
-    public Set<String> findRealTimeRanking(int start, int end) {
+    public Set<String> findRealTimeRanking(final int start, final int end) {
         return heartRepository.findRealTimeRanking(start, end);
     }
 }
