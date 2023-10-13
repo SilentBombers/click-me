@@ -11,6 +11,10 @@ public class RedisConnectionCondition implements Condition {
 
     private final RedisConnectionFactory connectionFactory;
 
+    public RedisConnectionCondition() {
+        this.connectionFactory = new RedisConnectionFactory();
+    }
+
     public RedisConnectionCondition(final RedisConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
@@ -29,17 +33,6 @@ public class RedisConnectionCondition implements Condition {
             return "PONG" .equals(result);
         } catch (Exception e) {
             return false;
-        }
-    }
-
-    static class RedisConnectionFactory {
-
-        public RedisClient createClient(RedisURI redisURI) {
-            return RedisClient.create(redisURI);
-        }
-
-        public StatefulRedisConnection<String, String> createConnection(RedisClient client) {
-            return client.connect();
         }
     }
 
