@@ -48,7 +48,7 @@ public class HeartMemoryRepository implements HeartRepository {
     public Set<String> findRealTimeRanking(int start, int end) {
         List<Map.Entry<String, Long>> sortedEntries = MAP.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toList());
+                .toList();
 
         List<Map.Entry<String, Long>> sublist = sortedEntries.subList(start - 1, end);
 
