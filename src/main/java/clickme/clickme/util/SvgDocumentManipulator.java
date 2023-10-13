@@ -33,20 +33,20 @@ public class SvgDocumentManipulator {
 
     public Document calculateSizeBasedOnCountLength(final Document doc, final String count) {
         Document copyDoc = (Document) doc.cloneNode(true);
-        Element rectElement = doc.getElementById(RECT_ELEMENT_ID);
+        Element rectElement = copyDoc.getElementById(RECT_ELEMENT_ID);
         CountLengthCategory category = CountLengthCategory.findCategory(Integer.parseInt(count));
 
         setAttribute(rectElement, "width", category.getWidth());
         setAttribute(rectElement, "height", category.getHeight());
 
-        Element emojiElement = doc.getElementById(EMOJI_ELEMENT_ID);
+        Element emojiElement = copyDoc.getElementById(EMOJI_ELEMENT_ID);
         setAttribute(emojiElement, "width", category.getWidth());
         setAttribute(emojiElement, "height", category.getHeight());
 
         return copyDoc;
     }
 
-    private void setAttribute(Element element, String attributeName, String value) {
+    private void setAttribute(Element element, final String attributeName, final String value) {
         element.setAttributeNS(null, attributeName, value);
     }
 }
