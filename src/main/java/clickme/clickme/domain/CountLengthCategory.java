@@ -8,12 +8,12 @@ public enum CountLengthCategory {
     private final String width;
     private final String height;
 
-    CountLengthCategory(String width, String height) {
+    CountLengthCategory(final String width, final String height) {
         this.width = width;
         this.height = height;
     }
 
-    public static CountLengthCategory findCategory(int length) {
+    public static CountLengthCategory findCategory(final int length) {
         if (length <= 4) {
             return LESS_OR_EQUAL_TO_FOUR;
         } else {

@@ -10,7 +10,7 @@ public class EmojiRandomIndexGenerator implements RandomNumberGenerator {
     private static final Random random = new Random();
 
     @Override
-    public int generator(int size) {
+    public int generator(final int size) {
         return random.nextInt(size);
     }
 }

@@ -32,7 +32,7 @@ public class EmojiService {
         final String count = getClickCount(id);
         final Document textDrawnDoc = svgDocumentManipulator.drawText(doc, count);
         final Document sizeChangedDoc = svgDocumentManipulator.calculateSizeBasedOnCountLength(textDrawnDoc, count);
-        
+
         return transformSvgToString(sizeChangedDoc);
     }
 
@@ -58,7 +58,7 @@ public class EmojiService {
         TransformerFactory.newInstance()
                 .newTransformer()
                 .transform(new DOMSource(doc), new StreamResult(writer));
-
+        System.out.println(writer);
         return writer.toString();
     }
 

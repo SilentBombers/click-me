@@ -6,11 +6,11 @@ import io.lettuce.core.api.StatefulRedisConnection;
 
 class RedisConnectionFactory {
 
-    public RedisClient createClient(RedisURI redisURI) {
+    public RedisClient createClient(final RedisURI redisURI) {
         return RedisClient.create(redisURI);
     }
 
-    public StatefulRedisConnection<String, String> createConnection(RedisClient client) {
+    public StatefulRedisConnection<String, String> createConnection(final RedisClient client) {
         return client.connect();
     }
 }

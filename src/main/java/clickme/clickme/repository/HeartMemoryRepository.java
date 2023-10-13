@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class HeartMemoryRepository implements HeartRepository {
 
-    private static final Map<String, Long> MAP =  new ConcurrentHashMap<>();
+    private Map<String, Long> MAP =  new ConcurrentHashMap<>();
 
     @Override
     public void increaseCount(String id) {

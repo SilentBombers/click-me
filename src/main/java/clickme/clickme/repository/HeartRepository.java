@@ -4,13 +4,13 @@ import java.util.Set;
 
 public interface HeartRepository {
 
-    void increaseCount(String id);
+    void increaseCount(final String id);
 
-    void add(String id);
+    void add(final String id);
 
-    Long findById(String id);
+    Long findById(final String id);
 
-    Long findRankByClicks(String id);
+    Long findRankByClicks(final String id);
 
-    Set<String> findRealTimeRanking(int start, int end);
+    Set<String> findRealTimeRanking(final int start, final int end);
 }

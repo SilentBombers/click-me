@@ -20,16 +20,16 @@ public class RedisConnectionCondition implements Condition {
     }
 
     @Override
-    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        RedisURI redisURI = RedisURI.builder()
+    public boolean matches(final ConditionContext context, final AnnotatedTypeMetadata metadata) {
+        final RedisURI redisURI = RedisURI.builder()
                 .withHost(context.getEnvironment().getProperty("spring.data.redis.host"))
                 .withPort(Integer.parseInt(context.getEnvironment().getProperty("spring.data.redis.port")))
                 .build();
 
-        try (CloseableRedisClient closeableRedis = new CloseableRedisClient(redisURI, connectionFactory);
-             StatefulRedisConnection<String, String> connection = closeableRedis.getConnection()
+        try (final CloseableRedisClient closeableRedis = new CloseableRedisClient(redisURI, connectionFactory);
+             final StatefulRedisConnection<String, String> connection = closeableRedis.getConnection()
         ) {
-            String result = connection.sync().ping();
+            final String result = connection.sync().ping();
             return "PONG" .equals(result);
         } catch (Exception e) {
             return false;
@@ -41,7 +41,7 @@ public class RedisConnectionCondition implements Condition {
         private final RedisClient client;
         private final StatefulRedisConnection<String, String> connection;
 
-        public CloseableRedisClient(RedisURI redisURI, RedisConnectionFactory factory) {
+        public CloseableRedisClient(final RedisURI redisURI, final RedisConnectionFactory factory) {
             this.client = factory.createClient(redisURI);
             this.connection = factory.createConnection(client);
         }

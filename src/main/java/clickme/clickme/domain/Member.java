@@ -23,12 +23,12 @@ public class Member {
     @Column
     private Long clickCount;
 
-    public Member(String nickname, Long clickCount) {
+    public Member(final String nickname, final Long clickCount) {
         this.nickname = nickname;
         this.clickCount = clickCount;
     }
 
-    public void updateClickCount(Long clickCount) {
+    public void updateClickCount(final Long clickCount) {
         this.clickCount = clickCount;
     }
 
