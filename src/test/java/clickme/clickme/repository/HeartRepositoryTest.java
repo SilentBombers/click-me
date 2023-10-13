@@ -32,12 +32,13 @@ class HeartRepositoryTest {
                 }),
                 DynamicTest.dynamicTest("id로 클릭 카운트 랭킹을 가져온다.", () -> {
                     String seungpang = "seungpang";
-                    assertThat(heartRepository.findById(seungpang)).isEqualTo(1L);
-                    
+                    assertThat(heartRepository.findRankByClicks(seungpang)).isEqualTo(1L);
+
                     String angie = "angie";
                     heartRepository.increaseCount(angie);
                     heartRepository.increaseCount(angie);
                     heartRepository.increaseCount(angie);
+                    assertThat(heartRepository.findRankByClicks(seungpang)).isEqualTo(2L);
                 }),
                 DynamicTest.dynamicTest("실시간 랭킹 유저 목록을 가져온다.", () -> {
                     Set<String> rankings = Set.of("angie", "seungpang");

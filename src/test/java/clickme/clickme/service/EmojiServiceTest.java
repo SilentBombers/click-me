@@ -2,7 +2,6 @@ package clickme.clickme.service;
 
 import clickme.clickme.repository.HeartMemoryRepository;
 import clickme.clickme.repository.HeartRepository;
-import clickme.clickme.repository.MemberRepository;
 import clickme.clickme.util.SvgDocumentFactory;
 import clickme.clickme.util.SvgDocumentManipulator;
 import jakarta.transaction.Transactional;
@@ -73,7 +72,7 @@ class EmojiServiceTest {
 
         assertThat(rank).isEqualTo(1L);
 
-        String id = "angie";
+        final String id = "angie";
         heartRepository.add(id);
         heartRepository.increaseCount(id);
         heartRepository.increaseCount(id);
@@ -94,7 +93,7 @@ class EmojiServiceTest {
         heartRepository.add("angie");
         heartRepository.add("chunsik");
 
-        Set<String> ranking = Set.of(SEUNGPANG, "angie", "chunsik");
+        final Set<String> ranking = Set.of(SEUNGPANG, "angie", "chunsik");
         assertThat(emojiService.findRealTimeRanking(1, 3))
                 .containsAll(ranking);
     }

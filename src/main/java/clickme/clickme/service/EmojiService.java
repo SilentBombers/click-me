@@ -58,7 +58,7 @@ public class EmojiService {
         TransformerFactory.newInstance()
                 .newTransformer()
                 .transform(new DOMSource(doc), new StreamResult(writer));
-        System.out.println(writer);
+
         return writer.toString();
     }
 

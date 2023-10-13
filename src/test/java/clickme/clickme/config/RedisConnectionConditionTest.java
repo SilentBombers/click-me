@@ -28,7 +28,7 @@ class RedisConnectionConditionTest {
     private Environment environment;
 
     @Mock
-    private RedisConnectionCondition.RedisConnectionFactory connectionFactory;
+    private RedisConnectionFactory connectionFactory;
 
     @Mock
     private RedisClient mockedClient;
@@ -67,8 +67,10 @@ class RedisConnectionConditionTest {
     @Test
     @DisplayName("redis 연결이 되지 않을경우 false를 반환한다.")
     void matchesFail() {
-        RedisConnectionCondition condition =
-                new RedisConnectionCondition(new RedisConnectionCondition.RedisConnectionFactory());
+        when(environment.getProperty("spring.data.redis.host")).thenReturn("localhost");
+        when(environment.getProperty("spring.data.redis.port")).thenReturn("1234");
+
+        RedisConnectionCondition condition = new RedisConnectionCondition(new RedisConnectionFactory());
 
         boolean result = condition.matches(conditionContext, annotatedTypeMetadata);
 
