@@ -1,13 +1,9 @@
 package clickme.clickme.service;
 
 import clickme.clickme.repository.HeartRepository;
-import clickme.clickme.util.EmojiRandomIndexGenerator;
+import clickme.clickme.util.SvgDocumentFactory;
 import clickme.clickme.util.SvgDocumentManipulator;
 import lombok.RequiredArgsConstructor;
-import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
-import org.apache.batik.util.XMLResourceDescriptor;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
@@ -23,38 +19,21 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class EmojiService {
 
-    private static final String EMOJI_PATH = "classpath:static/images/emoji_";
-    private static final String EMOJI_FORMAT = ".svg";
     private static final String MAX_COUNT = "99999+";
     private static final long MAX_COUNT_VALUE = 99999L;
 
     private final HeartRepository heartRepository;
-    private final ResourceLoader resourceLoader;
+    private final SvgDocumentFactory svgDocumentFactory;
     private final SvgDocumentManipulator svgDocumentManipulator;
 
     public String heart(final String id) throws IOException, TransformerException {
-        final String parser = XMLResourceDescriptor.getXMLParserClassName();
-        final SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-
-        final String svgPath = createEmojiPath();
-        final Document doc = createDocument(svgPath, factory);
+        final Document doc = svgDocumentFactory.createEmojiDocument();
 
         final String count = getClickCount(id);
         final Document textDrawnDoc = svgDocumentManipulator.drawText(doc, count);
         final Document sizeChangedDoc = svgDocumentManipulator.calculateSizeBasedOnCountLength(textDrawnDoc, count);
 
         return transformSvgToString(sizeChangedDoc);
-    }
-
-    private String createEmojiPath() {
-        return EMOJI_PATH + EmojiRandomIndexGenerator.getRandomNumber() + EMOJI_FORMAT;
-    }
-
-    private Document createDocument(final String svgPath, final SAXSVGDocumentFactory factory) throws IOException {
-        final Resource resource = resourceLoader.getResource(svgPath);
-        final String uri = resource.getURI()
-                .toString();
-        return factory.createDocument(uri);
     }
 
     private String getClickCount(final String URI) {

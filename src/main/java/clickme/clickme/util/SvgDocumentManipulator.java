@@ -7,7 +7,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 @Component
-@RequiredArgsConstructor
 public class SvgDocumentManipulator {
 
     private static final String TEXT_ELEMENT_ID = "my-text";
