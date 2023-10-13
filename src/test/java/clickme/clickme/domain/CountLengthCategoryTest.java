@@ -12,8 +12,7 @@ class CountLengthCategoryTest {
     @ValueSource(ints = {1,2,3,4})
     @DisplayName("4이하일 경우 Category는 LESS_OR_EQUAL_TO_FOUR이다.")
     void findCategoryByLessOrEqualToFour(int length) {
-        int num = length;
-        assertThat(CountLengthCategory.findCategory(num))
+        assertThat(CountLengthCategory.findCategory(length))
                 .isEqualTo(CountLengthCategory.LESS_OR_EQUAL_TO_FOUR);
     }
 
@@ -21,8 +20,7 @@ class CountLengthCategoryTest {
     @ValueSource(ints = {5,6,10,20,30})
     @DisplayName("4를 초과할 경우 Category는 GREATER_THAN_FOUR이다.")
     void findCategoryByGreaterThanFour(int length) {
-        int num = length;
-        assertThat(CountLengthCategory.findCategory(num))
+        assertThat(CountLengthCategory.findCategory(length))
                 .isEqualTo(CountLengthCategory.GREATER_THAN_FOUR);
     }
 }

@@ -34,7 +34,7 @@ public class SvgDocumentManipulator {
     public Document calculateSizeBasedOnCountLength(final Document doc, final String count) {
         Document copyDoc = (Document) doc.cloneNode(true);
         Element rectElement = copyDoc.getElementById(RECT_ELEMENT_ID);
-        CountLengthCategory category = CountLengthCategory.findCategory(Integer.parseInt(count));
+        CountLengthCategory category = CountLengthCategory.findCategory(count.length());
 
         setAttribute(rectElement, "width", category.getWidth());
         setAttribute(rectElement, "height", category.getHeight());
