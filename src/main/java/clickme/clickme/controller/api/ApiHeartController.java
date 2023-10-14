@@ -24,8 +24,8 @@ public class ApiHeartController {
     private final EmojiService emojiService;
 
     @GetMapping(value = "/count")
-    public ResponseEntity<String> findClickCount(@RequestParam String id) throws IOException, TransformerException {
-        CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.SECONDS);
+    public ResponseEntity<String> findClickCount(@RequestParam final String id) throws IOException, TransformerException {
+        final CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.SECONDS);
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("image/svg+xml"))
                 .cacheControl(cacheControl)
@@ -33,13 +33,14 @@ public class ApiHeartController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Long> findRankByClicks(@PathVariable String id) {
+    public ResponseEntity<Long> findRankByClicks(@PathVariable final String id) {
         return ResponseEntity.ok()
                 .body(emojiService.findRankByClicks(id));
     }
 
     @GetMapping("/realtime")
-    public ResponseEntity<Set<String>> findRealTimeRanking(@RequestParam int startRank, @RequestParam int endRank) {
+    public ResponseEntity<Set<String>> findRealTimeRanking(@RequestParam final int startRank,
+                                                           @RequestParam final int endRank) {
         return ResponseEntity.ok()
                         .body(emojiService.findRealTimeRanking(startRank, endRank));
     }

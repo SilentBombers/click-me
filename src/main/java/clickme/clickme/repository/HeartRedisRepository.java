@@ -21,28 +21,28 @@ public class HeartRedisRepository implements HeartRepository {
     }
 
     @Override
-    public void increaseCount(String id) {
+    public void increaseCount(final String id) {
         zSet.incrementScore(KEY, id, 1);
     }
 
     @Override
-    public void add(String id) {
+    public void add(final String id) {
         zSet.add(KEY, id, 0);
     }
 
     @Override
-    public Long findById(String id) {
+    public Long findById(final String id) {
         Double count = zSet.score(KEY, id);
         return count == null ? 0L : count.longValue();
     }
 
     @Override
-    public Long findRankByClicks(String id) {
+    public Long findRankByClicks(final String id) {
         return zSet.reverseRank(KEY, id) + 1;
     }
 
     @Override
-    public Set<String> findRealTimeRanking(int start, int end) {
+    public Set<String> findRealTimeRanking(final int start, final int end) {
         return zSet.reverseRange(KEY, start, end);
     }
 }
