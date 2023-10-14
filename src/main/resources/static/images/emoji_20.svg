@@ -1,6 +1,6 @@
 <svg id="emoji" viewBox="0 0 150 70" xmlns="http://www.w3.org/2000/svg">
+    <rect id="my-rect" fill="#e5f9ff" x="0" y="0" rx="20" ry="20"></rect>
     <g>
-        <rect id="my-rect" fill="#e5f9ff" x="0" y="0" rx="20" ry="20"></rect>
         <g id="color">
             <path fill="#fcea2b" d="M36,59.9585a24.0337,24.0337,0,0,1-15.34-5.541h0A24.0011,24.0011,0,1,1,36,59.9585Z"/>
             <circle cx="25.1117" cy="39.3182" r="5.1783" fill="#ffa7c0"/>
