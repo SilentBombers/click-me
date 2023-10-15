@@ -3,7 +3,7 @@ package clickme.clickme.domain;
 public enum CountLengthCategory {
 
     LESS_OR_EQUAL_TO_FOUR("120", "70"),
-    GREATER_THAN_FOUR("140", "70");
+    GREATER_THAN_FOUR("150", "70");
 
     private final String width;
     private final String height;

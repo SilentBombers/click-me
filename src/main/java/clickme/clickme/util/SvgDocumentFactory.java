@@ -16,7 +16,7 @@ public class SvgDocumentFactory {
 
     private static final String EMOJI_PATH = "classpath:static/images/emoji_";
     private static final String EMOJI_FORMAT = ".svg";
-    private static final int NUMBER_OF_DOCUMENTS = 15;
+    private static final int NUMBER_OF_DOCUMENTS = 25;
 
     private final ResourceLoader resourceLoader;
     private final RandomNumberGenerator emojiRandomIndexGenerator;
