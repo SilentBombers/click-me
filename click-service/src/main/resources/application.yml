@@ -4,24 +4,3 @@ spring:
       host: localhost
       port: 6379
 
-#
-#spring:
-#  data:
-#    redis:
-#      host: 10.178.0.4
-#      port: 6060
-#  datasource:
-#    url: jdbc:mysql://10.178.0.3:3306/clickme?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
-#    username: clickme
-#    password: clickme1!
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    open-in-view: false
-#    properties:
-#      hibernate:
-#        format_sql: true
-#        default_batch_fetch_size: 1000
-#        jdbc.lob.non_contextual_creation: true
-#        dialect: org.hibernate.dialect.MySQLDialect
