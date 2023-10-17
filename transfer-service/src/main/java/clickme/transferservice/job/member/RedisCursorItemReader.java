@@ -12,6 +12,8 @@ import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 
 public class RedisCursorItemReader implements ItemStreamReader<TypedTuple<String>> {
 
+    private static final int MEMBER_COUNT = 1000;
+
     private final String key;
     private final ZSetOperations<String, String> zSetOperations;
     private Cursor<TypedTuple<String>> cursor;
@@ -32,6 +34,6 @@ public class RedisCursorItemReader implements ItemStreamReader<TypedTuple<String
 
     @Override
     public void open(final ExecutionContext executionContext) throws ItemStreamException {
-        cursor = zSetOperations.scan(key, ScanOptions.scanOptions().count(100).build());
+        cursor = zSetOperations.scan(key, ScanOptions.scanOptions().count(MEMBER_COUNT).build());
     }
 }

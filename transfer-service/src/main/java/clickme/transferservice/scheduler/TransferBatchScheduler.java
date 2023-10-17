@@ -15,7 +15,7 @@ public class TransferBatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job syncRedisToMysqlJob;
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 720000)
     public void runSyncRedisToMysqlJob() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())

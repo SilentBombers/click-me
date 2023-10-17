@@ -23,6 +23,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 public class MemberUpsertJobConfig {
 
+    private static final int CHUCK_SIZE = 10;
+    private static final String REDIS_KEY = "clicks";
+    private static final String STEP_NAME = "syncRedisToMysqlStep";
+    private static final String JOB_NAME = "syncRedisToMysqlJob";
+
+
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
 
@@ -34,7 +40,7 @@ public class MemberUpsertJobConfig {
     @Bean
     @StepScope
     public ItemStreamReader<TypedTuple<String>> reader() {
-        return new RedisCursorItemReader("clicks", redisTemplate);
+        return new RedisCursorItemReader(REDIS_KEY, redisTemplate);
     }
 
     @Bean
@@ -61,8 +67,8 @@ public class MemberUpsertJobConfig {
                                      final ItemWriter<Member> writer,
                                      final JobRepository jobRepository,
                                      final PlatformTransactionManager transactionManager) {
-        return new StepBuilder("syncRedisToMysqlStep", jobRepository)
-                .<TypedTuple<String>, Member>chunk(10, transactionManager)
+        return new StepBuilder(STEP_NAME, jobRepository)
+                .<TypedTuple<String>, Member>chunk(CHUCK_SIZE, transactionManager)
                 .reader(reader)
                 .processor(processor())
                 .writer(writer)
@@ -71,7 +77,7 @@ public class MemberUpsertJobConfig {
 
     @Bean
     public Job syncRedisToMysqlJob(final Step syncRedisToMysqlStep, final JobRepository jobRepository) {
-        return new JobBuilder("syncRedisToMysqlJob", jobRepository)
+        return new JobBuilder(JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .flow(syncRedisToMysqlStep)
                 .end()
