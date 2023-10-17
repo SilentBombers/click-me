@@ -2,9 +2,12 @@ package clickme.transferservice.job.member;
 
 import clickme.transferservice.domain.Member;
 import clickme.transferservice.repository.MemberRepository;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
@@ -63,6 +66,15 @@ public class MemberUpsertJobConfig {
                 .reader(reader)
                 .processor(processor())
                 .writer(writer)
+                .build();
+    }
+
+    @Bean
+    public Job syncRedisToMysqlJob(final Step syncRedisToMysqlStep, final JobRepository jobRepository) {
+        return new JobBuilder("syncRedisToMysqlJob", jobRepository)
+                .incrementer(new RunIdIncrementer())
+                .flow(syncRedisToMysqlStep)
+                .end()
                 .build();
     }
 }
