@@ -1,12 +1,14 @@
 package clickme.clickme.repository;
 
 import clickme.clickme.config.RedisConnectionCondition;
+import clickme.clickme.controller.api.response.RankingResponse;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 @Conditional(RedisConnectionCondition.class)
@@ -42,7 +44,11 @@ public class HeartRedisRepository implements HeartRepository {
     }
 
     @Override
-    public Set<String> findRealTimeRanking(final int start, final int end) {
-        return zSet.reverseRange(KEY, start, end);
+    public List<RankingResponse> findRealTimeRanking(final long start, final long end) {
+        final AtomicLong ranking = new AtomicLong(start);
+        return zSet.rangeWithScores(KEY, start, end)
+                .stream()
+                .map(tuple -> new RankingResponse(ranking.getAndIncrement(), tuple.getValue(), tuple.getScore().longValue()))
+                .toList();
     }
 }

@@ -1,6 +1,7 @@
 package clickme.clickme.service;
 
 import clickme.clickme.repository.HeartRepository;
+import clickme.clickme.controller.api.response.RankingResponse;
 import clickme.clickme.util.SvgDocumentFactory;
 import clickme.clickme.util.SvgDocumentManipulator;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Set;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +67,7 @@ public class EmojiService {
         return heartRepository.findRankByClicks(id);
     }
 
-    public Set<String> findRealTimeRanking(final int start, final int end) {
+    public List<RankingResponse> findRealTimeRanking(final long start, final long end) {
         return heartRepository.findRealTimeRanking(start, end);
     }
 }

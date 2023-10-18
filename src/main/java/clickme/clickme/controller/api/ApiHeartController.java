@@ -1,5 +1,6 @@
 package clickme.clickme.controller.api;
 
+import clickme.clickme.controller.api.response.RankingResponse;
 import clickme.clickme.service.EmojiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -39,8 +41,8 @@ public class ApiHeartController {
     }
 
     @GetMapping("/realtime")
-    public ResponseEntity<Set<String>> findRealTimeRanking(@RequestParam final int startRank,
-                                                           @RequestParam final int endRank) {
+    public ResponseEntity<List<RankingResponse>> findRealTimeRanking(@RequestParam final long startRank,
+                                                                     @RequestParam final long endRank) {
         return ResponseEntity.ok()
                         .body(emojiService.findRealTimeRanking(startRank, endRank));
     }

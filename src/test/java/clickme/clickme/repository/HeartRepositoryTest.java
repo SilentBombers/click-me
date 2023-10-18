@@ -1,11 +1,13 @@
 package clickme.clickme.repository;
 
+import clickme.clickme.controller.api.response.RankingResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,8 +43,9 @@ class HeartRepositoryTest {
                     assertThat(heartRepository.findRankByClicks(seungpang)).isEqualTo(2L);
                 }),
                 DynamicTest.dynamicTest("실시간 랭킹 유저 목록을 가져온다.", () -> {
-                    Set<String> rankings = Set.of("angie", "seungpang");
-                    assertThat(rankings.containsAll(heartRepository.findRealTimeRanking(1, 2))).isTrue();
+                    assertThat((heartRepository.findRealTimeRanking(1, 2)))
+                            .extracting("nickname")
+                            .containsExactly("angie", "seungpang");
                 })
         );
     }

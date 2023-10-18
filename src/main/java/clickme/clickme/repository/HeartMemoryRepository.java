@@ -1,12 +1,13 @@
 package clickme.clickme.repository;
 
+import clickme.clickme.controller.api.response.RankingResponse;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class HeartMemoryRepository implements HeartRepository {
 
@@ -45,16 +46,12 @@ public class HeartMemoryRepository implements HeartRepository {
     }
 
     @Override
-    public Set<String> findRealTimeRanking(int start, int end) {
-        List<Map.Entry<String, Long>> sortedEntries = MAP.entrySet().stream()
+    public List<RankingResponse> findRealTimeRanking(long start, long end) {
+        final AtomicLong ranking = new AtomicLong(start);
+        return MAP.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .map(entry -> new RankingResponse(ranking.getAndIncrement(), entry.getKey(), entry.getValue()))
                 .toList();
 
-        List<Map.Entry<String, Long>> sublist = sortedEntries.subList(start - 1, end);
-
-        // 키만 추출하여 세트에 넣습니다.
-        return sublist.stream()
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
     }
 }

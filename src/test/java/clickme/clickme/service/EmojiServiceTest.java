@@ -1,5 +1,6 @@
 package clickme.clickme.service;
 
+import clickme.clickme.controller.api.response.RankingResponse;
 import clickme.clickme.repository.HeartMemoryRepository;
 import clickme.clickme.repository.HeartRepository;
 import clickme.clickme.util.SvgDocumentFactory;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -25,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class EmojiServiceTest {
 
     private static final String SEUNGPANG = "seungpang";
+    private static final String ANGIE = "angie";
+    private static final String CHUNSIK = "chunsik";
 
     private EmojiService emojiService;
     private HeartRepository heartRepository;
@@ -93,8 +97,13 @@ class EmojiServiceTest {
         heartRepository.add("angie");
         heartRepository.add("chunsik");
 
-        final Set<String> ranking = Set.of(SEUNGPANG, "angie", "chunsik");
+        final List<RankingResponse> rankings = List.of(
+                new RankingResponse(heartRepository.findById(SEUNGPANG), SEUNGPANG, heartRepository.findById(SEUNGPANG)),
+                new RankingResponse(heartRepository.findById(ANGIE), ANGIE, heartRepository.findById(ANGIE)),
+                new RankingResponse(heartRepository.findById(CHUNSIK), CHUNSIK, heartRepository.findById(CHUNSIK))
+        );
+
         assertThat(emojiService.findRealTimeRanking(1, 3))
-                .containsAll(ranking);
+                .containsAll(rankings);
     }
 }
