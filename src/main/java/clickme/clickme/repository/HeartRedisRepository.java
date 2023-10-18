@@ -46,7 +46,7 @@ public class HeartRedisRepository implements HeartRepository {
     @Override
     public List<RankingResponse> findRealTimeRanking(final long start, final long end) {
         final AtomicLong ranking = new AtomicLong(start);
-        return zSet.rangeWithScores(KEY, start, end)
+        return zSet.reverseRangeWithScores(KEY, start, end)
                 .stream()
                 .map(tuple -> new RankingResponse(ranking.getAndIncrement(), tuple.getValue(), tuple.getScore().longValue()))
                 .toList();

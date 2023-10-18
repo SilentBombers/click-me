@@ -51,7 +51,7 @@ public class HeartMemoryRepository implements HeartRepository {
         return MAP.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> new RankingResponse(ranking.getAndIncrement(), entry.getKey(), entry.getValue()))
-                .toList();
-
+                .toList()
+                .subList((int) start, (int) end);
     }
 }
