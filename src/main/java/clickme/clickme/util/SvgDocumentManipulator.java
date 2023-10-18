@@ -1,7 +1,6 @@
 package clickme.clickme.util;
 
 import clickme.clickme.domain.CountLengthCategory;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -1,7 +1,7 @@
 package clickme.clickme.service;
 
-import clickme.clickme.repository.HeartRepository;
 import clickme.clickme.controller.api.response.RankingResponse;
+import clickme.clickme.repository.HeartRepository;
 import clickme.clickme.util.SvgDocumentFactory;
 import clickme.clickme.util.SvgDocumentManipulator;
 import lombok.RequiredArgsConstructor;
