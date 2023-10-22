@@ -1,6 +1,8 @@
 package clickme.clickme.repository;
 
-import java.util.Set;
+import clickme.clickme.controller.api.response.RankingResponse;
+
+import java.util.List;
 
 public interface HeartRepository {
 
@@ -12,5 +14,5 @@ public interface HeartRepository {
 
     Long findRankByClicks(final String id);
 
-    Set<String> findRealTimeRanking(final int start, final int end);
+    List<RankingResponse> findRealTimeRanking(final int start, final int end);
 }
