@@ -36,4 +36,14 @@ public class RedisCursorItemReader implements ItemStreamReader<TypedTuple<String
     public void open(final ExecutionContext executionContext) throws ItemStreamException {
         cursor = zSetOperations.scan(key, ScanOptions.scanOptions().count(MEMBER_COUNT).build());
     }
+
+    @Override
+    public void update(final ExecutionContext executionContext) throws ItemStreamException {
+        ItemStreamReader.super.update(executionContext);
+    }
+
+    @Override
+    public void close() throws ItemStreamException {
+        ItemStreamReader.super.close();
+    }
 }

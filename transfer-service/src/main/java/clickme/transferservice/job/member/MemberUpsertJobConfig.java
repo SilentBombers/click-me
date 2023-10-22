@@ -23,7 +23,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 public class MemberUpsertJobConfig {
 
-    private static final int CHUCK_SIZE = 10;
+    private static final int CHUCK_SIZE = 1000;
     private static final String REDIS_KEY = "clicks";
     private static final String STEP_NAME = "syncRedisToMysqlStep";
     private static final String JOB_NAME = "syncRedisToMysqlJob";

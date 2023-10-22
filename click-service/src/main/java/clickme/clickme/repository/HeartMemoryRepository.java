@@ -1,34 +1,35 @@
 package clickme.clickme.repository;
 
+import clickme.clickme.controller.api.response.RankingResponse;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HeartMemoryRepository implements HeartRepository {
 
     private Map<String, Long> MAP =  new ConcurrentHashMap<>();
 
     @Override
-    public void increaseCount(String id) {
+    public void increaseCount(final String id) {
         MAP.put(id, MAP.get(id) + 1);
     }
 
     @Override
-    public void add(String id) {
+    public void add(final String id) {
         MAP.put(id, 0L);
     }
 
     @Override
-    public Long findById(String id) {
+    public Long findById(final String id) {
         return MAP.getOrDefault(id, 0L);
     }
 
     @Override
-    public Long findRankByClicks(String id) {
+    public Long findRankByClicks(final String id) {
         Long value = MAP.get(id);
         if (value == null) {
             throw new NoSuchElementException("해당 id로 등록된 사용자가 없습니다: " + id);
@@ -44,17 +45,12 @@ public class HeartMemoryRepository implements HeartRepository {
         return rank;
     }
 
-    @Override
-    public Set<String> findRealTimeRanking(int start, int end) {
-        List<Map.Entry<String, Long>> sortedEntries = MAP.entrySet().stream()
+    public List<RankingResponse> findRealTimeRanking(final int start, final int end) {
+        final AtomicInteger ranking = new AtomicInteger(start);
+        return MAP.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .toList();
-
-        List<Map.Entry<String, Long>> sublist = sortedEntries.subList(start - 1, end);
-
-        // 키만 추출하여 세트에 넣습니다.
-        return sublist.stream()
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
+                .map(entry -> new RankingResponse(ranking.getAndIncrement(), entry.getKey(), entry.getValue()))
+                .toList()
+                .subList(start, end);
     }
 }
