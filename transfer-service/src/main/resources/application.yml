@@ -1,0 +1,13 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6380
+  datasource:
+    url: jdbc:mysql://localhost:3306/clickme?rewriteBatchedStatements=true
+    username: clickme
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  batch:
+    jdbc:
+      initialize-schema: ALWAYS
