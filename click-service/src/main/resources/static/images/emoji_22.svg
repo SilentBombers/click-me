@@ -64,7 +64,7 @@
             <path fill="#D22F27"
                   d="M62.2115,50.457c0.8284-0.0287,1.4767-0.7235,1.448-1.552c-0.0273-0.7881-0.6599-1.4207-1.448-1.448 c-0.8284,0.0287-1.4767,0.7235-1.448,1.552C60.7908,49.7971,61.4234,50.4297,62.2115,50.457z"/>
         </g>
-        <animateTransform
+        <animateTransform id="animator"
                 attributeName="transform"
                 attributeType="XML"
                 type="rotate"

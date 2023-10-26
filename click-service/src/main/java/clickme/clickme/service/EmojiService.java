@@ -1,6 +1,7 @@
 package clickme.clickme.service;
 
 import clickme.clickme.controller.api.response.RankingResponse;
+import clickme.clickme.domain.Count;
 import clickme.clickme.repository.HeartRepository;
 import clickme.clickme.util.SvgDocumentFactory;
 import clickme.clickme.util.SvgDocumentManipulator;
@@ -30,28 +31,24 @@ public class EmojiService {
     public String heart(final String id) throws IOException, TransformerException {
         final Document doc = svgDocumentFactory.createEmojiDocument();
 
-        final String count = getClickCount(id);
+        final Count count = getClickCount(id);
         final Document textDrawnDoc = svgDocumentManipulator.drawText(doc, count);
         final Document sizeChangedDoc = svgDocumentManipulator.calculateSizeBasedOnCountLength(textDrawnDoc, count);
 
         return transformSvgToString(sizeChangedDoc);
     }
 
-    private String getClickCount(final String URI) {
-        final Long count = addAndGetCount(URI);
-        if (count > MAX_COUNT_VALUE) {
-            return MAX_COUNT;
-        }
-        return String.valueOf(count);
+    private Count getClickCount(final String URI) {
+        return addAndGetCount(URI);
     }
 
-    private Long addAndGetCount(final String URI) {
-        final Long count = heartRepository.findById(URI);
-        if (count == 0L) {
+    private Count addAndGetCount(final String URI) {
+        final Count count = new Count(heartRepository.findById(URI));
+        if (count.isZero()) {
             heartRepository.add(URI);
         }
         heartRepository.increaseCount(URI);
-        return count + 1L;
+        return count.increase();
     }
 
     private String transformSvgToString(final Document doc) throws TransformerException {
