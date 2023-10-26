@@ -24,6 +24,9 @@ public class Count {
     }
 
     public String getString() {
+        if (this.number >= MAX_COUNT_VALUE) {
+            return MAX_COUNT;
+        }
         return String.valueOf(this.number);
     }
 

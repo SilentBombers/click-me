@@ -23,7 +23,12 @@ class SvgDocumentManipulatorTest {
 
     @BeforeEach
     void setUp() {
-        svgDocumentManipulator = new SvgDocumentManipulator();
+        svgDocumentManipulator = new SvgDocumentManipulator(
+                new TextElementManipulator(),
+                new RectElementManipulator(),
+                new EmojiElementManipulator(),
+                new AnimateElementManipulator()
+        );
         svgDocumentFactory = new SvgDocumentFactory(new DefaultResourceLoader(), new EmojiRandomIndexGenerator());
     }
 
@@ -36,7 +41,7 @@ class SvgDocumentManipulatorTest {
         final Document resultDoc = svgDocumentManipulator.drawText(doc, count);
 
         assertThat(resultDoc.getElementById("my-text")
-                .getTextContent()).isEqualTo(count);
+                .getTextContent()).isEqualTo(count.getString());
     }
 
     @ParameterizedTest(name = "카운트 수가 {0}인 경우")
