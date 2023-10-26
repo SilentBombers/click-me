@@ -15,7 +15,7 @@
             <ellipse cx="36" cy="36" rx="23.0001" ry="23.0001" fill="none" stroke="#000000" stroke-linecap="round"
                      stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
         </g>
-        <animateTransform id="animator"
+        <animateTransform id="animate"
                 attributeName="transform"
                 attributeType="XML"
                 type="rotate"

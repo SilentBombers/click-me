@@ -11,7 +11,7 @@ public class SvgDocumentManipulator {
     private static final String TEXT_ELEMENT_ID = "my-text";
     private static final String RECT_ELEMENT_ID = "my-rect";
     private static final String EMOJI_ELEMENT_ID = "emoji";
-    private static final String ANIMATOR_ELEMENT_ID = "animator";
+    private static final String ANIMATE_ELEMENT_ID = "animate";
 
     private final TextElementManipulator textElementManipulator;
     private final RectElementManipulator rectElementManipulator;
@@ -44,7 +44,7 @@ public class SvgDocumentManipulator {
         Element emojiElement = copyDoc.getElementById(EMOJI_ELEMENT_ID);
         emojiElementManipulator.configureEmojiSizeBasedOnCountLength(emojiElement, count);
 
-        Element animatorElement = copyDoc.getElementById(ANIMATOR_ELEMENT_ID);
+        Element animatorElement = copyDoc.getElementById(ANIMATE_ELEMENT_ID);
         animateElementManipulator.configureAnimateDirection(animatorElement, count);
 
         return copyDoc;

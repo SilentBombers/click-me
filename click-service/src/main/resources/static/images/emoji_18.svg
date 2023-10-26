@@ -45,7 +45,7 @@
             <line x1="35.9264" x2="35.9264" y1="59.739" y2="58.2276" fill="none" stroke="#000" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width="2"/>
         </g>
-        <animateTransform id="animator"
+        <animateTransform id="animate"
                 attributeName="transform"
                 attributeType="XML"
                 type="rotate"
