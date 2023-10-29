@@ -1,6 +1,9 @@
-group = 'clickme.transfer'
-version = '0.0.1-SNAPSHOT'
+plugins {
+    id 'com.palantir.docker' version '0.35.0'
+}
 
+group = 'clickme.transfer'
+version = '1.0.0'
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
@@ -10,4 +13,12 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
+}
+
+docker {
+    println(tasks.bootJar.outputs.files)
+    name rootProject.name+'-'+project.name + ":" + version
+    dockerfile file('../Dockerfile')
+    files tasks.bootJar.outputs.files
+    buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
 }
