@@ -27,7 +27,8 @@ public class JdbcMemberRepository implements MemberRepository {
             public void setValues(final PreparedStatement ps, final int i) throws SQLException {
                 Member member = members.getItems()
                         .get(i);
-                ps.setString(1, member.nickname());
+                String nickname = member.nickname().replaceAll("\"", "");
+                ps.setString(1, nickname);
                 ps.setLong(2, member.clickCount());
             }
 

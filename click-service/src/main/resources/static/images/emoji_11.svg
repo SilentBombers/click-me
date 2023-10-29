@@ -26,7 +26,7 @@
                   stroke-width="2"
                   d="M45.8012,27.4384c-1.2547-3.3541-6.3873-3.5687-6.0658,1.3178c0.0428,0.6485,0.2787,1.2724,0.6361,1.8135l5.2737,6.4224l0,0 l5.1777-6.266c0.5747-0.6964,0.9147-1.5779,0.8974-2.4853c-0.0856-4.3523-5.0089-4.0351-6.0763-0.8036"/>
         </g>
-        <animateTransform
+        <animateTransform id="animate"
                 attributeName="transform"
                 attributeType="XML"
                 type="rotate"

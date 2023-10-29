@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class HeartMemoryRepository implements HeartRepository {
 
@@ -46,11 +47,11 @@ public class HeartMemoryRepository implements HeartRepository {
     }
 
     public List<RankingResponse> findRealTimeRanking(final int start, final int end) {
-        final AtomicInteger ranking = new AtomicInteger(start);
+        final AtomicLong ranking = new AtomicLong(start);
         return MAP.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> new RankingResponse(ranking.getAndIncrement(), entry.getKey(), entry.getValue()))
                 .toList()
-                .subList(start, end);
+                .subList(start-1, end);
     }
 }

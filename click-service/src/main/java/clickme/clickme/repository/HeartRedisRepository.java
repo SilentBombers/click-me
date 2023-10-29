@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 @Conditional(RedisConnectionCondition.class)
@@ -45,7 +46,7 @@ public class HeartRedisRepository implements HeartRepository {
 
     @Override
     public List<RankingResponse> findRealTimeRanking(final int start, final int end) {
-        final AtomicInteger ranking = new AtomicInteger(start);
+        final AtomicLong ranking = new AtomicLong(start);
         return zSet.reverseRangeWithScores(KEY, start, end)
                 .stream()
                 .map(tuple -> new RankingResponse(ranking.getAndIncrement(), tuple.getValue(), tuple.getScore().longValue()))

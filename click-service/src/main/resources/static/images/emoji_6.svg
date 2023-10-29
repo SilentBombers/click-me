@@ -33,7 +33,7 @@
             <polyline fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       points="41.878 23.488 37.766 30.014 45.328 30.43"/>
         </g>
-        <animateTransform
+        <animateTransform id="animate"
                 attributeName="transform"
                 attributeType="XML"
                 type="rotate"

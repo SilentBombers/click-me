@@ -1,6 +1,6 @@
 package clickme.clickme.util;
 
-import clickme.clickme.domain.CountLengthCategory;
+import clickme.clickme.domain.Count;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,40 +11,42 @@ public class SvgDocumentManipulator {
     private static final String TEXT_ELEMENT_ID = "my-text";
     private static final String RECT_ELEMENT_ID = "my-rect";
     private static final String EMOJI_ELEMENT_ID = "emoji";
-    private static final String TEXT_X_POSITION = "70";
-    private static final String TEXT_Y_POSITION = "45";
+    private static final String ANIMATE_ELEMENT_ID = "animate";
 
-    public Document drawText(final Document doc, final String count) {
+    private final TextElementManipulator textElementManipulator;
+    private final RectElementManipulator rectElementManipulator;
+    private final EmojiElementManipulator emojiElementManipulator;
+    private final AnimateElementManipulator animateElementManipulator;
+
+    public SvgDocumentManipulator(final TextElementManipulator textElementManipulator,
+                                  final RectElementManipulator rectElementManipulator,
+                                  final EmojiElementManipulator emojiElementManipulator,
+                                  final AnimateElementManipulator animateElementManipulator) {
+        this.textElementManipulator = textElementManipulator;
+        this.rectElementManipulator = rectElementManipulator;
+        this.emojiElementManipulator = emojiElementManipulator;
+        this.animateElementManipulator = animateElementManipulator;
+    }
+
+    public Document drawText(final Document doc, final Count count) {
         Document copyDoc = (Document) doc.cloneNode(true);
         Element textElement = copyDoc.getElementById(TEXT_ELEMENT_ID);
-        textElement.setTextContent(count);
-
-        setAttribute(textElement, "font-size", "24");
-        setAttribute(textElement, "font-family", "Arial, Helvetica, sans-serif");
-        setAttribute(textElement, "font-weight", "bold");
-
-        setAttribute(textElement, "x", TEXT_X_POSITION);
-        setAttribute(textElement, "y", TEXT_Y_POSITION);
+        textElementManipulator.configureTextElement(textElement, count);
 
         return copyDoc;
     }
 
-    public Document calculateSizeBasedOnCountLength(final Document doc, final String count) {
+    public Document calculateSizeBasedOnCountLength(final Document doc, final Count count) {
         Document copyDoc = (Document) doc.cloneNode(true);
         Element rectElement = copyDoc.getElementById(RECT_ELEMENT_ID);
-        CountLengthCategory category = CountLengthCategory.findCategory(count.length());
-
-        setAttribute(rectElement, "width", category.getWidth());
-        setAttribute(rectElement, "height", category.getHeight());
+        rectElementManipulator.configureRectSizeBasedOnCountLength(rectElement, count);
 
         Element emojiElement = copyDoc.getElementById(EMOJI_ELEMENT_ID);
-        setAttribute(emojiElement, "width", category.getWidth());
-        setAttribute(emojiElement, "height", category.getHeight());
+        emojiElementManipulator.configureEmojiSizeBasedOnCountLength(emojiElement, count);
+
+        Element animatorElement = copyDoc.getElementById(ANIMATE_ELEMENT_ID);
+        animateElementManipulator.configureAnimateDirection(animatorElement, count);
 
         return copyDoc;
-    }
-
-    private void setAttribute(Element element, final String attributeName, final String value) {
-        element.setAttributeNS(null, attributeName, value);
     }
 }

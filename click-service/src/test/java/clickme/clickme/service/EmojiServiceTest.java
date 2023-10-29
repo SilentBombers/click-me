@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
 class EmojiServiceTest {
 
     private static final String SEUNGPANG = "seungpang";
@@ -93,13 +92,15 @@ class EmojiServiceTest {
     @Test
     @DisplayName("실시간 랭킹 목록을 조회한다.")
     void findRealTimeRanking() {
-        heartRepository.add("angie");
-        heartRepository.add("chunsik");
-
+        heartRepository.add(ANGIE);
+        heartRepository.add(CHUNSIK);
+        heartRepository.increaseCount(SEUNGPANG);
+        heartRepository.increaseCount(SEUNGPANG);
+        heartRepository.increaseCount(ANGIE);
         final List<RankingResponse> rankings = List.of(
-                new RankingResponse(Math.toIntExact(heartRepository.findRankByClicks(SEUNGPANG)), SEUNGPANG, heartRepository.findById(SEUNGPANG)),
-                new RankingResponse(Math.toIntExact(heartRepository.findRankByClicks(ANGIE)), ANGIE, heartRepository.findById(ANGIE)),
-                new RankingResponse(Math.toIntExact(heartRepository.findRankByClicks(CHUNSIK)), CHUNSIK, heartRepository.findById(CHUNSIK))
+                new RankingResponse(heartRepository.findRankByClicks(SEUNGPANG), SEUNGPANG, heartRepository.findById(SEUNGPANG)),
+                new RankingResponse(heartRepository.findRankByClicks(ANGIE), ANGIE, heartRepository.findById(ANGIE)),
+                new RankingResponse(heartRepository.findRankByClicks(CHUNSIK), CHUNSIK, heartRepository.findById(CHUNSIK))
         );
 
         assertThat(emojiService.findRealTimeRanking(1, 3))

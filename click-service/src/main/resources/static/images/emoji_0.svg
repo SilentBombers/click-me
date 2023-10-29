@@ -22,7 +22,7 @@
       <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M50.2672,21.6975a7.1721,7.1721,0,0,1-5.1465.5413A7.0853,7.0853,0,0,1,41.4776,19.76"/>
       <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M42.4772,46.5a8.6968,8.6968,0,0,1-13,0"/>
     </g>
-    <animateTransform
+    <animateTransform id="animate"
             attributeName="transform"
             attributeType="XML"
             type="rotate"
