@@ -15,7 +15,6 @@ public class MysqlItemWriter implements ItemWriter<UpsertMember> {
 
     @Override
     public void write(final Chunk<? extends UpsertMember> members) {
-        System.out.println("이건???");
         memberRepository.batchUpdateToUpsertMember(members);
     }
 }

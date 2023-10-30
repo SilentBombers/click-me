@@ -76,7 +76,8 @@ public class MemberUpsertJobConfig {
     }
 
     @Bean
-    public Job syncRedisToMysqlJob(@Qualifier("syncRedisToMySqlStep") final Step syncRedisToMysqlStep, final JobRepository jobRepository) {
+    public Job syncRedisToMysqlJob(@Qualifier("syncRedisToMySqlStep") final Step syncRedisToMysqlStep,
+                                   final JobRepository jobRepository) {
         return new JobBuilder(JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .flow(syncRedisToMysqlStep)

@@ -28,12 +28,4 @@ public class NicknameMember {
     public void setNickname(final String nickname) {
         this.nickname = nickname;
     }
-
-    @Override
-    public String toString() {
-        return "NicknameMember{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                '}';
-    }
 }
