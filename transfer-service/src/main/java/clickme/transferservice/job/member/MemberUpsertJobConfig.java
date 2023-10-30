@@ -32,7 +32,8 @@ public class MemberUpsertJobConfig {
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
 
-    public MemberUpsertJobConfig(final RedisTemplate<String, String> redisTemplate, final MemberRepository memberRepository) {
+    public MemberUpsertJobConfig(final RedisTemplate<String, String> redisTemplate,
+                                 final MemberRepository memberRepository) {
         this.redisTemplate = redisTemplate;
         this.memberRepository = memberRepository;
     }

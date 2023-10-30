@@ -41,20 +41,20 @@ public class GithubApiService {
         return avatarUrl;
     }
 
-    private static URI createUri(final String apiUrl) {
+    private URI createUri(final String apiUrl) {
         return UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .build()
                 .toUri();
     }
 
-    private static HttpRequest createRequest(final URI uri) {
+    private HttpRequest createRequest(final URI uri) {
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .GET()
                 .build();
     }
 
-    private String getFirstAvatarUrl(GithubContributor[] contributors) {
+    private String getFirstAvatarUrl(final GithubContributor[] contributors) {
         if (contributors != null && contributors.length > 0) {
             return contributors[0].getAvatar_url();
         }
