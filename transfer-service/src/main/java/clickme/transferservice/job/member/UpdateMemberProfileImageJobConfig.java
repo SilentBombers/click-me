@@ -30,6 +30,11 @@ import java.util.Map;
 @Configuration
 public class UpdateMemberProfileImageJobConfig {
 
+    private static final String JOB_NAME = "profileImageUpdateJob";
+    private static final String STEP_NAME = "profileImageUpdateStep";
+    private static final int CHUCK_SIZE = 1000;
+    private static final int PAGE_SIZE = 1000;
+
     private final MemberItemProcessor memberItemProcessor;
     private final MemberRepository memberRepository;
     private final DataSource dataSource;
@@ -37,32 +42,34 @@ public class UpdateMemberProfileImageJobConfig {
     @Bean
     @StepScope
     public JdbcPagingItemReader<NicknameMember> jdbcPagingItemReader(final DataSource dataSource,
-                                                             @Value("#{jobParameters['createAt']}") String createAt) {
+                                                                     @Value("#{jobParameters['createAt']}") String createAt) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("createAt", createAt);
 
         return new JdbcPagingItemReaderBuilder<NicknameMember>()
                 .name("memberItemReader")
                 .dataSource(dataSource)
-                .queryProvider(queryProvider(dataSource))
+                .queryProvider(queryProvider())
                 .parameterValues(parameters)
-                .pageSize(1000)
+                .pageSize(PAGE_SIZE)
                 .rowMapper(new BeanPropertyRowMapper<>(NicknameMember.class))
                 .build();
     }
 
-    private PagingQueryProvider queryProvider(DataSource dataSource) {
-        SqlPagingQueryProviderFactoryBean factoryBean = new SqlPagingQueryProviderFactoryBean();
-        factoryBean.setDataSource(dataSource);
-        factoryBean.setSelectClause("SELECT id, nickname");
-        factoryBean.setFromClause("FROM member");
-        factoryBean.setWhereClause("WHERE DATE_FORMAT(create_at, '%Y-%m-%d') = :createAt");
-        factoryBean.setSortKey("id");
-
+    @Bean
+    public PagingQueryProvider queryProvider() {
         try {
-            return factoryBean.getObject();
+            return new SqlPagingQueryProviderFactoryBean() {
+                {
+                    setDataSource(dataSource);
+                    setSelectClause("SELECT id, nickname");
+                    setFromClause("FROM member");
+                    setWhereClause("WHERE DATE_FORMAT(create_at, '%Y-%m-%d') = :createAt");
+                    setSortKey("id");
+                }
+            }.getObject();
         } catch (Exception e) {
-            throw new RuntimeException("해당 쿼리의 결과가 올바르지 않습니다.");
+            throw new RuntimeException("쿼리 프로바이더 생성 중 오류가 발생했습니다.", e);
         }
     }
 
@@ -78,8 +85,8 @@ public class UpdateMemberProfileImageJobConfig {
                                        final PlatformTransactionManager transactionManager,
                                        final JdbcPagingItemReader<NicknameMember> reader,
                                        final ItemWriter<ProfileUpdateMember> writer) {
-        return new StepBuilder("profileImageUpdateStep", jobRepository)
-                .<NicknameMember, ProfileUpdateMember>chunk(1000, transactionManager)
+        return new StepBuilder(STEP_NAME, jobRepository)
+                .<NicknameMember, ProfileUpdateMember>chunk(CHUCK_SIZE, transactionManager)
                 .reader(reader)
                 .processor(memberItemProcessor)
                 .writer(writer)
@@ -88,7 +95,7 @@ public class UpdateMemberProfileImageJobConfig {
 
     @Bean
     public Job profileImageUpdateJob(final Step profileImageUpdateStep, final JobRepository jobRepository) {
-        return new JobBuilder("profileImageUpdateJob", jobRepository)
+        return new JobBuilder(JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .flow(profileImageUpdateStep)
                 .end()
