@@ -18,7 +18,7 @@ public class MemberItemProcessor implements ItemProcessor<NicknameMember, Profil
     public ProfileUpdateMember process(final NicknameMember member) {
         String avatarUrl = githubApiService.getAvatarUrl(member.getNickname());
 
-        if (avatarUrl != null || !avatarUrl.isEmpty()) {
+        if (avatarUrl != null && !avatarUrl.isEmpty()) {
             return new ProfileUpdateMember(member.getNickname(), avatarUrl);
         }
         return new ProfileUpdateMember(member.getNickname(), DEFAULT_AVATAR_URL.formatted(member.getNickname()));
