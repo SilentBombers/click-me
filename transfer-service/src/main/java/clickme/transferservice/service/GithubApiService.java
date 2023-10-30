@@ -56,7 +56,7 @@ public class GithubApiService {
 
     private String getFirstAvatarUrl(GithubContributor[] contributors) {
         if (contributors != null && contributors.length > 0) {
-            return contributors[0].getAvatarUrl();
+            return contributors[0].getAvatar_url();
         }
         return "";
     }
