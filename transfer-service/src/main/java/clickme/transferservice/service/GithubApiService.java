@@ -1,6 +1,7 @@
 package clickme.transferservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ public class GithubApiService {
 
     private String getFirstAvatarUrl(final GithubContributor[] contributors) {
         if (contributors != null && contributors.length > 0) {
-            return contributors[0].getAvatar_url();
+            return contributors[0].getAvatarUrl();
         }
         return "";
     }
