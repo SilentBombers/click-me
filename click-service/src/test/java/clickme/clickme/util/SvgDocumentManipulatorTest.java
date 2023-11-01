@@ -55,15 +55,18 @@ class SvgDocumentManipulatorTest {
 
         final Element rectElement = resultDoc.getElementById("my-rect");
         final Element emojiElement = resultDoc.getElementById("emoji");
+        final CountLengthCategory category = CountLengthCategory.findCategory(count.getLength());
         assertAll(
                 () -> assertThat(rectElement.getAttribute("width"))
-                        .isEqualTo(CountLengthCategory.findCategory(count.getLength()).getWidth()),
+                        .isEqualTo(category.getWidth()),
                 () -> assertThat(rectElement.getAttribute("height"))
-                        .isEqualTo(CountLengthCategory.findCategory(count.getLength()).getHeight()),
-                () -> assertThat(emojiElement.getAttribute("width"))
-                        .isEqualTo(CountLengthCategory.findCategory(count.getLength()).getWidth()),
-                () -> assertThat(emojiElement.getAttribute("height"))
-                        .isEqualTo(CountLengthCategory.findCategory(count.getLength()).getHeight())
+                        .isEqualTo(category.getHeight()),
+                () -> assertThat(emojiElement.getAttribute("viewBox"))
+                        .isEqualTo(createViewBox(category))
         );
+    }
+
+    private String createViewBox(CountLengthCategory category) {
+        return "0 0 %s %s".formatted(category.getWidth(), category.getHeight());
     }
 }

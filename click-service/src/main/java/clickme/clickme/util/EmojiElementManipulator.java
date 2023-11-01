@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 @Component
 public class EmojiElementManipulator extends ElementManipulator {
 
-    private static final String VIEW_BOX = "0 0 %d %d";
+    private static final String VIEW_BOX = "0 0 %s %s";
 
     public void configureEmojiSizeBasedOnCountLength(Element rectElement, final Count count) {
         CountLengthCategory category = CountLengthCategory.findCategory(count.getLength());
