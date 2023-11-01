@@ -1,13 +1,10 @@
 package clickme.transferservice.repository;
 
-import clickme.transferservice.domain.Member;
+import clickme.transferservice.domain.ProfileUpdateMember;
+import clickme.transferservice.domain.UpsertMember;
 import org.springframework.batch.item.Chunk;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @Component
 public class JdbcMemberRepository implements MemberRepository {
@@ -19,23 +16,15 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
-    public void batchUpdate(final Chunk<? extends Member> members) {
+    public void batchUpdateToUpsertMember(final Chunk<? extends UpsertMember> members) {
         String sql = "INSERT INTO member (nickname, click_count) VALUES (?, ?)" +
                 " ON DUPLICATE KEY UPDATE click_count = VALUES(click_count)";
-        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
-                Member member = members.getItems()
-                        .get(i);
-                String nickname = member.nickname().replaceAll("\"", "");
-                ps.setString(1, nickname);
-                ps.setLong(2, member.clickCount());
-            }
+        jdbcTemplate.batchUpdate(sql, new UpsertMemberBatchPreparedStatementSetter(members));
+    }
 
-            @Override
-            public int getBatchSize() {
-                return members.size();
-            }
-        });
+    @Override
+    public void batchUpdateToProfileUpdateMember(final Chunk<? extends ProfileUpdateMember> members) {
+        String sql = "UPDATE member SET profile_image_url = ? WHERE nickname = ?";
+        jdbcTemplate.batchUpdate(sql, new ProfileUpdateMemberBatchPreparedStatementSetter(members));
     }
 }

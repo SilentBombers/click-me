@@ -3,6 +3,7 @@ create table member
     id          bigint       not null auto_increment,
     nickname    varchar(255) not null,
     click_count bigint       not null,
+    create_at   date         not null default now()
     primary key (id)
 ) engine=InnoDB default charset utf8mb4;
 

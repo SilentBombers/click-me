@@ -1,9 +1,12 @@
 package clickme.transferservice.repository;
 
-import clickme.transferservice.domain.Member;
+import clickme.transferservice.domain.ProfileUpdateMember;
+import clickme.transferservice.domain.UpsertMember;
 import org.springframework.batch.item.Chunk;
 
 public interface MemberRepository {
 
-    void batchUpdate(Chunk<? extends Member> members);
+    void batchUpdateToUpsertMember(Chunk<? extends UpsertMember> members);
+
+    void batchUpdateToProfileUpdateMember(Chunk<? extends ProfileUpdateMember> members);
 }
