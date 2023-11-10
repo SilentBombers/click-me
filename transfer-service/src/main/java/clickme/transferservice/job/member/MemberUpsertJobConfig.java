@@ -1,7 +1,9 @@
 package clickme.transferservice.job.member;
 
 import clickme.transferservice.domain.UpsertMember;
+import clickme.transferservice.repository.HeartRepository;
 import clickme.transferservice.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
@@ -18,40 +20,32 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
+@RequiredArgsConstructor
 public class MemberUpsertJobConfig {
 
     private static final int CHUCK_SIZE = 1000;
-    private static final String REDIS_KEY = "clicks";
+    private static final String REDIS_KEY = "clickCountChanged";
     private static final String STEP_NAME = "syncRedisToMysqlStep";
     private static final String JOB_NAME = "syncRedisToMysqlJob";
 
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
-
-    public MemberUpsertJobConfig(final RedisTemplate<String, String> redisTemplate,
-                                 final MemberRepository memberRepository) {
-        this.redisTemplate = redisTemplate;
-        this.memberRepository = memberRepository;
-    }
+    private final HeartRepository heartRepository;
 
     @Bean
     @StepScope
-    public ItemStreamReader<TypedTuple<String>> reader() {
+    public ItemStreamReader<String> reader() {
         return new RedisCursorItemReader(REDIS_KEY, redisTemplate);
     }
 
     @Bean
     @StepScope
-    public ItemProcessor<TypedTuple<String>, UpsertMember> processor() {
-        return tuple -> {
-            String nickname = tuple.getValue();
-            Long clickCount = tuple.getScore()
-                    .longValue();
-
+    public ItemProcessor<String, UpsertMember> processor() {
+        return nickname -> {
+            Long clickCount = heartRepository.getClickCount(nickname);
             return new UpsertMember(nickname, clickCount);
         };
     }
@@ -64,12 +58,12 @@ public class MemberUpsertJobConfig {
 
     @Bean
     @JobScope
-    public Step syncRedisToMySqlStep(final ItemReader<TypedTuple<String>> reader,
+    public Step syncRedisToMySqlStep(final ItemReader<String> reader,
                                      final ItemWriter<UpsertMember> writer,
                                      final JobRepository jobRepository,
                                      final PlatformTransactionManager transactionManager) {
         return new StepBuilder(STEP_NAME, jobRepository)
-                .<TypedTuple<String>, UpsertMember>chunk(CHUCK_SIZE, transactionManager)
+                .<String, UpsertMember>chunk(CHUCK_SIZE, transactionManager)
                 .reader(reader)
                 .processor(processor())
                 .writer(writer)
