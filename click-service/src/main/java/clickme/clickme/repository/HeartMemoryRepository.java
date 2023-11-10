@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class HeartMemoryRepository implements HeartRepository {
@@ -52,6 +51,6 @@ public class HeartMemoryRepository implements HeartRepository {
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> new RankingResponse(ranking.getAndIncrement(), entry.getKey(), entry.getValue()))
                 .toList()
-                .subList(start-1, end);
+                .subList(start, end);
     }
 }

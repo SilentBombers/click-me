@@ -12,7 +12,7 @@ public class Count {
     }
 
     public boolean isEven() {
-        return this.number % 2 == 0 ? true : false;
+        return this.number % 2 == 0;
     }
 
     public boolean isZero() {
@@ -23,7 +23,7 @@ public class Count {
         return new Count(this.number + 1);
     }
 
-    public String getString() {
+    public String getValue() {
         if (this.number >= MAX_COUNT_VALUE) {
             return MAX_COUNT;
         }

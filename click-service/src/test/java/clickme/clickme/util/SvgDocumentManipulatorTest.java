@@ -41,7 +41,7 @@ class SvgDocumentManipulatorTest {
         final Document resultDoc = svgDocumentManipulator.drawText(doc, count);
 
         assertThat(resultDoc.getElementById("my-text")
-                .getTextContent()).isEqualTo(count.getString());
+                .getTextContent()).isEqualTo(count.getValue());
     }
 
     @ParameterizedTest(name = "카운트 수가 {0}인 경우")

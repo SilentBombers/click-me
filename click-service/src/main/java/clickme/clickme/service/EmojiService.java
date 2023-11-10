@@ -21,9 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmojiService {
 
-    private static final String MAX_COUNT = "99999+";
-    private static final long MAX_COUNT_VALUE = 99999L;
-
     private final HeartRepository heartRepository;
     private final SvgDocumentFactory svgDocumentFactory;
     private final SvgDocumentManipulator svgDocumentManipulator;
