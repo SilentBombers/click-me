@@ -34,6 +34,7 @@ public class MemberUpsertJobConfig {
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
     private final HeartRepository heartRepository;
+    private final MemberUpsertAfterJobListener memberUpsertAfterJobListener;
 
     @Bean
     @StepScope
@@ -77,6 +78,7 @@ public class MemberUpsertJobConfig {
                 .incrementer(new RunIdIncrementer())
                 .flow(syncRedisToMysqlStep)
                 .end()
+                .listener(memberUpsertAfterJobListener)
                 .build();
     }
 }
