@@ -36,16 +36,30 @@ public class EmojiService {
     }
 
     private Count getClickCount(final String URI) {
+        addIfZero(URI);
         return addAndGetCount(URI);
     }
 
-    private Count addAndGetCount(final String URI) {
+    private void addIfZero(final String URI) {
         final Count count = new Count(heartRepository.findById(URI));
         if (count.isZero()) {
             heartRepository.add(URI);
         }
+    }
+
+    private Count addAndGetCount(final String URI) {
+        Count count = new Count(heartRepository.findById(URI));
+        if (count.isZero()) {
+            heartRepository.add(URI);
+            count = count.increase();
+        }
+        changedCount(URI);
+        return count;
+    }
+
+    private void changedCount(final String URI) {
         heartRepository.increaseCount(URI);
-        return count.increase();
+        heartRepository.saveChanged(URI);
     }
 
     private String transformSvgToString(final Document doc) throws TransformerException {

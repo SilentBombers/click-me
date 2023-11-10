@@ -103,7 +103,7 @@ class EmojiServiceTest {
                 new RankingResponse(heartRepository.findRankByClicks(CHUNSIK), CHUNSIK, heartRepository.findById(CHUNSIK))
         );
 
-        assertThat(emojiService.findRealTimeRanking(1, 3))
+        assertThat(emojiService.findRealTimeRanking(0, 3))
                 .containsAll(rankings);
     }
 }
