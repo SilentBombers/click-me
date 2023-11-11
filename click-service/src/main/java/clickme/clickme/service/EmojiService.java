@@ -36,18 +36,6 @@ public class EmojiService {
     }
 
     private Count getClickCount(final String URI) {
-        addIfZero(URI);
-        return addAndGetCount(URI);
-    }
-
-    private void addIfZero(final String URI) {
-        final Count count = new Count(heartRepository.findById(URI));
-        if (count.isZero()) {
-            heartRepository.add(URI);
-        }
-    }
-
-    private Count addAndGetCount(final String URI) {
         Count count = new Count(heartRepository.findById(URI));
         if (count.isZero()) {
             heartRepository.add(URI);
