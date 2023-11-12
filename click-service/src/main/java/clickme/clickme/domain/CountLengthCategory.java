@@ -4,12 +4,12 @@ import java.util.Arrays;
 
 public enum CountLengthCategory {
 
-    ONE(1,"465", "180"),
-    TWO(2, "445", "180"),
-    THREE(3, "425", "180"),
-    FOUR(4, "405", "180"),
-    FIVE(5, "385", "180"),
-    GREATER_THAN_FIVE(6,"365", "180");
+    ONE(1,"390", "165"),
+    TWO(2, "378", "165"),
+    THREE(3, "366", "165"),
+    FOUR(4, "354", "165"),
+    FIVE(5, "342", "165"),
+    GREATER_THAN_FIVE(6,"330", "165");
 
     private final int length;
     private final String x;
@@ -24,12 +24,12 @@ public enum CountLengthCategory {
 
     public static CountLengthCategory findCategory(final int length) {
         return Arrays.stream(CountLengthCategory.values())
-                .filter(category -> category.hasCountLengthCategory(length))
+                .filter(category -> category.hasCountLength(length))
                 .findAny()
                 .orElse(GREATER_THAN_FIVE);
     }
 
-    private boolean hasCountLengthCategory(final int length) {
+    private boolean hasCountLength(final int length) {
         return this.length == length;
     }
 

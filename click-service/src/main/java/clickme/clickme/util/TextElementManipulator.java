@@ -11,7 +11,7 @@ public class TextElementManipulator extends ElementManipulator {
     public void configureTextElement(Element textElement, Count count) {
         textElement.setTextContent(count.getString());
 
-        setAttribute(textElement, "font-size", "80");
+        setAttribute(textElement, "font-size", "50");
         setAttribute(textElement, "font-family", "Arial, Helvetica, sans-serif");
         setAttribute(textElement, "font-weight", "bold");
         setAttribute(textElement, "fill", "white");

@@ -1,7 +1,7 @@
-<svg id="emoji" width="200px" height="80px" viewBox="0 0 715 294" version="1.1" xmlns="http://www.w3.org/2000/svg"
+<svg id="emoji" width="160" height="80" viewBox="0 0 550 290" version="1.1" xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
-        <rect id="path-a5ickncx7x-1" x="288" y="78" width="414" height="135" rx="67.5"></rect>
+        <rect id="my-rect" x="290" y="107" width="228" height="77" rx="38.5"></rect>
         <filter x="-5.3%" y="-17.8%" width="110.6%" height="137.8%" filterUnits="objectBoundingBox"
                 id="filter-a5ickncx7x-2">
             <feOffset dx="0" dy="5" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
@@ -56,13 +56,13 @@
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Rectangle-Copy-2">
-            <use fill="black" fill-opacity="1" filter="url(#filter-a5ickncx7x-2)" xlink:href="#path-a5ickncx7x-1"></use>
-            <use fill-opacity="0.15" fill="#000000" fill-rule="evenodd" xlink:href="#path-a5ickncx7x-1"></use>
-            <use fill="black" fill-opacity="1" filter="url(#filter-a5ickncx7x-3)" xlink:href="#path-a5ickncx7x-1"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-a5ickncx7x-2)" xlink:href="#my-rect"></use>
+            <use fill-opacity="0.15" fill="#000000" fill-rule="evenodd" xlink:href="#my-rect"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-a5ickncx7x-3)" xlink:href="#my-rect"></use>
         </g>
         <g id="Oval-Copy-2">
             <use fill="black" fill-opacity="1" filter="url(#filter-a5ickncx7x-5)" xlink:href="#path-a5ickncx7x-4"></use>
-            <use fill="#FFFDFD" fill-rule="evenodd" xlink:href="#path-a5ickncx7x-4"></use>
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-a5ickncx7x-4"></use>
             <use fill="black" fill-opacity="1" filter="url(#filter-a5ickncx7x-6)" xlink:href="#path-a5ickncx7x-4"></use>
         </g>
         <g>
