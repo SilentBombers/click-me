@@ -10,11 +10,11 @@ public class AnimateElementManipulator extends ElementManipulator {
     public void configureAnimateDirection(Element animateElement, final Count count) {
         String from, to;
         if (count.isEven()) {
-            from = "0 36 36";
-            to = "360 36 36";
+            from = "0 143.5 145.5";
+            to = "360 143.5 145.5";
         } else {
-            from = "360 36 36";
-            to = "0 36 36";
+            from = "360 143.5 145.5";
+            to = "0 143.5 145.5";
         }
         setAttribute(animateElement, "from", from);
         setAttribute(animateElement, "to", to);

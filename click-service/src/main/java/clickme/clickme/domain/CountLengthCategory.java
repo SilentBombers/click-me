@@ -1,33 +1,47 @@
 package clickme.clickme.domain;
 
+import java.util.Arrays;
+
 public enum CountLengthCategory {
 
-    LESS_OR_EQUAL_TO_FOUR("120", "70"),
-    GREATER_THAN_FOUR("150", "70");
+    ONE(1,"465", "180"),
+    TWO(2, "445", "180"),
+    THREE(3, "425", "180"),
+    FOUR(4, "405", "180"),
+    FIVE(5, "385", "180"),
+    GREATER_THAN_FIVE(6,"365", "180");
 
-    private final String width;
-    private final String height;
+    private final int length;
+    private final String x;
+    private final String y;
 
-    CountLengthCategory(final String width, final String height) {
-        this.width = width;
-        this.height = height;
+
+    CountLengthCategory(final int length, final String x, final String y) {
+        this.length = length;
+        this.x = x;
+        this.y = y;
     }
 
     public static CountLengthCategory findCategory(final int length) {
-        if (length <= 4) {
-            return LESS_OR_EQUAL_TO_FOUR;
-        } else {
-            return GREATER_THAN_FOUR;
-        }
+        return Arrays.stream(CountLengthCategory.values())
+                .filter(category -> category.hasCountLengthCategory(length))
+                .findAny()
+                .orElse(GREATER_THAN_FIVE);
     }
 
-    public String getWidth() {
-        return width;
+    private boolean hasCountLengthCategory(final int length) {
+        return this.length == length;
     }
 
-    public String getHeight() {
-        return height;
+    public int getLength() {
+        return length;
     }
 
+    public String getX() {
+        return x;
+    }
 
+    public String getY() {
+        return y;
+    }
 }
