@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberItemProcessor implements ItemProcessor<NicknameMember, ProfileUpdateMember> {
 
-    private static final String DEFAULT_AVATAR_URL = "https://github.com/%s.png";
+    private static final String DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/134919246?v=4";
 
     private final GithubApiService githubApiService;
 
@@ -22,7 +22,7 @@ public class MemberItemProcessor implements ItemProcessor<NicknameMember, Profil
     public ProfileUpdateMember process(final NicknameMember member) {
         String avatarUrl = Optional.ofNullable(githubApiService.getAvatarUrl(member.getNickname()))
                 .filter(StringUtils::hasText)
-                .orElse(DEFAULT_AVATAR_URL.formatted(member.getNickname()));
+                .orElse(DEFAULT_AVATAR_URL);
 
         return new ProfileUpdateMember(member.getNickname(), avatarUrl);
     }
