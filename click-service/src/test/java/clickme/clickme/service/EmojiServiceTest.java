@@ -1,8 +1,11 @@
 package clickme.clickme.service;
 
 import clickme.clickme.controller.api.response.RankingResponse;
+import clickme.clickme.domain.Member;
 import clickme.clickme.repository.HeartMemoryRepository;
 import clickme.clickme.repository.HeartRepository;
+import clickme.clickme.repository.MemberRepository;
+import clickme.clickme.repository.exception.NotFoundMemberException;
 import clickme.clickme.util.SvgDocumentFactory;
 import clickme.clickme.util.SvgDocumentManipulator;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +35,9 @@ class EmojiServiceTest {
     private HeartRepository heartRepository;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private SvgDocumentFactory svgDocumentFactory;
 
     @Autowired
@@ -39,8 +45,12 @@ class EmojiServiceTest {
 
     @BeforeEach
     void setUp() {
+        memberRepository.save(new Member(0L, SEUNGPANG, "a"));
+        memberRepository.save(new Member(0L, ANGIE, "b"));
+        memberRepository.save(new Member(0L, CHUNSIK, "c"));
+
         heartRepository = new HeartMemoryRepository();
-        emojiService = new EmojiService(heartRepository, svgDocumentFactory, svgDocumentManipulator);
+        emojiService = new EmojiService(heartRepository, memberRepository, svgDocumentFactory, svgDocumentManipulator);
         heartRepository.add(SEUNGPANG);
     }
 
@@ -98,12 +108,25 @@ class EmojiServiceTest {
         heartRepository.increaseCount(SEUNGPANG);
         heartRepository.increaseCount(ANGIE);
         final List<RankingResponse> rankings = List.of(
-                new RankingResponse(heartRepository.findRankByClicks(SEUNGPANG), SEUNGPANG, heartRepository.findById(SEUNGPANG)),
-                new RankingResponse(heartRepository.findRankByClicks(ANGIE), ANGIE, heartRepository.findById(ANGIE)),
-                new RankingResponse(heartRepository.findRankByClicks(CHUNSIK), CHUNSIK, heartRepository.findById(CHUNSIK))
+                new RankingResponse(heartRepository.findRankByClicks(SEUNGPANG), SEUNGPANG,
+                        heartRepository.findById(SEUNGPANG), memberRepository.getProfileImageUrlByName(SEUNGPANG)),
+                new RankingResponse(heartRepository.findRankByClicks(ANGIE), ANGIE,
+                        heartRepository.findById(ANGIE), memberRepository.getProfileImageUrlByName(ANGIE)),
+                new RankingResponse(heartRepository.findRankByClicks(CHUNSIK), CHUNSIK,
+                        heartRepository.findById(CHUNSIK), memberRepository.getProfileImageUrlByName(CHUNSIK))
         );
 
         assertThat(emojiService.findRealTimeRanking(1, 3))
                 .containsAll(rankings);
+    }
+
+    @Test
+    @DisplayName("없는 member로 조회할 경우 예외 발생")
+    void findProfileImageUrlByNameOrThrow() {
+        String invalidName = "invalidName";
+        heartRepository.add(invalidName);
+
+        assertThatThrownBy(() -> emojiService.findRealTimeRanking(1, 2))
+                .isInstanceOf(NotFoundMemberException.class);
     }
 }

@@ -1,6 +1,7 @@
 package clickme.clickme.repository;
 
 import clickme.clickme.controller.api.response.RankingResponse;
+import clickme.clickme.repository.dto.RankingDto;
 
 import java.util.Comparator;
 import java.util.List;
@@ -46,11 +47,11 @@ public class HeartMemoryRepository implements HeartRepository {
         return rank;
     }
 
-    public List<RankingResponse> findRealTimeRanking(final int start, final int end) {
+    public List<RankingDto> findRealTimeRanking(final int start, final int end) {
         final AtomicLong ranking = new AtomicLong(start);
         return MAP.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .map(entry -> new RankingResponse(ranking.getAndIncrement(), entry.getKey(), entry.getValue()))
+                .map(entry -> new RankingDto(ranking.getAndIncrement(), entry.getKey(), entry.getValue()))
                 .toList()
                 .subList(start-1, end);
     }

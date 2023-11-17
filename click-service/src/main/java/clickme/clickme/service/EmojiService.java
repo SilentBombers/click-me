@@ -3,6 +3,7 @@ package clickme.clickme.service;
 import clickme.clickme.controller.api.response.RankingResponse;
 import clickme.clickme.domain.Count;
 import clickme.clickme.repository.HeartRepository;
+import clickme.clickme.repository.MemberRepository;
 import clickme.clickme.util.SvgDocumentFactory;
 import clickme.clickme.util.SvgDocumentManipulator;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmojiService {
 
-    private static final String MAX_COUNT = "99999+";
-    private static final long MAX_COUNT_VALUE = 99999L;
-
     private final HeartRepository heartRepository;
+    private final MemberRepository memberRepository;
     private final SvgDocumentFactory svgDocumentFactory;
     private final SvgDocumentManipulator svgDocumentManipulator;
 
@@ -65,6 +64,15 @@ public class EmojiService {
     }
 
     public List<RankingResponse> findRealTimeRanking(final int start, final int end) {
-        return heartRepository.findRealTimeRanking(start, end);
+        return heartRepository.findRealTimeRanking(start, end)
+                .stream()
+                .map(ranking -> {
+                    System.out.println(ranking.nickname());
+                    String profileImage = memberRepository.getProfileImageUrlByName(ranking.nickname());
+
+                    System.out.println(profileImage);
+                    return new RankingResponse(ranking.ranking(), ranking.nickname(), ranking.count(), profileImage);
+                })
+                .toList();
     }
 }
