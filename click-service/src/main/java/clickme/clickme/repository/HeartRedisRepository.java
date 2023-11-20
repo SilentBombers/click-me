@@ -2,6 +2,7 @@ package clickme.clickme.repository;
 
 import clickme.clickme.config.RedisConnectionCondition;
 import clickme.clickme.controller.api.response.RankingResponse;
+import clickme.clickme.repository.dto.RankingDto;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
@@ -61,7 +62,7 @@ public class HeartRedisRepository implements HeartRepository {
 
         return rankings.reverseRangeWithScores(RANKING_KEY, start, end)
                 .stream()
-                .map(tuple -> new RankingResponse(ranking.getAndIncrement(), tuple.getValue(), tuple.getScore().longValue()))
+                .map(tuple -> new RankingDto(ranking.getAndIncrement(), tuple.getValue(), tuple.getScore().longValue()))
                 .toList();
     }
 }
