@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 public class TextElementManipulator extends ElementManipulator {
 
     public void configureTextElement(Element textElement, Count count) {
-        textElement.setTextContent(count.getString());
+        textElement.setTextContent(count.getValue());
 
         setAttribute(textElement, "font-size", "50");
         setAttribute(textElement, "font-family", "Arial, Helvetica, sans-serif");

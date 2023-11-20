@@ -116,7 +116,7 @@ class EmojiServiceTest {
                         heartRepository.findById(CHUNSIK), memberRepository.getProfileImageUrlByName(CHUNSIK))
         );
 
-        assertThat(emojiService.findRealTimeRanking(1, 3))
+        assertThat(emojiService.findRealTimeRanking(0, 3))
                 .containsAll(rankings);
     }
 

@@ -40,7 +40,7 @@ class HeartRepositoryTest {
                     assertThat(heartRepository.findRankByClicks(seungpang)).isEqualTo(2L);
                 }),
                 DynamicTest.dynamicTest("실시간 랭킹 유저 목록을 가져온다.", () -> {
-                    assertThat((heartRepository.findRealTimeRanking(1, 2)))
+                    assertThat((heartRepository.findRealTimeRanking(0, 2)))
                             .extracting("nickname")
                             .containsExactly("angie", "seungpang");
                 })

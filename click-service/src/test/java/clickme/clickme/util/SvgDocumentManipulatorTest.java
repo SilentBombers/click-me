@@ -41,7 +41,7 @@ class SvgDocumentManipulatorTest {
 
         final Element textElement = resultDoc.getElementById("my-text");
         assertAll(
-                () -> assertThat(textElement.getTextContent()).isEqualTo(count.getString()),
+                () -> assertThat(textElement.getTextContent()).isEqualTo(count.getValue()),
                 () -> assertThat(textElement.getAttribute("x"))
                         .isEqualTo(CountLengthCategory.findCategory(count.getLength()).getX()),
                 () -> assertThat(textElement.getAttribute("y"))
