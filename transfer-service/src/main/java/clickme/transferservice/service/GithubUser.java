@@ -1,6 +1,5 @@
 package clickme.transferservice.service;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class GithubContributor {
+public class GithubUser {
 
     private String login;
-    private int contributions;
 
     @JsonProperty("avatar_url")
     private String avatarUrl;

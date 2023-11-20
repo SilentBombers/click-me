@@ -11,6 +11,8 @@ public interface HeartRepository {
 
     void add(final String id);
 
+    void saveChanged(final String id);
+
     Long findById(final String id);
 
     Long findRankByClicks(final String id);
