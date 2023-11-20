@@ -21,9 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmojiService {
 
-    private static final String MAX_COUNT = "99999+";
-    private static final long MAX_COUNT_VALUE = 99999L;
-
     private final HeartRepository heartRepository;
     private final SvgDocumentFactory svgDocumentFactory;
     private final SvgDocumentManipulator svgDocumentManipulator;
@@ -39,16 +36,18 @@ public class EmojiService {
     }
 
     private Count getClickCount(final String URI) {
-        return addAndGetCount(URI);
-    }
-
-    private Count addAndGetCount(final String URI) {
-        final Count count = new Count(heartRepository.findById(URI));
+        Count count = new Count(heartRepository.findById(URI));
         if (count.isZero()) {
             heartRepository.add(URI);
+            count = count.increase();
         }
+        changedCount(URI);
+        return count;
+    }
+
+    private void changedCount(final String URI) {
         heartRepository.increaseCount(URI);
-        return count.increase();
+        heartRepository.saveChanged(URI);
     }
 
     private String transformSvgToString(final Document doc) throws TransformerException {
