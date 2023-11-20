@@ -1,4 +1,4 @@
-package clickme.transferservice.domain;
+package clickme.transferservice.job.member.dto;
 
 public record ProfileUpdateMember(String nickname, String profileImageUrl) {
 }
