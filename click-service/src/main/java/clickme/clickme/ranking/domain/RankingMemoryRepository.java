@@ -6,15 +6,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class HeartMemoryRepository implements HeartRepository {
+public class RankingMemoryRepository implements RankingRepository {
 
     private Map<String, Long> rankings =  new ConcurrentHashMap<>();
-    private Set<String> changedMembers = new CopyOnWriteArraySet();
 
     @Override
     public void increaseCount(final String id) {
@@ -24,11 +21,6 @@ public class HeartMemoryRepository implements HeartRepository {
     @Override
     public void add(final String id) {
         rankings.put(id, 0L);
-    }
-
-    @Override
-    public void saveChanged(final String id) {
-        changedMembers.add(id);
     }
 
     @Override

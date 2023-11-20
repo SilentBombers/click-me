@@ -1,9 +1,7 @@
 package clickme.clickme.svg.application;
 
-import clickme.clickme.ranking.domain.HeartMemoryRepository;
-import clickme.clickme.ranking.domain.HeartRepository;
-import clickme.clickme.ranking.domain.Member;
-import clickme.clickme.ranking.domain.MemberRepository;
+import clickme.clickme.ranking.domain.RankingMemoryRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.svg.domain.document.SvgDocumentFactory;
 import clickme.clickme.svg.domain.document.SvgDocumentManipulator;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +22,7 @@ class SvgImageServiceTest {
     private static final String SEUNGPANG = "seungpang";
 
     private SvgImageService svgImageService;
-    private HeartRepository heartRepository;
+    private RankingRepository rankingRepository;
 
     @Autowired
     private SvgDocumentFactory svgDocumentFactory;
@@ -34,9 +32,9 @@ class SvgImageServiceTest {
 
     @BeforeEach
     void setUp() {
-        heartRepository = new HeartMemoryRepository();
-        svgImageService = new SvgImageService(heartRepository, svgDocumentFactory, svgDocumentManipulator);
-        heartRepository.add(SEUNGPANG);
+        rankingRepository = new RankingMemoryRepository();
+        svgImageService = new SvgImageService(rankingRepository, svgDocumentFactory, svgDocumentManipulator);
+        rankingRepository.add(SEUNGPANG);
     }
 
     @Test
@@ -45,7 +43,7 @@ class SvgImageServiceTest {
         final String heart = svgImageService.generateSvgImage(SEUNGPANG);
 
         assertAll(
-                () -> assertThat(heartRepository.findByName(SEUNGPANG)).isEqualTo(1L),
+                () -> assertThat(rankingRepository.findByName(SEUNGPANG)).isEqualTo(1L),
                 () -> assertThat(heart.contains("emoji")).isTrue()
         );
     }
@@ -54,7 +52,7 @@ class SvgImageServiceTest {
     @DisplayName("클릭 카운트가 99999를 초과할 경우 99999+로 출력한다")
     void shouldReturnMaxCountWhenClickCountExceedsLimit() throws IOException, TransformerException {
         for (int i = 0; i < 99999; i++) {
-            heartRepository.increaseCount(SEUNGPANG);
+            rankingRepository.increaseCount(SEUNGPANG);
         }
 
         final String heart = svgImageService.generateSvgImage(SEUNGPANG);

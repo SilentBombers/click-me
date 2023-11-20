@@ -1,7 +1,5 @@
 package clickme.clickme.ranking.domain;
 
-import clickme.clickme.ranking.domain.HeartMemoryRepository;
-import clickme.clickme.ranking.domain.HeartRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -11,9 +9,9 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HeartRepositoryTest {
+class RankingRepositoryTest {
 
-    private final HeartRepository heartRepository = new HeartMemoryRepository();
+    private final RankingRepository rankingRepository = new RankingMemoryRepository();
 
     @TestFactory
     @DisplayName("HeartRepository 테스트")
@@ -21,28 +19,28 @@ class HeartRepositoryTest {
         return Arrays.asList(
                 DynamicTest.dynamicTest("카운트를 정상적으로 증가시킨다.", () -> {
                     String id = "seungpang";
-                    heartRepository.add(id);
-                    assertThat(heartRepository.findByName(id)).isZero();
-                    heartRepository.increaseCount(id);
-                    assertThat(heartRepository.findByName(id)).isEqualTo(1L);
+                    rankingRepository.add(id);
+                    assertThat(rankingRepository.findByName(id)).isZero();
+                    rankingRepository.increaseCount(id);
+                    assertThat(rankingRepository.findByName(id)).isEqualTo(1L);
                 }),
                 DynamicTest.dynamicTest("id 기준으로 정상적으로 조회한다.", () -> {
                     String id = "angie";
-                    heartRepository.add(id);
-                    assertThat(heartRepository.findByName(id)).isNotNull();
+                    rankingRepository.add(id);
+                    assertThat(rankingRepository.findByName(id)).isNotNull();
                 }),
                 DynamicTest.dynamicTest("id로 클릭 카운트 랭킹을 가져온다.", () -> {
                     String seungpang = "seungpang";
-                    assertThat(heartRepository.findRankByName(seungpang)).isEqualTo(1L);
+                    assertThat(rankingRepository.findRankByName(seungpang)).isEqualTo(1L);
 
                     String angie = "angie";
-                    heartRepository.increaseCount(angie);
-                    heartRepository.increaseCount(angie);
-                    heartRepository.increaseCount(angie);
-                    assertThat(heartRepository.findRankByName(seungpang)).isEqualTo(2L);
+                    rankingRepository.increaseCount(angie);
+                    rankingRepository.increaseCount(angie);
+                    rankingRepository.increaseCount(angie);
+                    assertThat(rankingRepository.findRankByName(seungpang)).isEqualTo(2L);
                 }),
                 DynamicTest.dynamicTest("실시간 랭킹 유저 목록을 가져온다.", () -> {
-                    assertThat((heartRepository.findLiveRanking(0, 2)))
+                    assertThat((rankingRepository.findLiveRanking(0, 2)))
                             .extracting("nickname")
                             .containsExactly("angie", "seungpang");
                 })

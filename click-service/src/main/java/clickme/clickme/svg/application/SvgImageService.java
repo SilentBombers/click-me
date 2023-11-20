@@ -1,6 +1,6 @@
 package clickme.clickme.svg.application;
 
-import clickme.clickme.ranking.domain.HeartRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.svg.domain.count.Count;
 import clickme.clickme.svg.domain.document.SvgDocumentFactory;
 import clickme.clickme.svg.domain.document.SvgDocumentManipulator;
@@ -19,7 +19,7 @@ import java.io.StringWriter;
 @RequiredArgsConstructor
 public class SvgImageService {
 
-    private final HeartRepository heartRepository;
+    private final RankingRepository rankingRepository;
     private final SvgDocumentFactory svgDocumentFactory;
     private final SvgDocumentManipulator svgDocumentManipulator;
 
@@ -38,12 +38,17 @@ public class SvgImageService {
     }
 
     private Count addAndGetCount(final String URI) {
-        final Count count = new Count(heartRepository.findByName(URI));
+        final Count count = new Count(rankingRepository.findByName(URI));
         if (count.isZero()) {
-            heartRepository.add(URI);
+            rankingRepository.add(URI);
         }
-        heartRepository.increaseCount(URI);
+        increaseCount(URI);
+        rankingRepository.increaseCount(URI);
         return count.increase();
+    }
+
+    private void increaseCount(final String URI) {
+        rankingRepository.increaseCount(URI);
     }
 
     private String transformSvgToString(final Document doc) throws TransformerException {

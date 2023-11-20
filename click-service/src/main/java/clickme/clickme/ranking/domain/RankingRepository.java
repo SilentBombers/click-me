@@ -4,13 +4,11 @@ import clickme.clickme.ranking.infrastructure.dto.RankingDto;
 
 import java.util.List;
 
-public interface HeartRepository {
+public interface RankingRepository {
 
     void increaseCount(final String name);
 
     void add(final String name);
-
-    void saveChanged(final String name);
 
     Long findByName(final String name);
 

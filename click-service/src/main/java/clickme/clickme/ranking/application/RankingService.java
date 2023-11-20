@@ -1,6 +1,6 @@
 package clickme.clickme.ranking.application;
 
-import clickme.clickme.ranking.domain.HeartRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.ranking.domain.MemberRepository;
 import clickme.clickme.ranking.ui.response.RankingResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +12,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RankingService {
 
-    private final HeartRepository heartRepository;
+    private final RankingRepository rankingRepository;
     private final MemberRepository memberRepository;
 
     public Long findRankByName(final String name) {
-        return heartRepository.findRankByName(name);
+        return rankingRepository.findRankByName(name);
     }
 
     public List<RankingResponse> findLiveRanking(final int start, final int end) {
-        return heartRepository.findLiveRanking(start, end)
+        return rankingRepository.findLiveRanking(start, end)
                 .stream()
                 .map(ranking -> {
                     String profileImage = memberRepository.getProfileImageUrlByName(ranking.nickname());

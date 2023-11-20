@@ -1,7 +1,7 @@
 package clickme.clickme.config;
 
-import clickme.clickme.ranking.domain.HeartMemoryRepository;
-import clickme.clickme.ranking.domain.HeartRepository;
+import clickme.clickme.ranking.domain.RankingMemoryRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ public class HeartRepositoryConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public HeartRepository heartRepository() {
-        return new HeartMemoryRepository();
+    public RankingRepository heartRepository() {
+        return new RankingMemoryRepository();
     }
 }

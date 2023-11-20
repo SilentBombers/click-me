@@ -1,7 +1,7 @@
 package clickme.clickme.ranking.infrastructure;
 
 import clickme.clickme.config.RedisConnectionCondition;
-import clickme.clickme.ranking.domain.HeartRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.ranking.infrastructure.dto.RankingDto;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 @Conditional(RedisConnectionCondition.class)
-public class HeartRedisRepository implements HeartRepository {
+public class RankingRedisRepository implements RankingRepository {
 
     private static final String RANKING_KEY = "clicks";
     private static final String CHANGED_KEY = "clickCountChanged%s";
@@ -25,7 +25,7 @@ public class HeartRedisRepository implements HeartRepository {
     private final ZSetOperations<String, String> rankings;
     private final SetOperations<String, String> changedMembers;
 
-    public HeartRedisRepository(RedisTemplate<String, String> redisTemplate) {
+    public RankingRedisRepository(RedisTemplate<String, String> redisTemplate) {
         this.rankings = redisTemplate.opsForZSet();
         this.changedMembers = redisTemplate.opsForSet();
     }

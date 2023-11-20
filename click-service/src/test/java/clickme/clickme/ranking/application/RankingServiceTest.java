@@ -1,7 +1,7 @@
 package clickme.clickme.ranking.application;
 
-import clickme.clickme.ranking.domain.HeartMemoryRepository;
-import clickme.clickme.ranking.domain.HeartRepository;
+import clickme.clickme.ranking.domain.RankingMemoryRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.ranking.domain.Member;
 import clickme.clickme.ranking.domain.MemberRepository;
 import clickme.clickme.ranking.domain.exception.NotFoundMemberException;
@@ -26,7 +26,7 @@ class RankingServiceTest {
     private static final String CHUNSIK = "chunsik";
 
     private RankingService rankingService;
-    private HeartRepository heartRepository;
+    private RankingRepository rankingRepository;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -37,9 +37,9 @@ class RankingServiceTest {
         memberRepository.save(new Member(0L, ANGIE, "b"));
         memberRepository.save(new Member(0L, CHUNSIK, "c"));
 
-        heartRepository = new HeartMemoryRepository();
-        rankingService = new RankingService(heartRepository, memberRepository);
-        heartRepository.add(SEUNGPANG);
+        rankingRepository = new RankingMemoryRepository();
+        rankingService = new RankingService(rankingRepository, memberRepository);
+        rankingRepository.add(SEUNGPANG);
     }
 
     @Test
@@ -50,9 +50,9 @@ class RankingServiceTest {
         assertThat(rank).isEqualTo(1L);
 
         final String id = "angie";
-        heartRepository.add(id);
-        heartRepository.increaseCount(id);
-        heartRepository.increaseCount(id);
+        rankingRepository.add(id);
+        rankingRepository.increaseCount(id);
+        rankingRepository.increaseCount(id);
 
         assertThat(rankingService.findRankByName(SEUNGPANG)).isEqualTo(2L);
     }
@@ -67,18 +67,18 @@ class RankingServiceTest {
     @Test
     @DisplayName("실시간 랭킹 목록을 조회한다.")
     void findRealTimeRanking() {
-        heartRepository.add(ANGIE);
-        heartRepository.add(CHUNSIK);
-        heartRepository.increaseCount(SEUNGPANG);
-        heartRepository.increaseCount(SEUNGPANG);
-        heartRepository.increaseCount(ANGIE);
+        rankingRepository.add(ANGIE);
+        rankingRepository.add(CHUNSIK);
+        rankingRepository.increaseCount(SEUNGPANG);
+        rankingRepository.increaseCount(SEUNGPANG);
+        rankingRepository.increaseCount(ANGIE);
         final List<RankingResponse> rankings = List.of(
-                new RankingResponse(heartRepository.findRankByName(SEUNGPANG), SEUNGPANG,
-                        heartRepository.findByName(SEUNGPANG), memberRepository.getProfileImageUrlByName(SEUNGPANG)),
-                new RankingResponse(heartRepository.findRankByName(ANGIE), ANGIE,
-                        heartRepository.findByName(ANGIE), memberRepository.getProfileImageUrlByName(ANGIE)),
-                new RankingResponse(heartRepository.findRankByName(CHUNSIK), CHUNSIK,
-                        heartRepository.findByName(CHUNSIK), memberRepository.getProfileImageUrlByName(CHUNSIK))
+                new RankingResponse(rankingRepository.findRankByName(SEUNGPANG), SEUNGPANG,
+                        rankingRepository.findByName(SEUNGPANG), memberRepository.getProfileImageUrlByName(SEUNGPANG)),
+                new RankingResponse(rankingRepository.findRankByName(ANGIE), ANGIE,
+                        rankingRepository.findByName(ANGIE), memberRepository.getProfileImageUrlByName(ANGIE)),
+                new RankingResponse(rankingRepository.findRankByName(CHUNSIK), CHUNSIK,
+                        rankingRepository.findByName(CHUNSIK), memberRepository.getProfileImageUrlByName(CHUNSIK))
         );
 
         assertThat(rankingService.findLiveRanking(0, 3))
@@ -89,7 +89,7 @@ class RankingServiceTest {
     @DisplayName("없는 member로 조회할 경우 예외 발생")
     void findProfileImageUrlByNameOrThrow() {
         String invalidName = "invalidName";
-        heartRepository.add(invalidName);
+        rankingRepository.add(invalidName);
 
         assertThatThrownBy(() -> rankingService.findLiveRanking(1, 2))
                 .isInstanceOf(NotFoundMemberException.class);
