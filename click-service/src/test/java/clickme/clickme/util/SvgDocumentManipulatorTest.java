@@ -4,8 +4,8 @@ import clickme.clickme.domain.Count;
 import clickme.clickme.domain.CountLengthCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.w3c.dom.Document;
@@ -25,48 +25,50 @@ class SvgDocumentManipulatorTest {
     void setUp() {
         svgDocumentManipulator = new SvgDocumentManipulator(
                 new TextElementManipulator(),
-                new RectElementManipulator(),
-                new EmojiElementManipulator(),
                 new AnimateElementManipulator()
         );
         svgDocumentFactory = new SvgDocumentFactory(new DefaultResourceLoader(), new EmojiRandomIndexGenerator());
     }
 
-    @Test
-    @DisplayName("text를 정상적으로 작성한다.")
-    void drawText() throws IOException {
-        Document doc = svgDocumentFactory.createEmojiDocument();
-
-        final Count count = new Count(10L);
-        final Document resultDoc = svgDocumentManipulator.drawText(doc, count);
-
-        assertThat(resultDoc.getElementById("my-text")
-                .getTextContent()).isEqualTo(count.getValue());
-    }
-
     @ParameterizedTest(name = "카운트 수가 {0}인 경우")
-    @ValueSource(ints = {1,10,100,1000,10000})
-    @DisplayName("카운트 수의 길이에 따라 너비와 높이가 정상적으로 설정된다")
-    void calculateSizeBasedOnCountLength(final long num) throws IOException {
+    @ValueSource(ints = {1, 10, 100, 1000, 10000, 10000, 100000})
+    @DisplayName("카운트 수의 길이에 따라 텍스트의 설정값들이 정상적으로 설정된다.")
+    void drawText(final long num) throws IOException {
         Document doc = svgDocumentFactory.createEmojiDocument();
 
         final Count count = new Count(num);
-        final Document resultDoc = svgDocumentManipulator.calculateSizeBasedOnCountLength(doc, count);
+        final Document resultDoc = svgDocumentManipulator.drawText(doc, count);
 
-        final Element rectElement = resultDoc.getElementById("my-rect");
-        final Element emojiElement = resultDoc.getElementById("emoji");
-        final CountLengthCategory category = CountLengthCategory.findCategory(count.getLength());
+        final Element textElement = resultDoc.getElementById("my-text");
         assertAll(
-                () -> assertThat(rectElement.getAttribute("width"))
-                        .isEqualTo(category.getWidth()),
-                () -> assertThat(rectElement.getAttribute("height"))
-                        .isEqualTo(category.getHeight()),
-                () -> assertThat(emojiElement.getAttribute("viewBox"))
-                        .isEqualTo(createViewBox(category))
+                () -> assertThat(textElement.getTextContent()).isEqualTo(count.getValue()),
+                () -> assertThat(textElement.getAttribute("x"))
+                        .isEqualTo(CountLengthCategory.findCategory(count.getLength()).getX()),
+                () -> assertThat(textElement.getAttribute("y"))
+                        .isEqualTo(CountLengthCategory.findCategory(count.getLength()).getY())
         );
     }
 
-    private String createViewBox(CountLengthCategory category) {
-        return "0 0 %s %s".formatted(category.getWidth(), category.getHeight());
+    @ParameterizedTest(name = "카운트 수가 {0}인 경우")
+    @CsvSource({
+            "1,360 143.5 145.5,0 143.5 145.5",
+            "2,0 143.5 145.5,360 143.5 145.5",
+            "21,360 143.5 145.5,0 143.5 145.5",
+            "44,0 143.5 145.5,360 143.5 145.5",
+    })
+    @DisplayName("카운트 수의 길이에 따라 텍스트의 x,y 값이 정상적으로 설정된다.")
+    void executeEffect(final long num, final String from, final String to) throws IOException {
+        Document doc = svgDocumentFactory.createEmojiDocument();
+
+        final Count count = new Count(num);
+        final Document resultDoc = svgDocumentManipulator.executeEffect(doc, count);
+
+        final Element animateElement = resultDoc.getElementById("animate");
+        assertAll(
+                () -> assertThat(animateElement.getAttribute("from"))
+                        .isEqualTo(from),
+                () -> assertThat(animateElement.getAttribute("to"))
+                        .isEqualTo(to)
+        );
     }
 }

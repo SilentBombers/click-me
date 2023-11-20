@@ -2,25 +2,25 @@ package clickme.clickme.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CountLengthCategoryTest {
 
     @ParameterizedTest(name = "길이가 {0}인 경우")
-    @ValueSource(ints = {1,2,3,4})
-    @DisplayName("4이하일 경우 Category는 LESS_OR_EQUAL_TO_FOUR이다.")
-    void findCategoryByLessOrEqualToFour(int length) {
-        assertThat(CountLengthCategory.findCategory(length))
-                .isEqualTo(CountLengthCategory.LESS_OR_EQUAL_TO_FOUR);
-    }
-
-    @ParameterizedTest(name = "길이가 {0}인 경우")
-    @ValueSource(ints = {5,6,10,20,30})
-    @DisplayName("4를 초과할 경우 Category는 GREATER_THAN_FOUR이다.")
-    void findCategoryByGreaterThanFour(int length) {
-        assertThat(CountLengthCategory.findCategory(length))
-                .isEqualTo(CountLengthCategory.GREATER_THAN_FOUR);
+    @CsvSource({
+            "1,ONE",
+            "2,TWO",
+            "3,THREE",
+            "4,FOUR",
+            "5,FIVE",
+            "6,GREATER_THAN_FIVE",
+            "7,GREATER_THAN_FIVE"
+    })
+    @DisplayName("길이에 따라 category를 알맞게 찾아온다.")
+    void findCategoryTest(int length, CountLengthCategory expected) {
+        final CountLengthCategory category = CountLengthCategory.findCategory(length);
+        assertThat(category).isEqualTo(expected);
     }
 }

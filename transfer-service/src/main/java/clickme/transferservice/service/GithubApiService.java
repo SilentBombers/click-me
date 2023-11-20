@@ -1,13 +1,15 @@
 package clickme.transferservice.service;
 
+import clickme.transferservice.service.exception.GithubApiException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,7 +19,7 @@ import java.net.http.HttpResponse;
 @Service
 @RequiredArgsConstructor
 public class GithubApiService {
-    private static final String GITHUB_API_URL = "https://api.github.com/repos/{nickname}/contributors";
+    private static final String GITHUB_API_URL = "https://api.github.com/users/{nickname}";
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -30,15 +32,19 @@ public class GithubApiService {
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == HttpStatus.OK.value()) {
-                String responseBody = response.body();
-                GithubContributor[] contributors = objectMapper.readValue(responseBody, GithubContributor[].class);
-                avatarUrl = getFirstAvatarUrl(contributors);
-            }
-        } catch (Exception e) {
-            log.error("해당 닉네임으로 github에서 데이터를 가져 올 수 없습니다. nickname: {}", nickname);
+            avatarUrl = parseGithubUser(response, avatarUrl);
+        } catch (IOException | InterruptedException | GithubApiException e) {
+            throw new GithubApiException("해당 닉네임으로 github에서 데이터를 가져 올 수 없습니다. nickname: " + nickname, e);
         }
+        return avatarUrl;
+    }
 
+    private String parseGithubUser(final HttpResponse<String> response, String avatarUrl) throws IOException {
+        if (response.statusCode() == HttpStatus.OK.value()) {
+            String responseBody = response.body();
+            GithubUser user = objectMapper.readValue(responseBody, GithubUser.class);
+            avatarUrl = user.getAvatarUrl();
+        }
         return avatarUrl;
     }
 
@@ -53,12 +59,5 @@ public class GithubApiService {
                 .uri(uri)
                 .GET()
                 .build();
-    }
-
-    private String getFirstAvatarUrl(final GithubContributor[] contributors) {
-        if (contributors != null && contributors.length > 0) {
-            return contributors[0].getAvatarUrl();
-        }
-        return "";
     }
 }

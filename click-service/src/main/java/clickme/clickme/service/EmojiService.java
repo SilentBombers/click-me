@@ -30,9 +30,9 @@ public class EmojiService {
 
         final Count count = getClickCount(id);
         final Document textDrawnDoc = svgDocumentManipulator.drawText(doc, count);
-        final Document sizeChangedDoc = svgDocumentManipulator.calculateSizeBasedOnCountLength(textDrawnDoc, count);
+        final Document animatedDoc = svgDocumentManipulator.executeEffect(textDrawnDoc, count);
 
-        return transformSvgToString(sizeChangedDoc);
+        return transformSvgToString(animatedDoc);
     }
 
     private Count getClickCount(final String URI) {

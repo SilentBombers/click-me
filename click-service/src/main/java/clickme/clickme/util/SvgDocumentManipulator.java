@@ -9,22 +9,14 @@ import org.w3c.dom.Element;
 public class SvgDocumentManipulator {
 
     private static final String TEXT_ELEMENT_ID = "my-text";
-    private static final String RECT_ELEMENT_ID = "my-rect";
-    private static final String EMOJI_ELEMENT_ID = "emoji";
     private static final String ANIMATE_ELEMENT_ID = "animate";
 
     private final TextElementManipulator textElementManipulator;
-    private final RectElementManipulator rectElementManipulator;
-    private final EmojiElementManipulator emojiElementManipulator;
     private final AnimateElementManipulator animateElementManipulator;
 
     public SvgDocumentManipulator(final TextElementManipulator textElementManipulator,
-                                  final RectElementManipulator rectElementManipulator,
-                                  final EmojiElementManipulator emojiElementManipulator,
                                   final AnimateElementManipulator animateElementManipulator) {
         this.textElementManipulator = textElementManipulator;
-        this.rectElementManipulator = rectElementManipulator;
-        this.emojiElementManipulator = emojiElementManipulator;
         this.animateElementManipulator = animateElementManipulator;
     }
 
@@ -36,13 +28,8 @@ public class SvgDocumentManipulator {
         return copyDoc;
     }
 
-    public Document calculateSizeBasedOnCountLength(final Document doc, final Count count) {
+    public Document executeEffect(final Document doc, final Count count) {
         Document copyDoc = (Document) doc.cloneNode(true);
-        Element rectElement = copyDoc.getElementById(RECT_ELEMENT_ID);
-        rectElementManipulator.configureRectSizeBasedOnCountLength(rectElement, count);
-
-        Element emojiElement = copyDoc.getElementById(EMOJI_ELEMENT_ID);
-        emojiElementManipulator.configureEmojiSizeBasedOnCountLength(emojiElement, count);
 
         Element animatorElement = copyDoc.getElementById(ANIMATE_ELEMENT_ID);
         animateElementManipulator.configureAnimateDirection(animatorElement, count);
