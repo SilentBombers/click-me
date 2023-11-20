@@ -1,7 +1,7 @@
 package clickme.clickme.config;
 
-import clickme.clickme.repository.HeartMemoryRepository;
-import clickme.clickme.repository.HeartRepository;
+import clickme.clickme.ranking.domain.HeartMemoryRepository;
+import clickme.clickme.ranking.domain.HeartRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
