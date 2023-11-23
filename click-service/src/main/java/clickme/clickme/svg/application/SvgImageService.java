@@ -1,5 +1,6 @@
 package clickme.clickme.svg.application;
 
+import clickme.clickme.ranking.domain.DailyClickRepository;
 import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.svg.domain.count.Count;
 import clickme.clickme.svg.domain.document.SvgDocumentFactory;
@@ -20,6 +21,7 @@ import java.io.StringWriter;
 public class SvgImageService {
 
     private final RankingRepository rankingRepository;
+    private final DailyClickRepository dailyClickRepository;
     private final SvgDocumentFactory svgDocumentFactory;
     private final SvgDocumentManipulator svgDocumentManipulator;
 
@@ -41,14 +43,15 @@ public class SvgImageService {
         final Count count = new Count(rankingRepository.findByName(URI));
         if (count.isZero()) {
             rankingRepository.add(URI);
+            dailyClickRepository.add(URI);
         }
         increaseCount(URI);
-        rankingRepository.increaseCount(URI);
         return count.increase();
     }
 
     private void increaseCount(final String URI) {
         rankingRepository.increaseCount(URI);
+        dailyClickRepository.increaseCount(URI);
     }
 
     private String transformSvgToString(final Document doc) throws TransformerException {

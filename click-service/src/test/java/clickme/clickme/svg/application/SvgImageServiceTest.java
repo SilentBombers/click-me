@@ -1,5 +1,7 @@
 package clickme.clickme.svg.application;
 
+import clickme.clickme.ranking.domain.DailyClickMemoryRepository;
+import clickme.clickme.ranking.domain.DailyClickRepository;
 import clickme.clickme.ranking.domain.RankingMemoryRepository;
 import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.svg.domain.document.SvgDocumentFactory;
@@ -23,6 +25,7 @@ class SvgImageServiceTest {
 
     private SvgImageService svgImageService;
     private RankingRepository rankingRepository;
+    private DailyClickRepository dailyClickRepository;
 
     @Autowired
     private SvgDocumentFactory svgDocumentFactory;
@@ -33,7 +36,8 @@ class SvgImageServiceTest {
     @BeforeEach
     void setUp() {
         rankingRepository = new RankingMemoryRepository();
-        svgImageService = new SvgImageService(rankingRepository, svgDocumentFactory, svgDocumentManipulator);
+        dailyClickRepository = new DailyClickMemoryRepository();
+        svgImageService = new SvgImageService(rankingRepository, dailyClickRepository, svgDocumentFactory, svgDocumentManipulator);
         rankingRepository.add(SEUNGPANG);
     }
 

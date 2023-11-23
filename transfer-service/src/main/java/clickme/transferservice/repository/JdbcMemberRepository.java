@@ -18,7 +18,7 @@ public class JdbcMemberRepository implements MemberRepository {
 
     @Override
     public void batchUpdateToUpsertMember(final Chunk<? extends UpsertMember> members) {
-        String sql = "INSERT INTO member (nickname, click_count) VALUES (?, ?)" +
+        String sql = "INSERT INTO member (name, click_count) VALUES (?, ?)" +
                 " ON DUPLICATE KEY UPDATE click_count = VALUES(click_count)";
         jdbcTemplate.batchUpdate(sql, new UpsertMemberBatchPreparedStatementSetter(members));
     }
