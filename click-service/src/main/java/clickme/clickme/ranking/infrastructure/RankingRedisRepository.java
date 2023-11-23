@@ -9,7 +9,6 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -38,11 +37,6 @@ public class RankingRedisRepository implements RankingRepository {
     @Override
     public void add(final String name) {
         rankings.add(RANKING_KEY, name, 0);
-    }
-
-    @Override
-    public void saveChanged(final String name) {
-        changedMembers.add(CHANGED_KEY.formatted(LocalDateTime.now().format(formatter)), name);
     }
 
     @Override

@@ -9,7 +9,7 @@ public class DailyClickMemoryRepository implements DailyClickRepository {
 
     @Override
     public void increaseCount(final String name) {
-        dailyClickCounts.put(name, dailyClickCounts.get(name) + 1);
+        dailyClickCounts.put(name, dailyClickCounts.getOrDefault(name, 0L) + 1);
     }
 
     @Override
