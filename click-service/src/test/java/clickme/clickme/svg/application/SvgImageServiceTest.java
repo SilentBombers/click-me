@@ -43,12 +43,23 @@ class SvgImageServiceTest {
 
     @Test
     @DisplayName("클릭 했을 경우 카운트가 오르고 svg 이미지가 정상적으로 호출된다.")
-    void heart() throws IOException, TransformerException {
-        final String heart = svgImageService.generateSvgImage(SEUNGPANG);
+    void generateClickableSvgImage() throws IOException, TransformerException {
+        final String svg = svgImageService.generateClickableSvgImage(SEUNGPANG);
 
         assertAll(
                 () -> assertThat(rankingRepository.findByName(SEUNGPANG)).isEqualTo(1L),
-                () -> assertThat(heart.contains("emoji")).isTrue()
+                () -> assertThat(svg.contains("emoji")).isTrue()
+        );
+    }
+
+    @Test
+    @DisplayName("카운트가 오르지 않고 svg 이미지가 정상적으로 호출된다.")
+    void generateNonClickableSvgImage() throws IOException, TransformerException {
+        final String svg = svgImageService.generateNonClickableSvgImage(SEUNGPANG);
+
+        assertAll(
+                () -> assertThat(rankingRepository.findByName(SEUNGPANG)).isEqualTo(0L),
+                () -> assertThat(svg.contains("emoji")).isTrue()
         );
     }
 
@@ -59,8 +70,8 @@ class SvgImageServiceTest {
             rankingRepository.increaseCount(SEUNGPANG);
         }
 
-        final String heart = svgImageService.generateSvgImage(SEUNGPANG);
+        final String svg = svgImageService.generateClickableSvgImage(SEUNGPANG);
 
-        assertThat(heart.contains("99999+")).isTrue();
+        assertThat(svg.contains("99999+")).isTrue();
     }
 }

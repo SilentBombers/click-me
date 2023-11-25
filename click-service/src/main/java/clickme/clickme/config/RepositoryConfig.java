@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class HeartRepositoryConfig {
+public class RepositoryConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public RankingRepository heartRepository() {
+    public RankingRepository rankingRepository() {
         return new RankingMemoryRepository();
     }
 
