@@ -8,6 +8,7 @@ import clickme.transferservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
@@ -30,12 +31,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
-import java.util.Queue;
 
 @Configuration
 @RequiredArgsConstructor
-public class MemberUpsertJobConfig {
+public class MemberUpsertJobConfig  {
 
     private static final int CHUCK_SIZE = 1000;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -53,7 +52,6 @@ public class MemberUpsertJobConfig {
     @StepScope
     public ItemStreamReader<String> reader() {
         final String key = REDIS_KEY.formatted(LocalDateTime.now().format(formatter));
-        System.out.println(key);
         return new RedisPagingItemReader(key, redisTemplate);
     }
 

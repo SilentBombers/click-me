@@ -25,7 +25,7 @@ public class JdbcMemberRepository implements MemberRepository {
 
     @Override
     public void batchUpdateToDailyClickCounts(final Chunk<? extends DailyClickCount> members) {
-        String sql = "INSERT INTO daily_click_count (name, date, click_count) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO click_count_history (name, date, click_count) VALUES (?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new InsertDailyClickCountBatchPreparedStatementStatementSetter(members));
     }
 

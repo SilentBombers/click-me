@@ -4,7 +4,6 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
@@ -22,7 +21,6 @@ public class RedisPagingItemReader implements ItemStreamReader<String> {
     private Queue<String> items = new LinkedList<>();
 
     public RedisPagingItemReader(String key, RedisTemplate<String, String> redisTemplate) {
-        System.out.println(key);
         this.key = key;
         this.redisTemplate = redisTemplate;
     }

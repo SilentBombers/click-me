@@ -4,12 +4,10 @@ import clickme.transferservice.job.member.dto.ProfileUpdateMember;
 import clickme.transferservice.service.GithubApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
-@Component
 @RequiredArgsConstructor
 public class MemberItemProcessor implements ItemProcessor<NicknameMember, ProfileUpdateMember> {
 

@@ -16,7 +16,7 @@ public class RankingV1Controller {
     private final RankingService rankingService;
 
     @GetMapping("/{name}")
-    public ResponseEntity<Long> findRankByClicks(@PathVariable final String name) {
+    public ResponseEntity<Long> findRankByName(@PathVariable final String name) {
         return ResponseEntity.ok()
                 .body(rankingService.findRankByName(name));
     }
