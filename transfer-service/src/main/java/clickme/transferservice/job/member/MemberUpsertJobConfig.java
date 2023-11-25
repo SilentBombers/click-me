@@ -1,6 +1,8 @@
 package clickme.transferservice.job.member;
 
-import clickme.transferservice.domain.UpsertMember;
+import clickme.transferservice.job.member.dto.DailyClickCount;
+import clickme.transferservice.job.member.dto.UpsertMember;
+import clickme.transferservice.repository.DailyClickRepository;
 import clickme.transferservice.repository.HeartRepository;
 import clickme.transferservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +19,14 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.util.Pair;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import java.time.LocalDate;
 
 @Configuration
 @RequiredArgsConstructor
@@ -33,40 +39,47 @@ public class MemberUpsertJobConfig {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
+    private final DailyClickRepository dailyClickRepository;
     private final HeartRepository heartRepository;
     private final MemberUpsertAfterJobListener memberUpsertAfterJobListener;
 
     @Bean
     @StepScope
     public ItemStreamReader<String> reader() {
-        return new RedisCursorItemReader(REDIS_KEY, redisTemplate);
+        return new RedisPagingItemReader(REDIS_KEY, redisTemplate);
     }
 
     @Bean
     @StepScope
-    public ItemProcessor<String, UpsertMember> processor() {
-        return nickname -> {
-            Long clickCount = heartRepository.getClickCount(nickname);
-            return new UpsertMember(nickname, clickCount);
+    public ItemProcessor<String, Pair<UpsertMember, DailyClickCount>> processor(@Value("#{jobParameters['createAt']}") String createAt) {
+        return name -> {
+            Long clickCount = heartRepository.getClickCount(name);
+            Long dailyClickCount = dailyClickRepository.getClickCount(name);
+            System.out.println(createAt);
+            return Pair.of(
+                    new UpsertMember(name, clickCount),
+                    new DailyClickCount(name, LocalDate.parse(createAt), dailyClickCount)
+            );
         };
     }
 
     @Bean
     @StepScope
-    public ItemWriter<UpsertMember> writer() {
+    public ItemWriter<Pair<UpsertMember, DailyClickCount>> writer() {
         return new MysqlItemWriter(memberRepository);
     }
 
     @Bean
     @JobScope
     public Step syncRedisToMySqlStep(final ItemReader<String> reader,
-                                     final ItemWriter<UpsertMember> writer,
+                                     final ItemWriter<Pair<UpsertMember, DailyClickCount>> writer,
+                                     final ItemProcessor<String, Pair<UpsertMember, DailyClickCount>> processor,
                                      final JobRepository jobRepository,
                                      final PlatformTransactionManager transactionManager) {
         return new StepBuilder(STEP_NAME, jobRepository)
-                .<String, UpsertMember>chunk(CHUCK_SIZE, transactionManager)
+                .<String, Pair<UpsertMember, DailyClickCount>>chunk(CHUCK_SIZE, transactionManager)
                 .reader(reader)
-                .processor(processor())
+                .processor(processor)
                 .writer(writer)
                 .build();
     }
