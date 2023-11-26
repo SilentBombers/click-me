@@ -12,6 +12,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.projectlombok:lombok'
 	implementation 'org.apache.xmlgraphics:batik-all:1.17'
+	implementation 'org.flywaydb:flyway-mysql'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 }

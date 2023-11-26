@@ -4,8 +4,8 @@ create table member
     click_count bigint not null,
     name     varchar(255) not null,
     profile_image_url  varchar(255),
-    created_at datetime not null default current_date,
-    last_modified_at datetime not null default current_date,
+    created_at datetime not null default now(),
+    last_modified_at datetime not null default now(),
     primary key (id)
 ) engine = InnoDB default charset utf8mb4;
 
