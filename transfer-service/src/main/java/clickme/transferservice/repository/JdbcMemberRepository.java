@@ -31,7 +31,7 @@ public class JdbcMemberRepository implements MemberRepository {
 
     @Override
     public void batchUpdateToProfileUpdateMember(final Chunk<? extends ProfileUpdateMember> members) {
-        String sql = "UPDATE member SET profile_image_url = ? WHERE nickname = ?";
+        String sql = "UPDATE member SET profile_image_url = ? WHERE name = ?";
         jdbcTemplate.batchUpdate(sql, new ProfileUpdateMemberBatchPreparedStatementSetter(members));
     }
 }

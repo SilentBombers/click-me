@@ -6,7 +6,6 @@ import clickme.transferservice.service.GithubApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -20,6 +19,7 @@ import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -31,6 +31,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Configuration
+@ConditionalOnProperty(value = "spring.batch.job.name", havingValue="profileImageUpdateJob")
 public class UpdateMemberProfileImageJobConfig {
 
     private static final String JOB_NAME = "profileImageUpdateJob";
@@ -43,20 +44,20 @@ public class UpdateMemberProfileImageJobConfig {
 
     @Bean
     @StepScope
-    public JdbcPagingItemReader<NicknameMember> jdbcPagingItemReader(
+    public JdbcPagingItemReader<NameMember> jdbcPagingItemReader(
             final DataSource dataSource,
             @Value("#{jobParameters['createAt']}") final String createAt
     ) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("createAt", createAt);
 
-        return new JdbcPagingItemReaderBuilder<NicknameMember>()
+        return new JdbcPagingItemReaderBuilder<NameMember>()
                 .name("memberItemReader")
                 .dataSource(dataSource)
                 .queryProvider(queryProvider())
                 .parameterValues(parameters)
                 .pageSize(PAGE_SIZE)
-                .rowMapper(new BeanPropertyRowMapper<>(NicknameMember.class))
+                .rowMapper(new BeanPropertyRowMapper<>(NameMember.class))
                 .build();
     }
 
@@ -79,7 +80,7 @@ public class UpdateMemberProfileImageJobConfig {
 
     @Bean
     @StepScope
-    public ItemProcessor<NicknameMember, ProfileUpdateMember> memberItemProcessor(final GithubApiService githubApiService) {
+    public ItemProcessor<NameMember, ProfileUpdateMember> memberItemProcessor(final GithubApiService githubApiService) {
         return new MemberItemProcessor(githubApiService);
     }
 
@@ -93,11 +94,11 @@ public class UpdateMemberProfileImageJobConfig {
     @JobScope
     public Step profileImageUpdateStep(final JobRepository jobRepository,
                                        final PlatformTransactionManager transactionManager,
-                                       final JdbcPagingItemReader<NicknameMember> reader,
-                                       final ItemProcessor<NicknameMember, ProfileUpdateMember> processor,
+                                       final JdbcPagingItemReader<NameMember> reader,
+                                       final ItemProcessor<NameMember, ProfileUpdateMember> processor,
                                        final ItemWriter<ProfileUpdateMember> writer) {
         return new StepBuilder(STEP_NAME, jobRepository)
-                .<NicknameMember, ProfileUpdateMember>chunk(CHUCK_SIZE, transactionManager)
+                .<NameMember, ProfileUpdateMember>chunk(CHUCK_SIZE, transactionManager)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)

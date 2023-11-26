@@ -14,6 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     default String getProfileImageUrlByName(final String name) {
         return findProfileImageUrlByName(name)
-                .orElseThrow(() -> new NotFoundMemberException(name));
+                .orElseGet(() -> "https://avatars.githubusercontent.com/u/134919246?v=4");
     }
 }

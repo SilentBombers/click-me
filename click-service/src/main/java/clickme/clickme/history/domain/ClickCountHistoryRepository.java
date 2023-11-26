@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ClickCountHistoryRepository extends JpaRepository<ClickCountHistory, Long> {
 
-    List<ClickCountHistory> findClickCountHistoryByNameAndDateBetween(final String name, final LocalDate startDate, final LocalDate endDate);
+    List<ClickCountHistory> findClickCountHistoryByNameAndDateBetweenOrderByDate(final String name, final LocalDate startDate, final LocalDate endDate);
 }

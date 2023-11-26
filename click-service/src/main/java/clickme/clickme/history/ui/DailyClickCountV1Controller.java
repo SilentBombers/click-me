@@ -19,7 +19,9 @@ public class DailyClickCountV1Controller {
     private final ClickCountHistoryService clickCountHistoryService;
 
     @GetMapping("/{name}")
-    public ResponseEntity<List<ClickCountHistoryResponse>> findClickCountHistoryByNameAndDateBetween(@PathVariable final String name) {
+    public ResponseEntity<List<ClickCountHistoryResponse>> findClickCountHistoryByNameAndDateBetween(
+            @PathVariable final String name
+    ) {
         return ResponseEntity.ok()
                 .body(clickCountHistoryService.findClickCountHistoryByNameAndDateBetween(name));
     }
