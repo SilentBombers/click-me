@@ -38,11 +38,11 @@ jobs:
           java-version: '17'
 
       - name: Run tests
-        run: ./gradlew test
+        run: ../gradlew test
 
       - name: Docker Build
         if: success()
-        run: ./gradlew docker
+        run: ../gradlew docker
 
       - name: Docker tag
         env:
