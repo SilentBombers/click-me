@@ -1,0 +1,55 @@
+name: cd for click-service
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
+  REGION: ${{ secrets.REGION }}
+  WORKSTATION_IMAGE: click-service
+  VERSION: '1.0.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./click-service
+
+    steps:
+      - name: Check out Repository
+        uses: actions/checkout@v3
+
+      - name: Set up google auth
+      - id: 'auth'
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.GCE_SA_KEY }}'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Set up Java version
+        uses: actions/setup-java@v1
+        with:
+            java-version: '17'
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Docker Build
+        if: success()
+        run: ./gradlew docker
+
+      - name: Docker tag
+        env:
+          image: ${{env.REGION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.DOCKER_REPO}}/${{env.WORKSTATION_IMAGE}}
+        run: docker tag click-me-click-service:${env.VERSION} ${{env.image}}
+
+      - name: Docker Push
+        run: docker push ${{env.image}}
+
+        
