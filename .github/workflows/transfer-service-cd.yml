@@ -21,6 +21,18 @@ jobs:
       - name: Check out Repository
         uses: actions/checkout@v3
 
+      - name: Set Application Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./src/main/resources/application-prod.yml
+        env:
+          spring.data.redis.host: ${{secrets.REDIS_HOST}}
+          spring.data.redis.port: ${{secrets.REDIS_PORT}}
+          spring.datasource.url: ${{secrets.DB_URL}}
+          spring.datasource.username: ${{secrets.DB_USERNAME}}
+          spring.datasource.password: ${{secrets.DB_PASSWORD}}
+          spec.template.spec.containers.image: ${{env.image}}
+
       - name: Set up google auth
         id: 'auth'
         uses: google-github-actions/auth@v1
@@ -47,7 +59,7 @@ jobs:
       - name: Docker tag
         env:
           image: ${{env.REGION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.DOCKER_REPO}}/${{env.WORKSTATION_IMAGE}}
-        run: docker tag click-me-click-service:${env.VERSION} ${{env.image}}
+        run: docker tag click-me-${{env.WORKSTATION_IMAGE}}:${env.VERSION} ${{env.image}}
 
       - name: Docker Push
         run: docker push ${{env.image}}
