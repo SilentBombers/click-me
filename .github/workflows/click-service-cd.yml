@@ -24,7 +24,7 @@ jobs:
       - name: Set Kubernetes Yaml
         uses: microsoft/variable-substitution@v1
         with:
-          files: ./resources.yaml
+          files: ./click-service/resources.yaml
         env:
           image: ${{env.REGION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.DOCKER_REPO}}/${{env.WORKSTATION_IMAGE}}
           spec.template.spec.containers.image: ${{env.image}}
