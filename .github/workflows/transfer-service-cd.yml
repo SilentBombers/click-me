@@ -24,7 +24,7 @@ jobs:
       - name: Set Application Yml
         uses: microsoft/variable-substitution@v1
         with:
-          files: ./src/main/resources/application-prod.yml
+          files: ./transfer-service/src/main/resources/application-prod.yml
         env:
           spring.data.redis.host: ${{secrets.REDIS_HOST}}
           spring.data.redis.port: ${{secrets.REDIS_PORT}}
