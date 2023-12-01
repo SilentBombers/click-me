@@ -1,8 +1,7 @@
 package clickme.transferservice.job.member;
 
-import clickme.transferservice.domain.ProfileUpdateMember;
+import clickme.transferservice.job.member.dto.ProfileUpdateMember;
 import clickme.transferservice.service.GithubApiService;
-import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;

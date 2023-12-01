@@ -1,6 +1,6 @@
 package clickme.transferservice.repository;
 
-import clickme.transferservice.domain.ProfileUpdateMember;
+import clickme.transferservice.job.member.dto.ProfileUpdateMember;
 import org.springframework.batch.item.Chunk;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 

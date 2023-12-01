@@ -1,7 +1,8 @@
 package clickme.transferservice.repository;
 
-import clickme.transferservice.domain.ProfileUpdateMember;
-import clickme.transferservice.domain.UpsertMember;
+import clickme.transferservice.job.member.dto.DailyClickCount;
+import clickme.transferservice.job.member.dto.ProfileUpdateMember;
+import clickme.transferservice.job.member.dto.UpsertMember;
 import org.springframework.batch.item.Chunk;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,12 @@ public class JdbcMemberRepository implements MemberRepository {
         String sql = "INSERT INTO member (nickname, click_count) VALUES (?, ?)" +
                 " ON DUPLICATE KEY UPDATE click_count = VALUES(click_count)";
         jdbcTemplate.batchUpdate(sql, new UpsertMemberBatchPreparedStatementSetter(members));
+    }
+
+    @Override
+    public void batchUpdateToDailyClickCounts(final Chunk<? extends DailyClickCount> members) {
+        String sql = "INSERT INTO daily_click_count (name, date, click_count) VALUES (?, ?, ?)";
+        jdbcTemplate.batchUpdate(sql, new InsertDailyClickCountBatchPreparedStatementStatementSetter(members));
     }
 
     @Override
