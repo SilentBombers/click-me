@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: click-service
+spec:
+  selector:
+    matchLabels:
+      app: click-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: click-service
+    spec:
+      containers:
+        - name: core
+          image: ${image}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: click-me-nginx
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: click-service
+
