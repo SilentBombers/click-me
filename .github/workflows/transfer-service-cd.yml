@@ -57,7 +57,7 @@ jobs:
       - name: Docker tag
         env:
           image: ${{env.REGION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.DOCKER_REPO}}/${{env.WORKSTATION_IMAGE}}
-        run: docker tag click-me-${{env.WORKSTATION_IMAGE}}:${env.VERSION} ${{env.image}}
+        run: docker tag click-me-${{env.WORKSTATION_IMAGE}}:${{env.VERSION}} ${{env.image}}
 
       - name: Docker Push
         run: docker push ${{env.image}}

@@ -67,7 +67,7 @@ jobs:
         run: ../gradlew docker
 
       - name: Docker tag
-        run: docker tag click-me-${{env.WORKSTATION_IMAGE}}:${env.VERSION} ${{env.image}}
+        run: docker tag click-me-${{env.WORKSTATION_IMAGE}}:${{env.VERSION}} ${{env.image}}
 
       - name: Docker Push
         run: docker push ${{env.image}}
