@@ -25,12 +25,6 @@ jobs:
       - name: Check out Repository
         uses: actions/checkout@v3
 
-      - name: Set Kubernetes Yaml
-        run : |
-          envsubst < ./resources.yaml > ./resources.yaml
-        env:
-          image: ${{env.IMAGE}}
-
       - name: Set Application Yml
         run : |
           envsubst < ./src/main/resources/application-prod.yml > ./src/main/resources/application-prod.yml
@@ -47,16 +41,13 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCE_SA_KEY }}
 
-      - id: get-credentials
-        uses: google-github-actions/get-gke-credentials@v1
-        with:
-          cluster_name: autopilot-cluster-1
-          location: ${{env.REGION}}
-
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCE_SA_KEY }}
+          install_components: gke-gcloud-auth-plugin
+          export_default_credentials: true
 
       - name: Use gcloud CLI
         run: gcloud info
@@ -84,5 +75,8 @@ jobs:
         run: docker push ${{env.IMAGE}}
 
       - name: Deploy
-        run: kubectl apply -f ./resources.yaml
+        run: |
+          gcloud container clusters get-credentials autopilot-cluster-1 --region ${{env.REGION}} --project ${{env.PROJECT_ID}}
+          sed "s,\${image},${{ env.IMAGE }},g" resources.yaml > deployment.yaml
+          kubectl apply -f ./deployment.yaml
         

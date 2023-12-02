@@ -23,17 +23,3 @@ spec:
             requests:
               cpu: 500m
               memory: 2000Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: click-me-nginx
-spec:
-  type: NodePort
-  ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-  selector:
-    app: click-service
-
