@@ -1,7 +1,10 @@
 name: cd for transfer-service
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+    paths:
+      - transfer-service/**
+      - .github/**
 
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}

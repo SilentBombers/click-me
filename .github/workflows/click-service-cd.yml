@@ -1,6 +1,6 @@
 name: cd for click-service
 on:
-  pull_request:
+  push:
     branches: [ main ]
     paths:
       - click-service/**
