@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: transfer-service
-              image: ${image}
+              image: ${image}:latest
               args:
                 - "--spring.batch.job.name=syncRedisToMysqlJob"
               env:
@@ -30,7 +30,7 @@ spec:
         spec:
           containers:
             - name: transfer-service
-              image: ${image}
+              image: ${image}:latest
               args:
                 - "--spring.batch.job.name=profileImageUpdateJob"
               env:
