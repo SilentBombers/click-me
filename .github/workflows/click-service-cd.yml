@@ -27,13 +27,14 @@ jobs:
 
       - name: Set Application Yml
         run : |
-          envsubst < ./src/main/resources/application-prod.yml > ./src/main/resources/application-prod.yml
+          envsubst < ./src/main/resources/application-prod.yml > ./src/main/resources/application-prod.yml.temp
+          mv ./src/main/resources/application-prod.yml.temp ./src/main/resources/application-prod.yml
         env:
-          spring.data.redis.host: ${{secrets.REDIS_HOST}}
-          spring.data.redis.port: ${{secrets.REDIS_PORT}}
-          spring.datasource.url: ${{secrets.DB_URL}}
-          spring.datasource.username: ${{secrets.DB_USERNAME}}
-          spring.datasource.password: ${{secrets.DB_PASSWORD}}
+          REDIS_HOST: ${{secrets.REDIS_HOST}}
+          REDIS_PORT: ${{secrets.REDIS_PORT}}
+          DB_URL: ${{secrets.DB_URL}}
+          DB_USERNAME: ${{secrets.DB_USERNAME}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
 
       - name: Set up google auth
         id: 'auth'
