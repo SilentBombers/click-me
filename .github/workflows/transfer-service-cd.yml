@@ -32,9 +32,9 @@ jobs:
         env:
           REDIS_HOST: ${{secrets.REDIS_HOST}}
           REDIS_PORT: ${{secrets.REDIS_PORT}}
-          DB_URL: ${{secrets.DB_URL}}
-          DB_USERNAME: ${{secrets.DB_USERNAME}}
-          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          DATASOURCE_URL: ${{secrets.DB_URL}}
+          DATASOURCE_USERNAME: ${{secrets.DB_USERNAME}}
+          DATASOURCE_PASSWORD: ${{secrets.DB_PASSWORD}}
 
       - name: Set up google auth
         id: 'auth'
