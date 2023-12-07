@@ -18,20 +18,20 @@ public class JdbcMemberRepository implements MemberRepository {
 
     @Override
     public void batchUpdateToUpsertMember(final Chunk<? extends UpsertMember> members) {
-        String sql = "INSERT INTO member (nickname, click_count) VALUES (?, ?)" +
+        String sql = "INSERT INTO member (name, click_count) VALUES (?, ?)" +
                 " ON DUPLICATE KEY UPDATE click_count = VALUES(click_count)";
         jdbcTemplate.batchUpdate(sql, new UpsertMemberBatchPreparedStatementSetter(members));
     }
 
     @Override
     public void batchUpdateToDailyClickCounts(final Chunk<? extends DailyClickCount> members) {
-        String sql = "INSERT INTO daily_click_count (name, date, click_count) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO click_count_history (name, date, click_count) VALUES (?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new InsertDailyClickCountBatchPreparedStatementStatementSetter(members));
     }
 
     @Override
     public void batchUpdateToProfileUpdateMember(final Chunk<? extends ProfileUpdateMember> members) {
-        String sql = "UPDATE member SET profile_image_url = ? WHERE nickname = ?";
+        String sql = "UPDATE member SET profile_image_url = ? WHERE name = ?";
         jdbcTemplate.batchUpdate(sql, new ProfileUpdateMemberBatchPreparedStatementSetter(members));
     }
 }

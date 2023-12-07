@@ -1,7 +1,7 @@
 package clickme.clickme.ranking.application;
 
-import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.ranking.domain.MemberRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.ranking.ui.response.RankingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

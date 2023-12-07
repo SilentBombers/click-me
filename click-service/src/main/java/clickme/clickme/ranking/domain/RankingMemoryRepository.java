@@ -15,7 +15,7 @@ public class RankingMemoryRepository implements RankingRepository {
 
     @Override
     public void increaseCount(final String id) {
-        rankings.put(id, rankings.get(id) + 1);
+        rankings.put(id, rankings.getOrDefault(id, 0L) + 1);
     }
 
     @Override

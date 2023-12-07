@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class NicknameMember {
+public class NameMember {
 
     private Long id;
-    private String nickname;
+    private String name;
 }

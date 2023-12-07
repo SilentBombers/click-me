@@ -1,4 +1,4 @@
-create table daily_click_count
+create table click_count_history
 (
     id bigint       not null auto_increment,
     name     varchar(255) not null,
@@ -7,7 +7,7 @@ create table daily_click_count
     primary key (id)
 ) engine = InnoDB default charset utf8mb4;
 
-alter table daily_click_count
-    add constraint daily_click_count_duplicate unique (name, date);
+alter table click_count_history
+    add constraint click_count_history_duplicate unique (name, date);
 
-create index idx_daily_click_count on daily_click_count (nickname, date);
+create index idx_click_count_history on click_count_history (name, date);

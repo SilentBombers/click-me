@@ -20,6 +20,7 @@ import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,13 +28,17 @@ import org.springframework.data.util.Pair;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Configuration
 @RequiredArgsConstructor
-public class MemberUpsertJobConfig {
+@ConditionalOnProperty(value = "spring.batch.job.name", havingValue="syncRedisToMysqlJob")
+public class MemberUpsertJobConfig  {
 
     private static final int CHUCK_SIZE = 1000;
-    private static final String REDIS_KEY = "clickCountChanged";
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final String REDIS_KEY = "%s:dailyClickCount";
     private static final String STEP_NAME = "syncRedisToMysqlStep";
     private static final String JOB_NAME = "syncRedisToMysqlJob";
 
@@ -46,16 +51,18 @@ public class MemberUpsertJobConfig {
     @Bean
     @StepScope
     public ItemStreamReader<String> reader() {
-        return new RedisPagingItemReader(REDIS_KEY, redisTemplate);
+        final String key = REDIS_KEY.formatted(LocalDateTime.now().format(formatter));
+        return new RedisPagingItemReader(key, redisTemplate);
     }
 
     @Bean
     @StepScope
-    public ItemProcessor<String, Pair<UpsertMember, DailyClickCount>> processor(@Value("#{jobParameters['createAt']}") String createAt) {
+    public ItemProcessor<String, Pair<UpsertMember, DailyClickCount>> processor(
+            @Value("#{jobParameters['createAt']}") final String createAt
+    ) {
         return name -> {
             Long clickCount = heartRepository.getClickCount(name);
             Long dailyClickCount = dailyClickRepository.getClickCount(name);
-            System.out.println(createAt);
             return Pair.of(
                     new UpsertMember(name, clickCount),
                     new DailyClickCount(name, LocalDate.parse(createAt), dailyClickCount)
