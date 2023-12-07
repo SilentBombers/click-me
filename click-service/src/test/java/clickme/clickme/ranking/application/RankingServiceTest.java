@@ -1,10 +1,9 @@
 package clickme.clickme.ranking.application;
 
-import clickme.clickme.ranking.domain.RankingMemoryRepository;
-import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.ranking.domain.Member;
 import clickme.clickme.ranking.domain.MemberRepository;
-import clickme.clickme.ranking.domain.exception.NotFoundMemberException;
+import clickme.clickme.ranking.domain.RankingMemoryRepository;
+import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.ranking.ui.response.RankingResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +23,7 @@ class RankingServiceTest {
     private static final String SEUNGPANG = "seungpang";
     private static final String ANGIE = "angie";
     private static final String CHUNSIK = "chunsik";
+    private static final String DEFAULT_IMAGE = "https://avatars.githubusercontent.com/u/134919246?v=4";
 
     private RankingService rankingService;
     private RankingRepository rankingRepository;
@@ -86,12 +86,13 @@ class RankingServiceTest {
     }
 
     @Test
-    @DisplayName("없는 member로 조회할 경우 예외 발생")
-    void findProfileImageUrlByNameOrThrow() {
+    @DisplayName("없는 member로 조회할 경우 default image를 반환한다.")
+    void findProfileImageUrlByNameOrDefaultUrl() {
         String invalidName = "invalidName";
         rankingRepository.add(invalidName);
 
-        assertThatThrownBy(() -> rankingService.findLiveRanking(1, 2))
-                .isInstanceOf(NotFoundMemberException.class);
+        final List<RankingResponse> liveRanking = rankingService.findLiveRanking(0, 2);
+
+        assertThat(liveRanking.get(1).profileImage()).isEqualTo(DEFAULT_IMAGE);
     }
 }

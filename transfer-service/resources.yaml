@@ -10,15 +10,13 @@ spec:
         spec:
           containers:
             - name: transfer-service
-              image: ${image}
+              image: ${image}:latest
               args:
                 - "--spring.batch.job.name=syncRedisToMysqlJob"
               env:
                 - name: createAt
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: metadata.creationTimestamp
-
+                  value: $(date -u +'%Y-%m-%dT%H:%M')
+          restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -32,11 +30,10 @@ spec:
         spec:
           containers:
             - name: transfer-service
-              image: ${image}
+              image: ${image}:latest
               args:
                 - "--spring.batch.job.name=profileImageUpdateJob"
               env:
                 - name: createAt
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: metadata.creationTimestamp
+                  value: $(date -u +'%Y-%m-%dT%H:%M')
+          restartPolicy: OnFailure
