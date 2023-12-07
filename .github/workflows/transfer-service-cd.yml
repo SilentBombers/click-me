@@ -1,6 +1,6 @@
 name: cd for transfer-service
 on:
-  push:
+  pull_request:
     branches: [ main ]
     paths:
       - transfer-service/**
@@ -76,6 +76,6 @@ jobs:
 
       - name: Deploy
         run: |
-          gcloud container clusters get-credentials autopilot-cluster-1 --region ${{env.REGION}} --project ${{env.PROJECT_ID}}
+          gcloud container clusters get-credentials autopilot-cluster-2 --region ${{env.REGION}} --project ${{env.PROJECT_ID}}
           sed "s,\${image},${{ env.IMAGE }},g" resources.yaml > cronJob.yaml
           kubectl apply -f ./cronJob.yaml

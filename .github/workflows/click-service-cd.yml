@@ -1,6 +1,6 @@
 name: cd for click-service
 on:
-  push:
+  pull_request:
     branches: [ main ]
     paths:
       - click-service/**
@@ -76,7 +76,7 @@ jobs:
 
       - name: Deploy
         run: |
-          gcloud container clusters get-credentials autopilot-cluster-1 --region ${{env.REGION}} --project ${{env.PROJECT_ID}}
+          gcloud container clusters get-credentials autopilot-cluster-2 --region ${{env.REGION}} --project ${{env.PROJECT_ID}}
           sed "s,\${image},${{ env.IMAGE }},g" resources.yaml > deployment.yaml
           kubectl apply -f ./deployment.yaml
         
