@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: core
-          image: ${image}
+          image: ${image}:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
