@@ -43,7 +43,7 @@ class SvgImageServiceTest {
 
     @Test
     @DisplayName("클릭 했을 경우 카운트가 오르고 svg 이미지가 정상적으로 호출된다.")
-    void generateClickableSvgImage() throws IOException, TransformerException {
+    void generateClickableSvgImage() {
         final String svg = svgImageService.generateClickableSvgImage(SEUNGPANG);
 
         assertAll(
@@ -54,7 +54,7 @@ class SvgImageServiceTest {
 
     @Test
     @DisplayName("카운트가 오르지 않고 svg 이미지가 정상적으로 호출된다.")
-    void generateNonClickableSvgImage() throws IOException, TransformerException {
+    void generateNonClickableSvgImage() {
         final String svg = svgImageService.generateNonClickableSvgImage(SEUNGPANG);
 
         assertAll(

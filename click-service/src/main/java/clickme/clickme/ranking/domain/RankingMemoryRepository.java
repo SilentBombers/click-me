@@ -1,11 +1,12 @@
 package clickme.clickme.ranking.domain;
 
+import clickme.clickme.common.EntityNotFoundException;
+import clickme.clickme.common.ErrorCode;
 import clickme.clickme.ranking.infrastructure.dto.RankingDto;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -32,7 +33,7 @@ public class RankingMemoryRepository implements RankingRepository {
     public Long findRankByName(final String id) {
         Long value = rankings.get(id);
         if (value == null) {
-            throw new NoSuchElementException("해당 id로 등록된 사용자가 없습니다: " + id);
+            throw new EntityNotFoundException("Member not found", ErrorCode.INVALID_INPUT_VALUE);
         }
 
         long rank = 1;
