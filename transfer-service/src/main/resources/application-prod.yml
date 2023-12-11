@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: none
   data:
     redis:
       host: ${REDIS_HOST}

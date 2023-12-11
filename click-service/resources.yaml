@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: core
-          image: ${image}:latest
+          image: ${image}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -22,4 +22,4 @@ spec:
           resources:
             requests:
               cpu: 500m
-              memory: 2000Mi
+              memory: 1024Mi

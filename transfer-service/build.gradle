@@ -1,9 +1,30 @@
 plugins {
-    id 'com.palantir.docker' version '0.35.0'
+    id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 group = 'clickme.transfer'
 version = '1.0.1'
+
+jib {
+    from {
+        image = "eclipse-temurin:17-jre"
+    }
+    to {
+        image = "asia-northeast3-docker.pkg.dev/sanguine-theory-406607/clickme/click-service"
+        tags = [version]
+    }
+    container {
+        jvmFlags = ["-Xms258m", "-Xmx1024m"]
+        environment = [
+                'REDIS_HOST': System.getenv('REDIS_HOST'),
+                'REDIS_PORT': System.getenv('REDIS_PORT'),
+                'DATASOURCE_URL': System.getenv('DATASOURCE_URL'),
+                'DATASOURCE_USERNAME': System.getenv('DATASOURCE_USERNAME'),
+                'DATASOURCE_PASSWORD': System.getenv('DATASOURCE_PASSWORD'),
+                'SPRING_PROFILES_ACTIVE': 'prod'
+        ]
+    }
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
@@ -13,12 +34,4 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
-}
-
-docker {
-    println(tasks.bootJar.outputs.files)
-    name rootProject.name+'-'+project.name + ":" + version
-    dockerfile file('./Dockerfile')
-    files tasks.bootJar.outputs.files
-    buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
 }
