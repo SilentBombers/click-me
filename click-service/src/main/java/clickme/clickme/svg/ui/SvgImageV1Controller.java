@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/svg-image")
 public class SvgImageV1Controller {
 
-    private static final CacheControl DEFAULT_CACHE_CONTROL = CacheControl.noCache();
+    private static final CacheControl DEFAULT_CACHE_CONTROL = CacheControl.maxAge(1, TimeUnit.SECONDS);
     private static final MediaType SVG = MediaType.valueOf("image/svg+xml");
 
     private final SvgImageService svgImageService;
