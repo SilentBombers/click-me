@@ -36,11 +36,11 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCE_SA_KEY }}
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - id: 'get-credentials'
+        uses: google-github-actions/get-gke-credentials@v1
         with:
-          project_id: ${{ env.PROJECT_ID }}
-          install_components: gke-gcloud-auth-plugin
+          cluster_name: autopilot-cluster-2
+          location: ${{ env.REGION }}
 
       - name: Use gcloud CLI
         run: gcloud info
@@ -53,14 +53,14 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'corretto'
+          distribution: 'temurin'
 
       - name: Docker Build
         if: success()
-        run: ../gradlew jib
+        run: ../gradlew transfer-service:jib
 
       - name: Deploy
         run: |
-          gcloud container clusters get-credentials autopilot-cluster-2 --region ${{env.REGION}} --project ${{env.PROJECT_ID}}
-          sed "s,\${image},${{ env.IMAGE }}:${{env.VERSION}},g" resources.yaml > cronJob.yaml
+          sed "s,\${image},${{ env.IMAGE }},g" resources.yaml > cronJob.yaml
           kubectl apply -f ./cronJob.yaml
+          

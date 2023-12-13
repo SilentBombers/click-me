@@ -11,10 +11,9 @@ spec:
         spec:
           containers:
             - name: transfer-service1
-              image: ${image}
-              command: ["/bin/sh", "-c"]
+              image: ${image}:latest
               args:
-                - "--spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d)"
+                - "--spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')"
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -22,7 +21,7 @@ kind: CronJob
 metadata:
   name: transfer-service2
 spec:
-  schedule: 0 15 30 * *
+  schedule: 30 15 * * *
   successfulJobsHistoryLimit: 5
   jobTemplate:
     spec:
@@ -30,8 +29,7 @@ spec:
         spec:
           containers:
             - name: transfer-service2
-              image: ${image}
-              command: ["/bin/sh", "-c"]
+              image: ${image}:latest
               args:
-                - "--spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d)"
+                - "--spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')"
           restartPolicy: OnFailure

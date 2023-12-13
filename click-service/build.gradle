@@ -7,11 +7,10 @@ version = '1.0.1'
 
 jib {
 	from {
-		image = "eclipse-temurin:17-jre"
+		image = "asia-northeast3-docker.pkg.dev/sanguine-theory-406607/clickme/click-service:latest"
 	}
 	to {
-		image = "asia-northeast3-docker.pkg.dev/sanguine-theory-406607/clickme/click-service"
-		tags = [version]
+		image = "asia-northeast3-docker.pkg.dev/sanguine-theory-406607/clickme/click-service:latest"
 	}
 	container {
 		jvmFlags = ["-Xms258m", "-Xmx1024m"]
