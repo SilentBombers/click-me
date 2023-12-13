@@ -18,5 +18,5 @@ public class AbstractRootEntity {
     private ZonedDateTime createdAt;
 
     @UpdateTimestamp
-    private ZonedDateTime updatedAt;
+    private ZonedDateTime lastModifiedAt;
 }
