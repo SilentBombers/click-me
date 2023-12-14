@@ -22,13 +22,27 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./click-service
 
     steps:
       - name: Check out Repository
         uses: actions/checkout@v3
+
+      - name: Cache Gradle caches
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ github.job}}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-${{ github.job }}
+
+      - name: Cache Jib layers
+        uses: actions/cache@v3
+        with:
+          path: ./click-service/build/jib-cache
+          key: ${{ runner.os }}-jib-${{ github.job }}-${{ hashFiles('**/build.gradle') }}
+          restore-keys: ${{ runner.os }}-jib-${{ github.job }}
+
 
       - name: Set up google auth
         id: 'auth'
@@ -42,9 +56,6 @@ jobs:
           cluster_name: autopilot-cluster-2
           location: ${{ env.REGION }}
 
-      - name: Use gcloud CLI
-        run: gcloud info
-
       - name: Docker auth
         run: |-
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
@@ -56,9 +67,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Docker Build
-        run: ../gradlew click-service:jib
+        run: ./gradlew :click-service:jib
 
       - name: Deploy
         run: |
-          sed "s,\${image},${{ env.IMAGE }},g" resources.yaml > deployment.yaml
-          kubectl apply -f ./deployment.yaml
+          sed "s,\${image},${{ env.IMAGE }},g" ./click-service/resources.yaml > deployment.yaml
+          kubectl apply -f deployment.yaml

@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: transfer-service1
 spec:
-  schedule: 0 15 * * *
+  schedule: 37 16 * * *
   successfulJobsHistoryLimit: 5
   jobTemplate:
     spec:
@@ -12,8 +12,9 @@ spec:
           containers:
             - name: transfer-service1
               image: ${image}:latest
-              args:
-                - "--spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')"
+              command: [ "/bin/sh", "-c" ]
+
+              args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')" ]
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -21,7 +22,7 @@ kind: CronJob
 metadata:
   name: transfer-service2
 spec:
-  schedule: 30 15 * * *
+  schedule: 40 16 * * *
   successfulJobsHistoryLimit: 5
   jobTemplate:
     spec:
@@ -30,6 +31,6 @@ spec:
           containers:
             - name: transfer-service2
               image: ${image}:latest
-              args:
-                - "--spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')"
+              command: [ "/bin/sh", "-c" ]
+              args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')" ]
           restartPolicy: OnFailure

@@ -7,7 +7,7 @@ version = '1.0.1'
 
 jib {
 	from {
-		image = "asia-northeast3-docker.pkg.dev/sanguine-theory-406607/clickme/click-service:latest"
+		image = "eclipse-temurin:17-jre-alpine"
 	}
 	to {
 		image = "asia-northeast3-docker.pkg.dev/sanguine-theory-406607/clickme/click-service:latest"
@@ -22,6 +22,7 @@ jib {
 				'DATASOURCE_PASSWORD': System.getenv('DATASOURCE_PASSWORD'),
 				'SPRING_PROFILES_ACTIVE': 'prod'
 		]
+		filesModificationTime = 'EPOCH_PLUS_SECOND'
 	}
 }
 
