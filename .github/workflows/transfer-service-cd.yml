@@ -58,7 +58,7 @@ jobs:
       - name: Docker Build
         if: success()
         run: ../gradlew transfer-service:jib
-
+        
       - name: Deploy
         run: |
           sed "s,\${image},${{ env.IMAGE }},g" resources.yaml > cronJob.yaml
