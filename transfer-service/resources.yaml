@@ -12,11 +12,8 @@ spec:
           containers:
             - name: transfer-service1
               image: ${image}:latest
-              args:
-                - "--spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')"
-              env:
-                - name: createAt
-                  value: $(date -u +'%Y-%m-%dT%H:%M')
+              command: [ "/bin/sh", "-c" ]
+              args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')" ]
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -33,9 +30,6 @@ spec:
           containers:
             - name: transfer-service2
               image: ${image}:latest
-              args:
-                - "--spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')"
-              env:
-                - name: createAt
-                  value: $(date -u +'%Y-%m-%dT%H:%M')
+              command: [ "/bin/sh", "-c" ]
+              args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')" ]
           restartPolicy: OnFailure
