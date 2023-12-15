@@ -7,7 +7,7 @@ version = '1.0.1'
 
 jib {
 	from {
-		image = "eclipse-temurin:17-jre-alpine@eclipse-temurin@sha256:635ec1b177ac2a587324ed5eda2b9dec197876e16d10c35a4ef9595d76c2c891"
+		image = "eclipse-temurin:17-jre-alpine@sha256:635ec1b177ac2a587324ed5eda2b9dec197876e16d10c35a4ef9595d76c2c891"
 	}
 	to {
 		image = "asia-northeast3-docker.pkg.dev/sanguine-theory-406607/clickme/click-service:latest"
