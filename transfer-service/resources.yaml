@@ -13,7 +13,6 @@ spec:
             - name: transfer-service1
               image: ${image}:latest
               command: [ "/bin/sh", "-c" ]
-
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')" ]
           restartPolicy: OnFailure
 ---

@@ -22,7 +22,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
-
+    
     steps:
       - name: Check out Repository
         uses: actions/checkout@v3
@@ -71,5 +71,4 @@ jobs:
       - name: Deploy
         run: |
           sed "s,\${image},${{ env.IMAGE }},g" ./transfer-service/resources.yaml > cronJob.yaml
-          kubectl apply -f cronJob.yaml
-          
+          kubectl apply -f ./cronJob.yaml

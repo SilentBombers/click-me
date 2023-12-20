@@ -43,7 +43,6 @@ jobs:
           key: ${{ runner.os }}-jib-${{ github.job }}-${{ hashFiles('**/build.gradle') }}
           restore-keys: ${{ runner.os }}-jib-${{ github.job }}
 
-
       - name: Set up google auth
         id: 'auth'
         uses: google-github-actions/auth@v1
@@ -72,4 +71,5 @@ jobs:
       - name: Deploy
         run: |
           sed "s,\${image},${{ env.IMAGE }},g" ./click-service/resources.yaml > deployment.yaml
-          kubectl apply -f deployment.yaml
+          kubectl apply -f ./deployment.yaml
+        
