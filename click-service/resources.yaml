@@ -6,6 +6,10 @@ spec:
   selector:
     matchLabels:
       app: click-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   replicas: 1
   template:
     metadata:
@@ -13,7 +17,7 @@ spec:
         app: click-service
     spec:
       containers:
-        - name: core
+        - name: click-service
           image: ${image}:latest
           imagePullPolicy: Always
           ports:
@@ -22,4 +26,4 @@ spec:
           resources:
             requests:
               cpu: 500m
-              memory: 2000Mi
+              memory: 1000Mi

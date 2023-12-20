@@ -22,6 +22,7 @@ jib {
 				'DATASOURCE_PASSWORD': System.getenv('DATASOURCE_PASSWORD'),
 				'SPRING_PROFILES_ACTIVE': 'prod'
 		]
+		filesModificationTime = 'EPOCH_PLUS_SECOND'
 	}
 }
 
