@@ -22,9 +22,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./transfer-service
 
     steps:
       - name: Check out Repository
