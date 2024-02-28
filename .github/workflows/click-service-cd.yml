@@ -52,7 +52,7 @@ jobs:
       - id: 'get-credentials'
         uses: google-github-actions/get-gke-credentials@v1
         with:
-          cluster_name: autopilot-cluster-1
+          cluster_name: autopilot-cluster-2
           location: ${{ env.REGION }}
 
       - name: Docker auth
@@ -74,3 +74,4 @@ jobs:
           kubectl apply -f ./deployment.yaml
           mv ./click-service/hpa.yaml .
           kubectl apply -f ./hpa.yaml
+
