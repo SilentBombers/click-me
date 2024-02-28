@@ -1,6 +1,6 @@
 name: cd for click-service
 on:
-  push:
+  pull_request:
     branches: [ main ]
     paths:
       - click-service/**
@@ -74,3 +74,4 @@ jobs:
           kubectl apply -f ./deployment.yaml
           mv ./click-service/hpa.yaml .
           kubectl apply -f ./hpa.yaml
+
