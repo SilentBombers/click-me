@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: transfer-service1
 spec:
-  schedule: 37 16 * * *
+  schedule: 0 15 * * *
   successfulJobsHistoryLimit: 5
   jobTemplate:
     spec:
@@ -21,7 +21,7 @@ kind: CronJob
 metadata:
   name: transfer-service2
 spec:
-  schedule: 40 16 * * *
+  schedule: 0 15 * * *
   successfulJobsHistoryLimit: 5
   jobTemplate:
     spec:
