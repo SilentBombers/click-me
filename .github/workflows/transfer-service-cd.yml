@@ -1,6 +1,6 @@
 name: cd for transfer-service
 on:
-  push:
+  pull_request:
     branches: [ main ]
     paths:
       - transfer-service/**
