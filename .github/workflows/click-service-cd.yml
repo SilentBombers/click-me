@@ -74,4 +74,3 @@ jobs:
           kubectl apply -f ./deployment.yaml
           mv ./click-service/hpa.yaml .
           kubectl apply -f ./hpa.yaml
-        
