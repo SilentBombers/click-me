@@ -1,0 +1,15 @@
+spring:
+  main:
+    web-application-type: none
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+    url: jdbc:mysql://localhost:3306
+  batch:
+    job:
+      name: ${job.name:NONE}
