@@ -19,14 +19,14 @@ jobs:
       - name: Check out Repository
         uses: actions/checkout@v3
 
-      - name: cache
+      - name: Cache Gradle
         uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle
+          key: ${{ runner.os }}-gradle-${{ github.job}}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-${{ github.job}}
 
       - name: set up JDK 17
         uses: actions/setup-java@v3
