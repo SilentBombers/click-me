@@ -21,7 +21,7 @@ kind: CronJob
 metadata:
   name: transfer-service2
 spec:
-  schedule: 0 15 * * *
+  schedule: 30 15 * * *
   successfulJobsHistoryLimit: 5
   jobTemplate:
     spec:
@@ -33,3 +33,4 @@ spec:
               command: [ "/bin/sh", "-c" ]
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')" ]
           restartPolicy: OnFailure
+
