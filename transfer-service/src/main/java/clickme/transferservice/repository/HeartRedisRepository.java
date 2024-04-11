@@ -17,7 +17,7 @@ public class HeartRedisRepository implements HeartRepository {
 
     @Override
     public Long getClickCount(final String nickname) {
-        return rankings.score(KEY, nickname)
-                .longValue();
+        return rankings.score(KEY, nickname) == null ?
+                0L : rankings.score(KEY, nickname).longValue();
     }
 }
