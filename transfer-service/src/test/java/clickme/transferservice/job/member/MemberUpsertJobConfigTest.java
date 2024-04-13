@@ -1,6 +1,7 @@
 package clickme.transferservice.job.member;
 
 import clickme.transferservice.TestBatchConfig;
+import clickme.transferservice.util.RedisKeyGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobExecution;
@@ -48,8 +49,8 @@ class MemberUpsertJobConfigTest extends AbstractIntegrationTest {
 
     @Test
     void 일일_클릭카운트가_정상적으로_db에_저장된다() throws Exception {
-        dailyClickCounts.add("%s:dailyClickCount".formatted(LocalDateTime.now().format(formatter)), "seungpang", 2);
-        dailyClickCounts.add("%s:dailyClickCount".formatted(LocalDateTime.now().format(formatter)), "angie", 5);
+        일일_클락카운트를_추가한다("seungpang", 2L);
+        일일_클락카운트를_추가한다("angie", 5L);
 
         final JobExecution jobExecution = jobLauncherTestUtils.launchJob(JOB_PARAMETERS);
         int count = jdbcTemplate.queryForObject("SELECT count(*) FROM click_count_history", Integer.class);
@@ -62,7 +63,7 @@ class MemberUpsertJobConfigTest extends AbstractIntegrationTest {
 
     @Test
     void 당일_클릭카운트가_존재해야_정상적으로_member테이블에_반영된다() throws Exception {
-        dailyClickCounts.add("%s:dailyClickCount".formatted(LocalDateTime.now().format(formatter)), "seungpang", 1);
+        일일_클락카운트를_추가한다("seungpang", 1L);
 
         final JobExecution jobExecution = jobLauncherTestUtils.launchJob(JOB_PARAMETERS);
         final int count = jdbcTemplate.queryForObject("SELECT click_count FROM member WHERE name = ?", new Object[]{"seungpang"}, Integer.class);
@@ -82,5 +83,9 @@ class MemberUpsertJobConfigTest extends AbstractIntegrationTest {
                 () -> assertThat(jobExecution.getExitStatus().getExitCode()).isEqualTo("COMPLETED"),
                 () -> assertThat(count).isZero()
         );
+    }
+
+    private void 일일_클락카운트를_추가한다(String name, Long clickCount) {
+        dailyClickCounts.add(RedisKeyGenerator.getDailyClickCountKey(), name, clickCount);
     }
 }

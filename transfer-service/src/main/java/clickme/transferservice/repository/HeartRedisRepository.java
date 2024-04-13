@@ -1,13 +1,12 @@
 package clickme.transferservice.repository;
 
+import clickme.transferservice.util.RedisKeyGenerator;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HeartRedisRepository implements HeartRepository {
-
-    private static final String KEY = "clicks";
 
     private final ZSetOperations<String, String> rankings;
 
@@ -17,7 +16,7 @@ public class HeartRedisRepository implements HeartRepository {
 
     @Override
     public Long getClickCount(final String nickname) {
-        return rankings.score(KEY, nickname) == null ?
-                0L : rankings.score(KEY, nickname).longValue();
+        return rankings.score(RedisKeyGenerator.getCLickCountKey(), nickname) == null ?
+                0L : rankings.score(RedisKeyGenerator.getCLickCountKey(), nickname).longValue();
     }
 }

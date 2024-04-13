@@ -4,6 +4,7 @@ import clickme.transferservice.job.member.dto.DailyClickCount;
 import clickme.transferservice.job.member.dto.UpsertMember;
 import clickme.transferservice.repository.HeartRepository;
 import clickme.transferservice.repository.MemberRepository;
+import clickme.transferservice.util.RedisKeyGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -31,8 +32,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Configuration
@@ -41,8 +40,6 @@ import java.time.format.DateTimeFormatter;
 public class MemberUpsertJobConfig  {
 
     private static final int CHUCK_SIZE = 1000;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final String REDIS_KEY = "%s:dailyClickCount";
     private static final String STEP_NAME = "syncRedisToMysqlStep";
     private static final String JOB_NAME = "syncRedisToMysqlJob";
 
@@ -68,7 +65,7 @@ public class MemberUpsertJobConfig  {
             @Value("#{stepExecutionContext[startOffset]}") Long startOffset,
             @Value("#{stepExecutionContext[endOffset]}") Long endOffset
     ) {
-        final String key = REDIS_KEY.formatted(LocalDateTime.now().format(formatter));
+        final String key = RedisKeyGenerator.getDailyClickCountKey();
         return new RedisPagingItemReader(key, redisTemplate, startOffset, endOffset);
     }
 
@@ -123,7 +120,7 @@ public class MemberUpsertJobConfig  {
     @Bean
     @StepScope
     public Partitioner partitioner() {
-        return new RedisRangePartitioner(REDIS_KEY.formatted(LocalDateTime.now().format(formatter)), 10, redisTemplate);
+        return new RedisRangePartitioner(RedisKeyGenerator.getDailyClickCountKey(), redisTemplate);
     }
 
 
