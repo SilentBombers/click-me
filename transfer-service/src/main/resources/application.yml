@@ -9,5 +9,5 @@ spring:
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   batch:
-    jdbc:
-      initialize-schema: ALWAYS
+    job:
+      name: ${job.name:NONE}
