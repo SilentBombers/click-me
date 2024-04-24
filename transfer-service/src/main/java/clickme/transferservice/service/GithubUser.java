@@ -15,8 +15,6 @@ import lombok.Setter;
 @Setter
 public class GithubUser {
 
-    private String login;
-
     @JsonProperty("avatar_url")
     private String avatarUrl;
 }
