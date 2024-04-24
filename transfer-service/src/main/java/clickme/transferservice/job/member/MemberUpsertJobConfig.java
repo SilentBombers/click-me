@@ -36,10 +36,12 @@ import java.time.LocalDate;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "spring.batch.job.name", havingValue="syncRedisToMysqlJob")
-public class MemberUpsertJobConfig  {
+@ConditionalOnProperty(value = "spring.batch.job.name", havingValue = "syncRedisToMysqlJob")
+public class MemberUpsertJobConfig {
 
-    private static final int CHUCK_SIZE = 1000;
+    private static final int POOL_SIZE = 10;
+    private static final int PARTITION_SIZE = 10;
+    private static final int CHUNK_SIZE = 1000;
     private static final String STEP_NAME = "syncRedisToMysqlStep";
     private static final String JOB_NAME = "syncRedisToMysqlJob";
 
@@ -49,10 +51,51 @@ public class MemberUpsertJobConfig  {
     private final MemberUpsertAfterJobListener memberUpsertAfterJobListener;
 
     @Bean
+    public Job syncRedisToMysqlJob(@Qualifier("stepManager") final Step stepManager,
+                                   final JobRepository jobRepository) {
+        return new JobBuilder(JOB_NAME, jobRepository)
+                .incrementer(new RunIdIncrementer())
+                .flow(stepManager)
+                .end()
+                .listener(memberUpsertAfterJobListener)
+                .build();
+    }
+
+    @Bean
+    public Step stepManager(@Qualifier("syncRedisToMySqlStep") Step partitionStep, JobRepository jobRepository) {
+        return new StepBuilder("stepManager", jobRepository)
+                .partitioner("syncRedisToMySqlStep", partitioner())
+                .step(partitionStep)
+                .gridSize(PARTITION_SIZE) // 파티션 수
+                .taskExecutor(executor())
+                .build();
+    }
+
+    @Bean
+    @StepScope
+    public Partitioner partitioner() {
+        return new RedisRangePartitioner(RedisKeyGenerator.getDailyClickCountKey(), redisTemplate);
+    }
+
+    @Bean
+    public Step syncRedisToMySqlStep(final ItemReader<TypedTuple<String>> reader,
+                                     final ItemWriter<Pair<UpsertMember, DailyClickCount>> writer,
+                                     final ItemProcessor<TypedTuple<String>, Pair<UpsertMember, DailyClickCount>> processor,
+                                     final JobRepository jobRepository,
+                                     final PlatformTransactionManager transactionManager) {
+        return new StepBuilder(STEP_NAME, jobRepository)
+                .<TypedTuple<String>, Pair<UpsertMember, DailyClickCount>>chunk(CHUNK_SIZE, transactionManager)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .build();
+    }
+
+    @Bean
     public TaskExecutor executor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(16);
-        executor.setMaxPoolSize(16);
+        executor.setCorePoolSize(POOL_SIZE);
+        executor.setMaxPoolSize(POOL_SIZE);
         executor.setThreadNamePrefix("partition-thread");
         executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
         executor.initialize();
@@ -89,49 +132,5 @@ public class MemberUpsertJobConfig  {
     @StepScope
     public ItemWriter<Pair<UpsertMember, DailyClickCount>> writer() {
         return new MysqlItemWriter(memberRepository);
-    }
-
-    @Bean
-    public Step syncRedisToMySqlStep(final ItemReader<TypedTuple<String>> reader,
-                                     final ItemWriter<Pair<UpsertMember, DailyClickCount>> writer,
-                                     final ItemProcessor<TypedTuple<String>, Pair<UpsertMember, DailyClickCount>> processor,
-                                     final JobRepository jobRepository,
-                                     final PlatformTransactionManager transactionManager) {
-        return new StepBuilder(STEP_NAME, jobRepository)
-                .<TypedTuple<String>, Pair<UpsertMember, DailyClickCount>>chunk(CHUCK_SIZE, transactionManager)
-                .reader(reader)
-                .processor(processor)
-                .writer(writer)
-                .build();
-    }
-
-    @Bean
-    public Step masterStep(@Qualifier("syncRedisToMySqlStep") Step partitionStep,
-                           JobRepository jobRepository,
-                           PlatformTransactionManager transactionManager) {
-        return new StepBuilder("masterStep", jobRepository)
-                .partitioner("syncRedisToMySqlStep", partitioner())
-                .step(partitionStep)
-                .gridSize(10) // 파티션 수
-                .taskExecutor(executor())
-                .build();
-    }
-
-    @Bean
-    @StepScope
-    public Partitioner partitioner() {
-        return new RedisRangePartitioner(RedisKeyGenerator.getDailyClickCountKey(), redisTemplate);
-    }
-
-
-    @Bean
-    public Job syncRedisToMysqlJob(@Qualifier("masterStep") final Step masterStep,
-                                   final JobRepository jobRepository) {
-        return new JobBuilder(JOB_NAME, jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .flow(masterStep)
-                .end()
-                .listener(memberUpsertAfterJobListener)
-                .build();
     }
 }

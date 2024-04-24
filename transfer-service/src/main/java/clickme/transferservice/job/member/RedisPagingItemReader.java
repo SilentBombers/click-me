@@ -14,8 +14,8 @@ public class RedisPagingItemReader implements ItemStreamReader<TypedTuple<String
 
     private final String key;
     private final RedisTemplate<String, String> redisTemplate;
-    private long startOffset = 0L;
-    private long endOffset = Long.MAX_VALUE;
+    private long startOffset;
+    private long endOffset;
     private Queue<TypedTuple<String>> items = new LinkedList<>();
 
     public RedisPagingItemReader(final String key,
