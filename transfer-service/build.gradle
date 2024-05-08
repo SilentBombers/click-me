@@ -10,7 +10,7 @@ jib {
         image = "eclipse-temurin:17-jre-alpine@sha256:635ec1b177ac2a587324ed5eda2b9dec197876e16d10c35a4ef9595d76c2c891"
     }
     to {
-        image = "asia-northeast3-docker.pkg.dev/the-tendril-413504/clickme/transfer-service:latest"
+        image = "asia-northeast3-docker.pkg.dev/ninth-victor-422606-e1/clickme/transfer-service:latest"
     }
     container {
         jvmFlags = ["-Xms258m", "-Xmx1024m"]
@@ -34,4 +34,8 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
+    testImplementation 'org.testcontainers:testcontainers'
+    testImplementation 'org.testcontainers:mysql'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'com.mysql:mysql-connector-j'
 }

@@ -1,6 +1,7 @@
 package clickme.transferservice.service;
 
 import clickme.transferservice.service.exception.GithubApiException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +33,13 @@ public class GithubApiService {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             avatarUrl = parseGithubUser(response, avatarUrl);
-        } catch (IOException | InterruptedException | GithubApiException e) {
-            throw new GithubApiException("해당 닉네임으로 github에서 데이터를 가져 올 수 없습니다. nickname: " + nickname, e);
+        } catch (IOException | InterruptedException e) {
+            throw new GithubApiException();
         }
         return avatarUrl;
     }
 
-    private String parseGithubUser(final HttpResponse<String> response, String avatarUrl) throws IOException {
+    private String parseGithubUser(final HttpResponse<String> response, String avatarUrl) throws JsonProcessingException {
         if (response.statusCode() == HttpStatus.OK.value()) {
             String responseBody = response.body();
             GithubUser user = objectMapper.readValue(responseBody, GithubUser.class);

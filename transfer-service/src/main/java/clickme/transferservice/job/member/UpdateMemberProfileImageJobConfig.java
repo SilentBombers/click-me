@@ -36,7 +36,7 @@ public class UpdateMemberProfileImageJobConfig {
 
     private static final String JOB_NAME = "profileImageUpdateJob";
     private static final String STEP_NAME = "profileImageUpdateStep";
-    private static final int CHUCK_SIZE = 1000;
+    private static final int CHUNK_SIZE = 1000;
     private static final int PAGE_SIZE = 1000;
 
     private final MemberRepository memberRepository;
@@ -98,7 +98,7 @@ public class UpdateMemberProfileImageJobConfig {
                                        final ItemProcessor<NameMember, ProfileUpdateMember> processor,
                                        final ItemWriter<ProfileUpdateMember> writer) {
         return new StepBuilder(STEP_NAME, jobRepository)
-                .<NameMember, ProfileUpdateMember>chunk(CHUCK_SIZE, transactionManager)
+                .<NameMember, ProfileUpdateMember>chunk(CHUNK_SIZE, transactionManager)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
