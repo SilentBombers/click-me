@@ -10,7 +10,7 @@ spec:
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
-  replicas: 1
+  replicas: 5
   template:
     metadata:
       labels:
@@ -25,6 +25,6 @@ spec:
               protocol: TCP
           resources:
             requests:
-              cpu: 500m
+              cpu: 1000m
               memory: 2000Mi
 
