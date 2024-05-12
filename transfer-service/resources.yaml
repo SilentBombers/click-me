@@ -16,7 +16,7 @@ spec:
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')" ]
               resources:
                 requests:
-                  cpu: 1000m
+                  cpu: 500m
                   memory: 1000Mi
           restartPolicy: OnFailure
 ---
@@ -38,6 +38,6 @@ spec:
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')" ]
               resources:
                 requests:
-                  cpu: 1000m
+                  cpu: 500m
                   memory: 1000Mi
           restartPolicy: OnFailure
