@@ -14,10 +14,6 @@ spec:
               image: ${image}:latest
               command: [ "/bin/sh", "-c" ]
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')" ]
-              resources:
-                requests:
-                  cpu: 500m
-                  memory: 1000Mi
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -36,8 +32,4 @@ spec:
               image: ${image}:latest
               command: [ "/bin/sh", "-c" ]
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')" ]
-              resources:
-                requests:
-                  cpu: 500m
-                  memory: 1000Mi
           restartPolicy: OnFailure
