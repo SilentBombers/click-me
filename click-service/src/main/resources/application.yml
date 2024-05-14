@@ -2,7 +2,7 @@ spring:
   data:
     redis:
       host: localhost
-      port: 6380
+      port: 6379
   datasource:
     driver-class-name: org.h2.Driver
     username: sa
@@ -19,7 +19,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         default_batch_fetch_size: 100
     open-in-view: false
     show-sql: true
