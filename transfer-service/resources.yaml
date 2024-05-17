@@ -14,7 +14,7 @@ spec:
               image: ${image}:latest
               command: [ "/bin/sh", "-c" ]
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=syncRedisToMysqlJob createAt=$(date -u +'%Y-%m-%d')" ]
-          restartPolicy: OnFailure
+          restartPolicy: Never
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -32,4 +32,4 @@ spec:
               image: ${image}:latest
               command: [ "/bin/sh", "-c" ]
               args: ["java -cp /app/resources:/app/classes:/app/libs/* clickme.transferservice.TransferServiceApplication --spring.batch.job.name=profileImageUpdateJob createAt=$(date -u +'%Y-%m-%d')" ]
-          restartPolicy: OnFailure
+          restartPolicy: Never
