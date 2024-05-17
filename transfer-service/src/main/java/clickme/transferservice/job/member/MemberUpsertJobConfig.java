@@ -46,18 +46,22 @@ public class MemberUpsertJobConfig {
     private final HeartRepository heartRepository;
     private final MemberUpsertAfterJobListener memberUpsertAfterJobListener;
     private final ThreadPoolTaskExecutor taskExecutor;
+    private final JobCompletionNotificationListener jobCompletionNotificationListener;
 
     public MemberUpsertJobConfig(
             final RedisTemplate<String, String> redisTemplate,
             final MemberRepository memberRepository,
             final HeartRepository heartRepository,
             final MemberUpsertAfterJobListener memberUpsertAfterJobListener,
-            @Qualifier("taskExecutor")final ThreadPoolTaskExecutor taskExecutor) {
+            @Qualifier("taskExecutor")final ThreadPoolTaskExecutor taskExecutor,
+            final JobCompletionNotificationListener jobCompletionNotificationListener
+    ) {
         this.redisTemplate = redisTemplate;
         this.memberRepository = memberRepository;
         this.heartRepository = heartRepository;
         this.memberUpsertAfterJobListener = memberUpsertAfterJobListener;
         this.taskExecutor = taskExecutor;
+        this.jobCompletionNotificationListener = jobCompletionNotificationListener;
     }
 
     @Bean
@@ -68,6 +72,7 @@ public class MemberUpsertJobConfig {
                 .flow(stepManager)
                 .end()
                 .listener(memberUpsertAfterJobListener)
+                .listener(jobCompletionNotificationListener)
                 .build();
     }
 

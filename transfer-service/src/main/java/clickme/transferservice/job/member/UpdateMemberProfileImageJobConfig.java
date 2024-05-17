@@ -41,6 +41,7 @@ public class UpdateMemberProfileImageJobConfig {
 
     private final MemberRepository memberRepository;
     private final DataSource dataSource;
+    private final JobCompletionNotificationListener jobCompletionNotificationListener;
 
     @Bean
     @StepScope
@@ -111,6 +112,7 @@ public class UpdateMemberProfileImageJobConfig {
                 .incrementer(new RunIdIncrementer())
                 .flow(profileImageUpdateStep)
                 .end()
+                .listener(jobCompletionNotificationListener)
                 .build();
     }
 }
