@@ -1,0 +1,40 @@
+package clickme.transferservice.job.member;
+
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.listener.JobExecutionListenerSupport;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+
+@Component
+public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
+
+    private final ApplicationContext context;
+    private final ThreadPoolTaskExecutor taskExecutor;
+
+    public JobCompletionNotificationListener(
+            ApplicationContext context,
+            @Qualifier("taskExecutor")ThreadPoolTaskExecutor taskExecutor
+    ) {
+        this.context = context;
+        this.taskExecutor = taskExecutor;
+    }
+
+    @Override
+    public void afterJob(JobExecution jobExecution) {
+        Runnable closeContextTask = () -> {
+            try {
+                Thread.sleep(5000); // 5초 대기
+                ((ConfigurableApplicationContext) context).close();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        };
+        if (jobExecution.getStatus() == BatchStatus.COMPLETED || jobExecution.getStatus() == BatchStatus.FAILED) {
+            taskExecutor.execute(closeContextTask);
+        }
+    }
+}
