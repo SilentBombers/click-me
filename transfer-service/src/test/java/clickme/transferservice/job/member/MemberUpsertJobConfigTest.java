@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringJUnitConfig(classes = {MemberUpsertJobConfig.class, TestBatchConfig.class, MemberUpsertAfterJobListener.class})
-@TestPropertySource(properties = {"spring.batch.job.name = syncRedisToMysqlJob", "slack.webhook.url=https://example.com"})
+@TestPropertySource(properties = {"spring.batch.job.name = syncRedisToMysqlJob", "SLACK_WEBHOOK_URL=https://example.com"})
 class MemberUpsertJobConfigTest extends AbstractIntegrationTest {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

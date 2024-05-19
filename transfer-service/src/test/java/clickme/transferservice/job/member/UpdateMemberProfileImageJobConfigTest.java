@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringJUnitConfig(classes = {UpdateMemberProfileImageJobConfig.class, TestBatchConfig.class})
-@TestPropertySource(properties = {"spring.batch.job.name = profileImageUpdateJob", "slack.webhook.url=https://example.com"})
+@TestPropertySource(properties = {"spring.batch.job.name = profileImageUpdateJob", "SLACK_WEBHOOK_URL=https://example.com"})
 class UpdateMemberProfileImageJobConfigTest extends AbstractIntegrationTest {
 
     private static final String DEFAULT_IMAGE = "https://avatars.githubusercontent.com/u/134919246?v=4";
