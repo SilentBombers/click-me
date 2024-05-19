@@ -20,6 +20,8 @@ public class AppConfig {
         executor.setThreadNamePrefix("executor-thread");
         executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
         executor.setAwaitTerminationSeconds(30);
+        executor.setKeepAliveSeconds(30);
+        executor.setAllowCoreThreadTimeOut(true);
         executor.initialize();
         return executor;
     }
