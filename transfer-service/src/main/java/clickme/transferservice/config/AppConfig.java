@@ -19,6 +19,7 @@ public class AppConfig {
         executor.setMaxPoolSize(POOL_SIZE);
         executor.setThreadNamePrefix("executor-thread");
         executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
+        executor.setAwaitTerminationSeconds(30);
         executor.initialize();
         return executor;
     }
