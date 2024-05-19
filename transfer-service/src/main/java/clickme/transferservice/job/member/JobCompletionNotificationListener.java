@@ -18,7 +18,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 
     public JobCompletionNotificationListener(
             final HttpClientSupport httpClientSupport,
-            @Value("${slack.webhook.url}") final String slackWebhookURL
+            @Value("${SLACK_WEBHOOK_URL}") final String slackWebhookURL
     ) {
         this.httpClientSupport = httpClientSupport;
         this.slackWebhookURL = slackWebhookURL;
