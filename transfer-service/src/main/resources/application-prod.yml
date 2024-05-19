@@ -13,3 +13,7 @@ spring:
   batch:
     job:
       name: ${job.name:NONE}
+
+slack:
+  webhook:
+    url: ${SLACK_WEBHOOK_URL}
