@@ -10,9 +10,11 @@ public class AppConfig {
 
     private static final int POOL_SIZE = 10;
 
+    private ThreadPoolTaskExecutor executor;
+
     @Bean
     public ThreadPoolTaskExecutor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(POOL_SIZE);
         executor.setMaxPoolSize(POOL_SIZE);
         executor.setThreadNamePrefix("executor-thread");
@@ -23,6 +25,6 @@ public class AppConfig {
 
     @PreDestroy
     public void destroy() {
-        taskExecutor().shutdown();
+        executor.shutdown();
     }
 }
