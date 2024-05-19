@@ -77,7 +77,8 @@ public class MemberUpsertJobConfig {
     }
 
     @Bean
-    public Step stepManager(@Qualifier("syncRedisToMySqlStep") Step partitionStep, JobRepository jobRepository) {
+    public Step stepManager(@Qualifier("syncRedisToMySqlStep") final Step partitionStep,
+                            final JobRepository jobRepository) {
         return new StepBuilder("stepManager", jobRepository)
                 .partitioner("syncRedisToMySqlStep", partitioner())
                 .step(partitionStep)
@@ -109,8 +110,8 @@ public class MemberUpsertJobConfig {
     @Bean
     @StepScope
     public ItemStreamReader<TypedTuple<String>> reader(
-            @Value("#{stepExecutionContext[startOffset]}") Long startOffset,
-            @Value("#{stepExecutionContext[endOffset]}") Long endOffset
+            @Value("#{stepExecutionContext[startOffset]}") final Long startOffset,
+            @Value("#{stepExecutionContext[endOffset]}") final Long endOffset
     ) {
         final String key = RedisKeyGenerator.getDailyClickCountKey();
         return new RedisPagingItemReader(key, redisTemplate, startOffset, endOffset);
