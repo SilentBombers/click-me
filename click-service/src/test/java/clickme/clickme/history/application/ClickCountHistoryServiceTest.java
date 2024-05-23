@@ -22,29 +22,24 @@ class ClickCountHistoryServiceTest {
     private ClickCountHistoryRepository clickCountHistoryRepository;
 
     @Test
-    void findClickCountHistoryByNameAndDateBetween_whenHistoryExists() {
-        // Given
+    void 클릭카운트_히스토리를_정상적으로_조회한다() {
         String name = "testUser";
         LocalDate localDate = LocalDate.now();
-        clickCountHistoryRepository.save(new ClickCountHistory(name, localDate, 10L));
-
+        clickCountHistoryRepository.save(new ClickCountHistory(name,  10L));
         ClickCountHistoryResponse expectedResponse = new ClickCountHistoryResponse(localDate, 10L);
 
-        // When
         ClickCountHistoriesResponse clickCountHistoryResponses =
                 clickCountHistoryService.findClickCountHistoryByNameAndDateBetween(name);
 
-        // Then
         assertThat(clickCountHistoryResponses.clickCountHistories().contains(expectedResponse)).isTrue();
     }
 
     @Test
-    void findClickCountHistoryByNameAndDateBetween_whenHistoryDoesNotExist() {
+    void 클릭카운트_히스토리가_존재하지_않으면_클릭카운트는_전부0이다() {
         String name = "testUser";
         ClickCountHistoriesResponse clickCountHistoryResponses =
                 clickCountHistoryService.findClickCountHistoryByNameAndDateBetween(name);
 
-        // Then
         for (int i = 0; i < 7; i++) {
             assertThat(clickCountHistoryResponses.clickCountHistories().get(i).clickCount()).isZero();
         }
