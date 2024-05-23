@@ -49,7 +49,11 @@ public class RankingRedisRepository implements RankingRepository {
 
     @Override
     public List<RankingDto> findLiveRanking(final int start, final int end) {
-        final AtomicLong ranking = new AtomicLong(start + 1);
+        if (start < 0 || end < start) {
+            return Collections.emptyList();
+        }
+
+        final AtomicLong ranking = new AtomicLong(start + 1L);
 
         Set<ZSetOperations.TypedTuple<String>> rangeWithScores
                 = rankings.reverseRangeWithScores(RANKING_KEY, start, end);
