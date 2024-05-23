@@ -37,6 +37,10 @@ public class ClickCountHistory {
         this.clickCount = clickCount;
     }
 
+    public ClickCountHistory(final String name, final Long clickCount) {
+        this(name, LocalDate.now(), clickCount);
+    }
+
     @Override
     public String toString() {
         return "DailyClickCount{" +

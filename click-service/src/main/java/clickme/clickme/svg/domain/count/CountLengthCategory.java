@@ -33,10 +33,6 @@ public enum CountLengthCategory {
         return this.length == length;
     }
 
-    public int getLength() {
-        return length;
-    }
-
     public String getX() {
         return x;
     }

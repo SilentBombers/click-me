@@ -1,9 +1,30 @@
 plugins {
-	id 'com.palantir.docker' version '0.35.0'
+	id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 group = 'clickme.click'
-version = '1.0.1'
+version = '1.0.2'
+
+jib {
+	from {
+		image = "eclipse-temurin:17-jre-alpine@sha256:635ec1b177ac2a587324ed5eda2b9dec197876e16d10c35a4ef9595d76c2c891"
+	}
+	to {
+		image = "asia-northeast3-docker.pkg.dev/ninth-victor-422606-e1/clickme/click-service:latest"
+	}
+	container {
+		jvmFlags = ["-Xms258m", "-Xmx1024m"]
+		environment = [
+				'REDIS_HOST': System.getenv('REDIS_HOST'),
+				'REDIS_PORT': System.getenv('REDIS_PORT'),
+				'DATASOURCE_URL': System.getenv('DATASOURCE_URL'),
+				'DATASOURCE_USERNAME': System.getenv('DATASOURCE_USERNAME'),
+				'DATASOURCE_PASSWORD': System.getenv('DATASOURCE_PASSWORD'),
+				'SPRING_PROFILES_ACTIVE': 'prod'
+		]
+		filesModificationTime = 'EPOCH_PLUS_SECOND'
+	}
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -13,18 +34,13 @@ dependencies {
 	implementation 'org.projectlombok:lombok'
 	implementation 'org.apache.xmlgraphics:batik-all:1.17'
 	implementation 'org.flywaydb:flyway-mysql'
+	testImplementation 'io.rest-assured:rest-assured:5.4.0'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'org.testcontainers:junit-jupiter'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-docker {
-	println(tasks.bootJar.outputs.files)
-	name rootProject.name+'-'+project.name + ":" + version
-	dockerfile file('./Dockerfile')
-	files tasks.bootJar.outputs.files
-	buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
 }

@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: none
   data:
     redis:
       host: localhost
@@ -9,5 +11,9 @@ spring:
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   batch:
-    jdbc:
-      initialize-schema: ALWAYS
+    job:
+      name: ${job.name:NONE}
+
+slack:
+  webhook:
+    url: ${SLACK_WEBHOOK_URL}
