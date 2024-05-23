@@ -34,8 +34,6 @@ class SvgAcceptanceTest extends AcceptanceTest {
         );
     }
 
-
-
     @Test
     void 활성_svg_이미지를_가져온다() throws Exception {
         String name = "seungpang";
