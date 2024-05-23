@@ -18,7 +18,7 @@ class RankingAcceptanceTest extends AcceptanceTest {
         String name = "seungpang";
         rankingRepository.add("seungpang");
 
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/v1/rankings/" + name);
+        final ExtractableResponse<Response> response = 개인_랭킹_조회(name);
         final Long rank = response.as(Long.class);
 
         assertAll(
@@ -35,7 +35,7 @@ class RankingAcceptanceTest extends AcceptanceTest {
         rankingRepository.increaseCount("angie");
         rankingRepository.increaseCount("angie");
         rankingRepository.increaseCount("chunsik");
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/v1/rankings/live?startRank=0&endRank=2");
+        final ExtractableResponse<Response> response = 실시간_랭킹_조회(0, 2);
         final List<RankingResponse> rankings = response.jsonPath().getList(".", RankingResponse.class);
 
         assertAll(
@@ -51,7 +51,7 @@ class RankingAcceptanceTest extends AcceptanceTest {
     void 존재하지_않는_사용자의_랭킹을_조회하면_0을_반환한다() {
         String name = "unknown";
 
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/v1/rankings/" + name);
+        final ExtractableResponse<Response> response = 개인_랭킹_조회(name);
         final Long rank = response.as(Long.class);
 
         assertAll(
@@ -62,7 +62,7 @@ class RankingAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 빈_랭킹_범위_요청시_빈_리스트를_반환한다() {
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/v1/rankings/live?startRank=2&endRank=2");
+        final ExtractableResponse<Response> response = 실시간_랭킹_조회(2, 2);
         final List<RankingResponse> rankings = response.jsonPath().getList(".", RankingResponse.class);
 
         assertAll(
@@ -72,8 +72,8 @@ class RankingAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 랭킹_범위가_데이터베이스의_실제_랭킹_수를_초과하는_경우() {
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/v1/rankings/live?startRank=0&endRank=10");
+    void 랭킹_범위가_실제_랭킹_수를_초과하는_경우() {
+        final ExtractableResponse<Response> response = 실시간_랭킹_조회(0, 10);
         final List<RankingResponse> rankings = response.jsonPath().getList(".", RankingResponse.class);
 
         assertAll(
@@ -84,12 +84,20 @@ class RankingAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 랭킹_범위가_음수인_경우_빈_리스트를_반환한다() {
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/v1/rankings/live?startRank=-1&endRank=-1");
+        final ExtractableResponse<Response> response = 실시간_랭킹_조회(-1, -1);
         final List<RankingResponse> rankings = response.jsonPath().getList(".", RankingResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(rankings).isEmpty()
         );
+    }
+
+    private static ExtractableResponse<Response> 개인_랭킹_조회(final String name) {
+        return AcceptanceFixture.get("/api/v1/rankings/"  + name);
+    }
+
+    private static ExtractableResponse<Response> 실시간_랭킹_조회(int startRank, int endRank) {
+        return AcceptanceFixture.get("/api/v1/rankings/live?startRank=" + startRank + "&endRank=" + endRank);
     }
 }
