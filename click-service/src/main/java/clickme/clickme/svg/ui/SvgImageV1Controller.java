@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -25,7 +23,7 @@ public class SvgImageV1Controller {
     private final SvgImageService svgImageService;
 
     @GetMapping
-    public ResponseEntity<String> getNonClickableSvgImageByName(@RequestParam final String name) throws IOException, TransformerException {
+    public ResponseEntity<String> getNonClickableSvgImageByName(@RequestParam final String name) {
         return ResponseEntity.ok()
                 .contentType(SVG)
                 .cacheControl(DEFAULT_CACHE_CONTROL)
@@ -33,7 +31,7 @@ public class SvgImageV1Controller {
     }
 
     @GetMapping("/increment")
-    public ResponseEntity<String> getClickableSvgImageByName(@RequestParam final String name) throws IOException, TransformerException {
+    public ResponseEntity<String> getClickableSvgImageByName(@RequestParam final String name) {
         return ResponseEntity.ok()
                 .contentType(SVG)
                 .cacheControl(DEFAULT_CACHE_CONTROL)

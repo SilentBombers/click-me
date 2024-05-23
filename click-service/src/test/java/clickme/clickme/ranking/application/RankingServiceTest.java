@@ -1,5 +1,6 @@
 package clickme.clickme.ranking.application;
 
+import clickme.clickme.common.EntityNotFoundException;
 import clickme.clickme.ranking.domain.Member;
 import clickme.clickme.ranking.domain.MemberRepository;
 import clickme.clickme.ranking.domain.RankingMemoryRepository;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -61,7 +61,7 @@ class RankingServiceTest {
     @DisplayName("없는 id로 랭크를 조회하면 예외가 발생 한다.")
     void shouldThrowExceptionWhenFindingRankByNonexistentId() {
         assertThatThrownBy(() -> rankingService.findRankByName("angie"))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
