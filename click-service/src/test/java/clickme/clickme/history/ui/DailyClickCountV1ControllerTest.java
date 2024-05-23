@@ -50,6 +50,7 @@ class DailyClickCountV1ControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", CoreMatchers.is(clickCountHistoryResponses.clickCountHistories().size())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.clickCountHistories.size()",
+                        CoreMatchers.is(clickCountHistoryResponses.clickCountHistories().size())));
     }
 }
