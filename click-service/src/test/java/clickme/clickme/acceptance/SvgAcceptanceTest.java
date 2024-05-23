@@ -1,13 +1,13 @@
 package clickme.clickme.acceptance;
 
+import clickme.clickme.common.ErrorCode;
 import clickme.clickme.svg.application.SvgImageService;
+import clickme.clickme.svg.application.exception.SvgException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -64,22 +64,22 @@ class SvgAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 서비스_예외_발생시_비활성_SVG_이미지를_가져오지_못하고_예외가_발생한다() throws Exception {
+    void 서비스_예외_발생시_비활성_SVG_이미지를_가져오지_못하고_예외가_발생한다() {
         String name = "seungpang";
 
-        when(svgImageService.generateNonClickableSvgImage(isA(String.class))).thenThrow(new IOException("Service exception"));
-
+        when(svgImageService.generateNonClickableSvgImage(isA(String.class)))
+                .thenThrow(new SvgException("Service exception", ErrorCode.INTERNAL_SERVER_ERROR));
         ExtractableResponse<Response> response = 비활성_svg_이미지_조회(name);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
     @Test
-    void 서비스_예외_발생시_활성_SVG_이미지를_가져오지_못하고_예외가_발생한다() throws Exception {
+    void 서비스_예외_발생시_활성_SVG_이미지를_가져오지_못하고_예외가_발생한다() {
         String name = "seungpang";
 
-        when(svgImageService.generateClickableSvgImage(isA(String.class))).thenThrow(new IOException("Service exception"));
-
+        when(svgImageService.generateClickableSvgImage(isA(String.class)))
+                .thenThrow(new SvgException("Service exception", ErrorCode.INTERNAL_SERVER_ERROR));
         ExtractableResponse<Response> response = 활성_svg_이미지_조회(name);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -91,7 +91,6 @@ class SvgAcceptanceTest extends AcceptanceTest {
         String svgContent = "<svg>Non-clickable content</svg>";
 
         when(svgImageService.generateNonClickableSvgImage(isA(String.class))).thenReturn(svgContent);
-
         ExtractableResponse<Response> response = 비활성_svg_이미지_조회(name);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -104,11 +103,12 @@ class SvgAcceptanceTest extends AcceptanceTest {
         String svgContent = "<svg>Clickable content</svg>";
 
         when(svgImageService.generateClickableSvgImage(isA(String.class))).thenReturn(svgContent);
-
         ExtractableResponse<Response> response = 활성_svg_이미지_조회(name);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.header("Cache-Control")).isEqualTo("max-age=1");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.header("Cache-Control")).isEqualTo("max-age=1")
+        );
     }
 
     private static ExtractableResponse<Response> 비활성_svg_이미지_조회(final String name) {
