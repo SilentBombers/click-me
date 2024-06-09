@@ -2,13 +2,14 @@
 <Configuration status="WARN">
   <Properties>
     <Property name="log-path">/var/log/click-service</Property>
+    <Property name="pod-name">${env:POD_NAME}</Property>
   </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1}:%L - %m%n"/>
     </Console>
-    <RollingFile name="RollingFileAppender" fileName="${log-path}/click-service.log"
-                 filePattern="${log-path}/click-service-%d{yyyy-MM-dd}.log.gz">
+    <RollingFile name="RollingFileAppender" fileName="${log-path}/click-service-${pod-name}.log"
+                 filePattern="${log-path}/click-service-${pod-name}-%d{yyyy-MM-dd}.log.gz">
       <PatternLayout>
         <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1}:%L - %m%n</Pattern>
       </PatternLayout>
