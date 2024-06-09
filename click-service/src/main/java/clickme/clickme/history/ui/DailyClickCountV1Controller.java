@@ -1,15 +1,13 @@
 package clickme.clickme.history.ui;
 
 import clickme.clickme.history.application.ClickCountHistoryService;
-import clickme.clickme.history.application.dto.ClickCountHistoryResponse;
+import clickme.clickme.history.application.dto.ClickCountHistoriesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +17,7 @@ public class DailyClickCountV1Controller {
     private final ClickCountHistoryService clickCountHistoryService;
 
     @GetMapping("/{name}")
-    public ResponseEntity<List<ClickCountHistoryResponse>> findClickCountHistoryByNameAndDateBetween(
+    public ResponseEntity<ClickCountHistoriesResponse> findClickCountHistoryByNameAndDateBetween(
             @PathVariable final String name
     ) {
         return ResponseEntity.ok()

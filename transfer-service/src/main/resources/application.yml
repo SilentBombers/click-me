@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: none
   data:
     redis:
       host: localhost
@@ -11,3 +13,7 @@ spring:
   batch:
     job:
       name: ${job.name:NONE}
+
+slack:
+  webhook:
+    url: ${SLACK_WEBHOOK_URL}

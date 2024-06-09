@@ -5,7 +5,6 @@ import clickme.transferservice.job.member.dto.UpsertMember;
 import clickme.transferservice.repository.HeartRepository;
 import clickme.transferservice.repository.MemberRepository;
 import clickme.transferservice.util.RedisKeyGenerator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.data.util.Pair;
@@ -35,11 +33,9 @@ import java.time.LocalDate;
 
 @Slf4j
 @Configuration
-@RequiredArgsConstructor
 @ConditionalOnProperty(value = "spring.batch.job.name", havingValue = "syncRedisToMysqlJob")
 public class MemberUpsertJobConfig {
 
-    private static final int POOL_SIZE = 10;
     private static final int PARTITION_SIZE = 10;
     private static final int CHUNK_SIZE = 1000;
     private static final String STEP_NAME = "syncRedisToMysqlStep";
@@ -49,6 +45,24 @@ public class MemberUpsertJobConfig {
     private final MemberRepository memberRepository;
     private final HeartRepository heartRepository;
     private final MemberUpsertAfterJobListener memberUpsertAfterJobListener;
+    private final ThreadPoolTaskExecutor taskExecutor;
+    private final JobCompletionNotificationListener jobCompletionNotificationListener;
+
+    public MemberUpsertJobConfig(
+            final RedisTemplate<String, String> redisTemplate,
+            final MemberRepository memberRepository,
+            final HeartRepository heartRepository,
+            final MemberUpsertAfterJobListener memberUpsertAfterJobListener,
+            @Qualifier("taskExecutor")final ThreadPoolTaskExecutor taskExecutor,
+            final JobCompletionNotificationListener jobCompletionNotificationListener
+    ) {
+        this.redisTemplate = redisTemplate;
+        this.memberRepository = memberRepository;
+        this.heartRepository = heartRepository;
+        this.memberUpsertAfterJobListener = memberUpsertAfterJobListener;
+        this.taskExecutor = taskExecutor;
+        this.jobCompletionNotificationListener = jobCompletionNotificationListener;
+    }
 
     @Bean
     public Job syncRedisToMysqlJob(@Qualifier("stepManager") final Step stepManager,
@@ -58,16 +72,18 @@ public class MemberUpsertJobConfig {
                 .flow(stepManager)
                 .end()
                 .listener(memberUpsertAfterJobListener)
+                .listener(jobCompletionNotificationListener)
                 .build();
     }
 
     @Bean
-    public Step stepManager(@Qualifier("syncRedisToMySqlStep") Step partitionStep, JobRepository jobRepository) {
+    public Step stepManager(@Qualifier("syncRedisToMySqlStep") final Step partitionStep,
+                            final JobRepository jobRepository) {
         return new StepBuilder("stepManager", jobRepository)
                 .partitioner("syncRedisToMySqlStep", partitioner())
                 .step(partitionStep)
                 .gridSize(PARTITION_SIZE) // 파티션 수
-                .taskExecutor(executor())
+                .taskExecutor(taskExecutor)
                 .build();
     }
 
@@ -92,21 +108,10 @@ public class MemberUpsertJobConfig {
     }
 
     @Bean
-    public TaskExecutor executor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(POOL_SIZE);
-        executor.setMaxPoolSize(POOL_SIZE);
-        executor.setThreadNamePrefix("partition-thread");
-        executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
-        executor.initialize();
-        return executor;
-    }
-
-    @Bean
     @StepScope
     public ItemStreamReader<TypedTuple<String>> reader(
-            @Value("#{stepExecutionContext[startOffset]}") Long startOffset,
-            @Value("#{stepExecutionContext[endOffset]}") Long endOffset
+            @Value("#{stepExecutionContext[startOffset]}") final Long startOffset,
+            @Value("#{stepExecutionContext[endOffset]}") final Long endOffset
     ) {
         final String key = RedisKeyGenerator.getDailyClickCountKey();
         return new RedisPagingItemReader(key, redisTemplate, startOffset, endOffset);

@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'clickme.transfer'
-version = '1.0.1'
+version = '1.1.0'
 
 jib {
     from {
@@ -20,6 +20,7 @@ jib {
                 'DATASOURCE_URL': System.getenv('DATASOURCE_URL'),
                 'DATASOURCE_USERNAME': System.getenv('DATASOURCE_USERNAME'),
                 'DATASOURCE_PASSWORD': System.getenv('DATASOURCE_PASSWORD'),
+                'SLACK_WEBHOOK_URL': System.getenv('SLACK_WEBHOOK_URL'),
                 'SPRING_PROFILES_ACTIVE': 'prod'
         ]
         filesModificationTime = 'EPOCH_PLUS_SECOND'
