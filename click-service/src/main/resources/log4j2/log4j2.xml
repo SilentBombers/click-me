@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Properties>
+    <Property name="log-path">/var/log/click-service</Property>
+  </Properties>
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1}:%L - %m%n"/>
+    </Console>
+    <RollingFile name="RollingFileAppender" fileName="${log-path}/click-service.log"
+                 filePattern="${log-path}/click-service-%d{yyyy-MM-dd}.log.gz">
+      <PatternLayout>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1}:%L - %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="RollingFileAppender"/>
+    </Root>
+    <Logger name="clickme.clickme" level="debug" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="RollingFileAppender"/>
+    </Logger>
+  </Loggers>
+</Configuration>
