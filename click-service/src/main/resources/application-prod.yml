@@ -22,3 +22,13 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+  config: classpath:log4j2/log4j2.xml
