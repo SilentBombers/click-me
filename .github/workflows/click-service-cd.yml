@@ -70,12 +70,11 @@ jobs:
 
       - name: Apply Persistent Volumes
         run: |
-          kubectl apply -f ./pv.yaml
-          kubectl apply -f ./pvc.yaml
+          kubectl apply -f ./click-service/pv.yaml
+          kubectl apply -f ./click-service/pvc.yaml
 
       - name: Deploy
         run: |
           sed "s,\${image},${{ env.IMAGE }},g" ./click-service/resources.yaml > deployment.yaml
           kubectl apply -f ./deployment.yaml
-          mv ./click-service/hpa.yaml .
-          kubectl apply -f ./hpa.yaml
+          kubectl apply -f ./click-service/hpa.yaml
