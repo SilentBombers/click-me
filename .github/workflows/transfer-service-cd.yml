@@ -1,6 +1,6 @@
 name: cd for transfer-service
 on:
-  pull_request:
+  push:
     branches: [ main ]
     paths:
       - transfer-service/**
@@ -53,8 +53,8 @@ jobs:
       - id: 'get-credentials'
         uses: google-github-actions/get-gke-credentials@v1
         with:
-          cluster_name: autopilot-cluster-1
-          location: ${{ env.REGION }}
+          cluster_name: cluster-1
+          location: ${{ env.REGION }}-a
 
       - name: Docker auth
         run: |-

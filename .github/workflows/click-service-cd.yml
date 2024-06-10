@@ -18,6 +18,8 @@ env:
   DATASOURCE_URL: ${{secrets.DB_URL}}
   DATASOURCE_USERNAME: ${{secrets.DB_USERNAME}}
   DATASOURCE_PASSWORD: ${{secrets.DB_PASSWORD}}
+  GRAFANA_ADMIN_USER: ${{ secrets.GRAFANA_ADMIN_USER }}
+  GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
 
 jobs:
   build:
@@ -52,8 +54,8 @@ jobs:
       - id: 'get-credentials'
         uses: google-github-actions/get-gke-credentials@v1
         with:
-          cluster_name: autopilot-cluster-1
-          location: ${{ env.REGION }}
+          cluster_name: cluster-1
+          location: ${{ env.REGION }}-a
 
       - name: Docker auth
         run: |-
@@ -78,4 +80,3 @@ jobs:
           sed "s,\${image},${{ env.IMAGE }},g" ./click-service/resources.yaml > deployment.yaml
           kubectl apply -f ./deployment.yaml
           kubectl apply -f ./click-service/hpa.yaml
-
