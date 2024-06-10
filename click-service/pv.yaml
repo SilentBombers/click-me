@@ -10,4 +10,3 @@ spec:
   gcePersistentDisk:
     pdName: log-pv-disk
     fsType: ext4
-
