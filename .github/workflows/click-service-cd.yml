@@ -4,7 +4,7 @@ on:
     branches: [ main ]
     paths:
       - click-service/**
-      - .github/**
+      - .github/workflows/click-service-cd.yml
 
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}

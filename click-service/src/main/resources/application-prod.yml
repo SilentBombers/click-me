@@ -32,3 +32,24 @@ logging:
             sql:
               BasicBinder: TRACE
   config: classpath:log4j2/log4j2.xml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+        step: 1m
