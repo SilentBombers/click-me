@@ -39,6 +39,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	implementation 'org.apache.xmlgraphics:batik-all:1.17'
 	implementation 'org.flywaydb:flyway-mysql'
 	testImplementation 'io.rest-assured:rest-assured:5.4.0'
