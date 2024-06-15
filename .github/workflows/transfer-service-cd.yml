@@ -1,6 +1,6 @@
 name: cd for transfer-service
 on:
-  push:
+  pull_request:
     branches: [ main ]
     paths:
       - transfer-service/**
@@ -73,4 +73,5 @@ jobs:
         run: |
           sed "s,\${image},${{ env.IMAGE }},g" ./transfer-service/resources.yaml > cronJob.yaml
           kubectl apply -f ./cronJob.yaml
+
 
