@@ -68,11 +68,6 @@ jobs:
       - name: Docker Build
         run: ./gradlew :click-service:jib
 
-      - name: Apply Persistent Volumes
-        run: |
-          kubectl apply -f ./click-service/pv.yaml
-          kubectl apply -f ./click-service/pvc.yaml
-
       - name: Deploy
         run: |
           sed "s,\${image},${{ env.IMAGE }},g" ./click-service/resources.yaml > deployment.yaml
