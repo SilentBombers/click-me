@@ -44,5 +44,4 @@ spec:
               name: log-volume
       volumes:
         - name: log-volume
-          persistentVolumeClaim:
-            claimName: log-pvc
+          emptyDir: {}
