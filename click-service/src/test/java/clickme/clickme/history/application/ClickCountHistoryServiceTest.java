@@ -24,8 +24,8 @@ class ClickCountHistoryServiceTest {
     @Test
     void 클릭카운트_히스토리를_정상적으로_조회한다() {
         String name = "testUser";
-        LocalDate localDate = LocalDate.now();
-        clickCountHistoryRepository.save(new ClickCountHistory(name,  10L));
+        LocalDate localDate = LocalDate.now().minusDays(2);
+        clickCountHistoryRepository.save(new ClickCountHistory(name, localDate, 10L));
         ClickCountHistoryResponse expectedResponse = new ClickCountHistoryResponse(localDate, 10L);
 
         ClickCountHistoriesResponse clickCountHistoryResponses =
