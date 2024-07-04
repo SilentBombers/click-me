@@ -18,9 +18,8 @@ import java.util.stream.IntStream;
 public class ClickCountHistoryService {
 
     private final ClickCountHistoryRepository clickCountHistoryRepository;
-
     public ClickCountHistoriesResponse findClickCountHistoryByNameAndDateBetween(final String name) {
-        final LocalDate endDate = LocalDate.now();
+        final LocalDate endDate = LocalDate.now().minusDays(1);
         final LocalDate startDate = endDate.minusDays(6);
 
         final List<ClickCountHistory> histories = clickCountHistoryRepository
@@ -41,10 +40,8 @@ public class ClickCountHistoryService {
 
     private static List<ClickCountHistoryResponse> buildResponse(final LocalDate startDate, final Map<LocalDate, Long> dateToClickCount) {
         return IntStream.rangeClosed(0, 6)
-                .mapToObj(i -> {
-                    LocalDate date = startDate.plusDays(i);
-                    return new ClickCountHistoryResponse(date, dateToClickCount.getOrDefault(date, 0L));
-                })
+                .mapToObj(startDate::plusDays)
+                .map(date -> new ClickCountHistoryResponse(date, dateToClickCount.getOrDefault(date, 0L)))
                 .toList();
     }
 }
