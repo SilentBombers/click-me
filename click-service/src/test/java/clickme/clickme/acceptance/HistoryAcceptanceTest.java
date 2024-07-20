@@ -31,9 +31,10 @@ class HistoryAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 당일_클릭카운트가10이면_히스토리_마지막도_10이다() {
+    void 전날_클릭카운트가10이면_히스토리_마지막도_10이다() {
         String name = "seungpang";
-        clickCountHistoryRepository.save(new ClickCountHistory(name, 10L));
+        final LocalDate localDate = LocalDate.now().minusDays(1);
+        clickCountHistoryRepository.save(new ClickCountHistory(name, localDate, 10L));
 
         final ExtractableResponse<Response> response = AcceptanceFixture.get("api/v1/daily-click-count/" + name);
         final ClickCountHistoriesResponse actual = response.as(ClickCountHistoriesResponse.class);
@@ -47,8 +48,8 @@ class HistoryAcceptanceTest extends AcceptanceTest {
     void 일부_날짜에_대한_클릭_카운트_기록이_없는_경우_누락된_날짜에_대한_기록은_0으로_채워진다() {
         String name = "seungpang";
         LocalDate today = LocalDate.now();
-        clickCountHistoryRepository.save(new ClickCountHistory(name, today.minusDays(6), 10L));
-        clickCountHistoryRepository.save(new ClickCountHistory(name, today.minusDays(4), 5L));
+        clickCountHistoryRepository.save(new ClickCountHistory(name, today.minusDays(7), 10L));
+        clickCountHistoryRepository.save(new ClickCountHistory(name, today.minusDays(5), 5L));
 
         final ExtractableResponse<Response> response = AcceptanceFixture.get("api/v1/daily-click-count/" + name);
         final ClickCountHistoriesResponse historiesResponse = response.as(ClickCountHistoriesResponse.class);
@@ -58,7 +59,7 @@ class HistoryAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(actual.get(0).clickCount()).isEqualTo(10),
                 () -> assertThat(actual.get(2).clickCount()).isEqualTo(5),
-                () -> assertThat(actual.get(4).clickCount()).isEqualTo(0)
+                () -> assertThat(actual.get(4).clickCount()).isZero()
         );
     }
 
