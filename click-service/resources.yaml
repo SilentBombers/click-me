@@ -9,8 +9,8 @@ spec:
       app: click-service
   strategy:
     rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+      maxSurge: 30%
+      maxUnavailable: 30%
   template:
     metadata:
       labels:
