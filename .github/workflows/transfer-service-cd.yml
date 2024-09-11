@@ -54,7 +54,7 @@ jobs:
         uses: google-github-actions/get-gke-credentials@v1
         with:
           cluster_name: cluster-1
-          location: ${{ env.REGION }}-a
+          location: ${{ env.REGION }}-c
 
       - name: Docker auth
         run: |-
