@@ -74,3 +74,4 @@ jobs:
           sed "s,\${image},${{ env.IMAGE }},g" ./transfer-service/resources.yaml > cronJob.yaml
           kubectl apply -f ./cronJob.yaml
 
+
