@@ -75,3 +75,6 @@ jobs:
           sed "s,\${image},${{ env.IMAGE }},g" ./click-service/resources.yaml > deployment.yaml
           kubectl apply -f ./deployment.yaml
           kubectl apply -f ./click-service/hpa.yaml
+
+
+
