@@ -10,7 +10,7 @@ jib {
         image = "eclipse-temurin:17-jre-alpine@sha256:635ec1b177ac2a587324ed5eda2b9dec197876e16d10c35a4ef9595d76c2c891"
     }
     to {
-        image = "asia-northeast3-docker.pkg.dev/fresh-replica-435314-d1/clickme/transfer-service:latest"
+        image = "asia-northeast3-docker.pkg.dev/macro-atom-439600-g4/clickme/transfer-service:latest"
     }
     container {
         jvmFlags = ["-Xms258m", "-Xmx1024m"]
