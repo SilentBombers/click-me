@@ -57,3 +57,9 @@ management:
       export:
         enabled: true
         step: 1m
+
+gcp:
+  storage:
+    bucket-name: ${BUKET_NAME}
+    credentials:
+      location: classpath:credentials.json
