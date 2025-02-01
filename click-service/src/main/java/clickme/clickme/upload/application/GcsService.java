@@ -10,6 +10,11 @@ import java.util.UUID;
 @Service
 public class GcsService {
 
+    private static final String PREFIX_PATH = "svgs/";
+    private static final String FORMAT = ".svg";
+    private static final String SVG_TYPE = "image/svg+xml";
+    private static final String DEFAULT_STORAGE_URL = "https://storage.googleapis.com/%s/%s";
+
     private final Storage storage;
 
     @Value("${gcp.storage.bucket-name}")
@@ -20,10 +25,10 @@ public class GcsService {
     }
 
     public String uploadSvg(String svgContent) {
-        String fileName = "svgs/" + UUID.randomUUID() + ".svg";
+        String fileName = PREFIX_PATH + UUID.randomUUID() + FORMAT;
         Bucket bucket = storage.get(bucketName);
-        bucket.create(fileName, svgContent.getBytes(), "image/svg+xml");
+        bucket.create(fileName, svgContent.getBytes(), SVG_TYPE);
 
-        return String.format("https://storage.googleapis.com/%s/%s", bucketName, fileName);
+        return String.format(DEFAULT_STORAGE_URL, bucketName, fileName);
     }
 }
