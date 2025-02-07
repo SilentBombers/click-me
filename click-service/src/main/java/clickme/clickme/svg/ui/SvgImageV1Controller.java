@@ -23,18 +23,19 @@ public class SvgImageV1Controller {
     private final SvgImageService svgImageService;
 
     @GetMapping
-    public ResponseEntity<String> getNonClickableSvgImageByName(@RequestParam final String name) {
+    public ResponseEntity<String> getNonClickableSvgImageByName(@RequestParam final String name, @RequestParam final String svgUrl) {
+        System.out.println(svgUrl);
         return ResponseEntity.ok()
                 .contentType(SVG)
                 .cacheControl(DEFAULT_CACHE_CONTROL)
-                .body(svgImageService.generateNonClickableSvgImage(name));
+                .body(svgImageService.generateNonClickableSvgImage(name, svgUrl));
     }
 
     @GetMapping("/increment")
-    public ResponseEntity<String> getClickableSvgImageByName(@RequestParam final String name) {
+    public ResponseEntity<String> getClickableSvgImageByName(@RequestParam final String name, @RequestParam final String svgUrl) {
         return ResponseEntity.ok()
                 .contentType(SVG)
                 .cacheControl(DEFAULT_CACHE_CONTROL)
-                .body(svgImageService.generateClickableSvgImage(name));
+                .body(svgImageService.generateClickableSvgImage(name, svgUrl));
     }
 }
