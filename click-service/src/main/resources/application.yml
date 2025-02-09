@@ -70,6 +70,4 @@ management:
 gcp:
   storage:
     bucket-name: test
-    credentials:
-      location: classpath:credentials.json
 

@@ -61,5 +61,3 @@ management:
 gcp:
   storage:
     bucket-name: ${BUKET_NAME}
-    credentials:
-      location: classpath:credentials.json
