@@ -69,7 +69,7 @@ management:
 
 gcp:
   storage:
-    bucket-name: ${BUKET_NAME}
+    bucket-name: test
     credentials:
       location: classpath:credentials.json
 
