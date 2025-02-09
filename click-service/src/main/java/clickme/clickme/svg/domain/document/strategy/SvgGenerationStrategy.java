@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface SvgGenerationStrategy {
 
-    Document generateSvg(Count count, String name, String svgUrl) throws IOException;
+    Document generateSvg(Count count, String name) throws IOException;
 }

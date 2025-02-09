@@ -33,9 +33,8 @@ public class GcsSvgGenerationStrategy implements SvgGenerationStrategy {
     }
 
     @Override
-    public Document generateSvg(Count count, String name, String svgUrl) throws IOException {
-        Member member = memberRepository.findByName(name)
-                .orElseThrow(() -> new IOException("Member not found"));
+    public Document generateSvg(Count count, String name) throws IOException {
+        Member member = memberRepository.getMemberByName(name);
         String memberSvgUrl = member.getSvgUrl();
         Document doc = loadSvgFromGcs(memberSvgUrl);
         doc = svgDocumentManipulator.drawText(doc, count);

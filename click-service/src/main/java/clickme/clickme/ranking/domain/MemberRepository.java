@@ -20,4 +20,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
         return findProfileImageUrlByName(name)
                 .orElse("https://avatars.githubusercontent.com/u/134919246?v=4");
     }
+
+    default Member getMemberByName(String name) {
+        return findByName(name)
+                .orElse(new Member(0L, name, null));
+    }
 }

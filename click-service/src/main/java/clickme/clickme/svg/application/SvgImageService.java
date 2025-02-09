@@ -21,6 +21,7 @@ import org.w3c.dom.Document;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,24 +37,23 @@ public class SvgImageService {
     private final Storage storage;
     private final SvgTransformer svgTransformer;
 
-    public String generateClickableSvgImage(final String name, final String svgUrl) {
+    public String generateClickableSvgImage(final String name) {
         try {
             final Count count = addAndGetCount(name);
-            SvgGenerationStrategy strategy = chooseStrategy(svgUrl, name);
-            Document doc = strategy.generateSvg(count, name, svgUrl);
+            SvgGenerationStrategy strategy = chooseStrategy(name);
+            Document doc = strategy.generateSvg(count, name);
             return svgTransformer.transform(doc);
         } catch (IOException | TransformerException e) {
             throw new SvgException("Error generating Clickable SVG Image", ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private SvgGenerationStrategy chooseStrategy(String svgUrl, String name) {
-        final String foundSvgImage = memberRepository.findSvgImageName(name)
-                .orElse(null);
-        if (svgUrl.equals("null") && foundSvgImage == null) {
-            return new DefaultSvgGenerationStrategy(svgDocumentFactory, svgDocumentManipulator);
-        } else {
+    private SvgGenerationStrategy chooseStrategy(String name) {
+        final Optional<String> foundSvgImage = memberRepository.findSvgImageName(name);
+        if (foundSvgImage.isPresent()) {
             return new GcsSvgGenerationStrategy(svgDocumentFactory, svgDocumentManipulator, storage, BUCKET_NAME, memberRepository);
+        } else {
+            return new DefaultSvgGenerationStrategy(svgDocumentFactory, svgDocumentManipulator);
         }
     }
 
@@ -74,12 +74,26 @@ public class SvgImageService {
 
     @Transactional
     public String generateNonClickableSvgImage(final String name, final String svgUrl) {
-        if (!svgUrl.equals("null")) {
-            final Member member = memberRepository.findByName(name)
-                    .orElse(new Member(0L, name, null));
+        if (!svgUrl.equals("null") && !svgUrl.isEmpty()) {
+            final Member member = memberRepository.getMemberByName(name);
             member.updateSvgUrl(svgUrl);
             memberRepository.save(member);
         }
-        return generateClickableSvgImage(name, svgUrl);
+        return generateNonClickableSvgImage(name);
+    }
+
+    private String generateNonClickableSvgImage(final String name) {
+        try {
+            final Count count = getClickCount(name);
+            SvgGenerationStrategy strategy = chooseStrategy(name);
+            Document doc = strategy.generateSvg(count, name);
+            return svgTransformer.transform(doc);
+        } catch (IOException | TransformerException e) {
+            throw new SvgException("Error generating Clickable SVG Image", ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private Count getClickCount(final String name) {
+        return new Count(rankingRepository.findByName(name));
     }
 }

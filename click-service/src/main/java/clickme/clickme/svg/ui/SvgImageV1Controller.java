@@ -32,10 +32,10 @@ public class SvgImageV1Controller {
     }
 
     @GetMapping("/increment")
-    public ResponseEntity<String> getClickableSvgImageByName(@RequestParam final String name, @RequestParam final String svgUrl) {
+    public ResponseEntity<String> getClickableSvgImageByName(@RequestParam final String name) {
         return ResponseEntity.ok()
                 .contentType(SVG)
                 .cacheControl(DEFAULT_CACHE_CONTROL)
-                .body(svgImageService.generateClickableSvgImage(name, svgUrl));
+                .body(svgImageService.generateClickableSvgImage(name));
     }
 }

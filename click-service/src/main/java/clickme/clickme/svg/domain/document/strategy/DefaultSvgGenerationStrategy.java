@@ -19,7 +19,7 @@ public class DefaultSvgGenerationStrategy implements SvgGenerationStrategy{
     }
 
     @Override
-    public Document generateSvg(final Count count, final String name, final String svgUrl) throws IOException {
+    public Document generateSvg(final Count count, final String name) throws IOException {
         Document doc = svgDocumentFactory.createEmojiDocument();
         doc = svgDocumentManipulator.drawDefaultText(doc, count);
         doc = svgDocumentManipulator.executeEffect(doc, count);

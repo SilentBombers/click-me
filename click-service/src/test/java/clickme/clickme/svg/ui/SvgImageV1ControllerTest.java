@@ -30,11 +30,12 @@ class SvgImageV1ControllerTest {
     @Test
     void getNonClickableSvgImageByName() throws Exception {
         String name = "seungpang";
+        String svgUrl = "null";
         String expected = "seungpang click count";
-        when(svgImageService.generateNonClickableSvgImage(isA(String.class)))
+        when(svgImageService.generateNonClickableSvgImage(isA(String.class), isA(String.class)))
                 .thenReturn(expected);
 
-        final ResultActions response = mockMvc.perform(get("/api/v1/svg-image?name=" + name));
+        final ResultActions response = mockMvc.perform(get("/api/v1/svg-image?name=" + name + "&svgUrl=" + svgUrl));
 
         response.andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
