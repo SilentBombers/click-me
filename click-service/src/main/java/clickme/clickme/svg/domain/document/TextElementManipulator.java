@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 @Component
 public class TextElementManipulator extends ElementManipulator {
 
-    public void configureTextElement(Element textElement, Count count) {
+    public void configureDefaultTextElement(Element textElement, Count count) {
         textElement.setTextContent(count.getValue());
 
         setAttribute(textElement, "font-size", "50");
@@ -26,5 +26,17 @@ public class TextElementManipulator extends ElementManipulator {
 
         setAttribute(textElement, "x", category.getX());
         setAttribute(textElement, "y", category.getY());
+    }
+
+    public void configureElements(Element textElement, Element circleElement, Count count, Coordinates coors) {
+        textElement.setAttribute("x", String.valueOf(coors.textX()));
+        textElement.setAttribute("y", String.valueOf(coors.textY()));
+        textElement.setAttribute("font-size", "17");
+        textElement.setAttribute("fill", "black");
+        textElement.setAttribute("font-weight", "bold");
+        textElement.setTextContent(count.getValue());
+
+        circleElement.setAttribute("cx", String.valueOf(coors.circleX()));
+        circleElement.setAttribute("cy", String.valueOf(coors.circleY()));
     }
 }

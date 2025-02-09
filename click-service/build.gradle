@@ -13,10 +13,10 @@ configurations {
 
 jib {
 	from {
-		image = "eclipse-temurin:17-jre-alpine@sha256:635ec1b177ac2a587324ed5eda2b9dec197876e16d10c35a4ef9595d76c2c891"
+		image = "asia-northeast3-docker.pkg.dev/regal-station-443123-m2/clickme/ffmpeg-base:latest"
 	}
 	to {
-		image = "asia-northeast3-docker.pkg.dev/micro-chiller-429914-q6/clickme/click-service:latest"
+		image = "asia-northeast3-docker.pkg.dev/regal-station-443123-m2/clickme/click-service:latest"
 	}
 	container {
 		jvmFlags = ["-Xms258m", "-Xmx1024m"]
@@ -26,9 +26,14 @@ jib {
 				'DATASOURCE_URL': System.getenv('DATASOURCE_URL'),
 				'DATASOURCE_USERNAME': System.getenv('DATASOURCE_USERNAME'),
 				'DATASOURCE_PASSWORD': System.getenv('DATASOURCE_PASSWORD'),
-				'SPRING_PROFILES_ACTIVE': 'prod'
+				'BUKET_NAME': System.getenv('BUKET_NAME'),
+				'SPRING_PROFILES_ACTIVE': 'prod',
+				'GOOGLE_APPLICATION_CREDENTIALS': '/secrets/credentials.json'
 		]
 		filesModificationTime = 'EPOCH_PLUS_SECOND'
+	}
+	extraDirectories {
+		paths = [file('secrets')]
 	}
 }
 
@@ -38,6 +43,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+	implementation 'com.google.cloud:google-cloud-storage:2.48.0'
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'

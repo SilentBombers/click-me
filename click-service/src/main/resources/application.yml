@@ -1,4 +1,11 @@
 spring:
+  servlet:
+    multipart:
+      location: uploads/
+      enabled: true
+      max-file-size: 10MB
+      file-size-threshold: 2MB
+      max-request-size: 10MB
   jackson:
     time-zone: Asia/Seoul
   data:
@@ -59,3 +66,8 @@ management:
       export:
         enabled: true
         step: 1m
+
+gcp:
+  storage:
+    bucket-name: test
+

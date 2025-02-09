@@ -34,6 +34,12 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
+      - name: Set up Google Cloud auth
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCE_SA_KEY }}
+
       - name: Grant execute permission gradlew
         run: chmod +x ../gradlew
 
