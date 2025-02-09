@@ -1,7 +1,6 @@
 package clickme.clickme.svg.domain.document;
 
 import clickme.clickme.svg.util.RandomNumberGenerator;
-import lombok.RequiredArgsConstructor;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.springframework.core.io.Resource;
@@ -9,10 +8,11 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Component
-@RequiredArgsConstructor
 public class SvgDocumentFactory {
 
     private static final String EMOJI_PATH = "classpath:static/images/emoji_";
@@ -21,22 +21,30 @@ public class SvgDocumentFactory {
 
     private final ResourceLoader resourceLoader;
     private final RandomNumberGenerator emojiRandomIndexGenerator;
+    private final SAXSVGDocumentFactory factory;
+
+    public SvgDocumentFactory(final ResourceLoader resourceLoader, final RandomNumberGenerator emojiRandomIndexGenerator) {
+        this.resourceLoader = resourceLoader;
+        this.emojiRandomIndexGenerator = emojiRandomIndexGenerator;
+        this.factory = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
+    }
 
     public Document createEmojiDocument() throws IOException {
-        final String parser = XMLResourceDescriptor.getXMLParserClassName();
-        final SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-
         final String svgPath = createEmojiPath();
-        return createSvgDocument(svgPath, factory);
+        return createSvgDocument(svgPath);
     }
 
     private String createEmojiPath() {
         return EMOJI_PATH + emojiRandomIndexGenerator.generator(NUMBER_OF_DOCUMENTS) + EMOJI_FORMAT;
     }
 
-    private Document createSvgDocument(final String svgPath,
-                                       final SAXSVGDocumentFactory factory) throws IOException {
+    private Document createSvgDocument(final String svgPath) throws IOException {
         final Resource resource = resourceLoader.getResource(svgPath);
         return factory.createDocument(resource.getURI().toString());
+    }
+
+    public Document createSvgDocumentFromString(final String svgContent) throws IOException {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(svgContent.getBytes(StandardCharsets.UTF_8));
+        return factory.createDocument(null, inputStream);
     }
 }

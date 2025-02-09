@@ -57,3 +57,10 @@ management:
       export:
         enabled: true
         step: 1m
+
+gcp:
+  storage:
+    bucket-name: ${BUKET_NAME}
+
+environment:
+  GOOGLE_APPLICATION_CREDENTIALS: '/app/resources/credentials.json'

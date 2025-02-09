@@ -34,11 +34,11 @@ class SvgDocumentManipulatorTest {
     @ParameterizedTest(name = "카운트 수가 {0}인 경우")
     @ValueSource(ints = {1, 10, 100, 1000, 10000, 10000, 100000})
     @DisplayName("카운트 수의 길이에 따라 텍스트의 설정값들이 정상적으로 설정된다.")
-    void drawText(final long num) throws IOException {
+    void drawDefaultText(final long num) throws IOException {
         Document doc = svgDocumentFactory.createEmojiDocument();
 
         final Count count = new Count(num);
-        final Document resultDoc = svgDocumentManipulator.drawText(doc, count);
+        final Document resultDoc = svgDocumentManipulator.drawDefaultText(doc, count);
 
         final Element textElement = resultDoc.getElementById("my-text");
         assertAll(

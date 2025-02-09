@@ -2,10 +2,13 @@ package clickme.clickme.svg.application;
 
 import clickme.clickme.ranking.domain.DailyClickMemoryRepository;
 import clickme.clickme.ranking.domain.DailyClickRepository;
+import clickme.clickme.ranking.domain.MemberRepository;
 import clickme.clickme.ranking.domain.RankingMemoryRepository;
 import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.svg.domain.document.SvgDocumentFactory;
 import clickme.clickme.svg.domain.document.SvgDocumentManipulator;
+import clickme.clickme.svg.domain.document.SvgTransformer;
+import com.google.cloud.storage.Storage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,11 +36,28 @@ class SvgImageServiceTest {
     @Autowired
     private SvgDocumentManipulator svgDocumentManipulator;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private Storage storage;
+
+    @Autowired
+    private SvgTransformer svgTransformer;
+
     @BeforeEach
     void setUp() {
         rankingRepository = new RankingMemoryRepository();
         dailyClickRepository = new DailyClickMemoryRepository();
-        svgImageService = new SvgImageService(rankingRepository, dailyClickRepository, svgDocumentFactory, svgDocumentManipulator);
+        svgImageService = new SvgImageService(
+                rankingRepository,
+                dailyClickRepository,
+                svgDocumentFactory,
+                svgDocumentManipulator,
+                memberRepository,
+                storage,
+                svgTransformer
+        );
         rankingRepository.add(SEUNGPANG);
     }
 
@@ -55,7 +75,7 @@ class SvgImageServiceTest {
     @Test
     @DisplayName("카운트가 오르지 않고 svg 이미지가 정상적으로 호출된다.")
     void generateNonClickableSvgImage() {
-        final String svg = svgImageService.generateNonClickableSvgImage(SEUNGPANG);
+        final String svg = svgImageService.generateNonClickableSvgImage(SEUNGPANG, "null");
 
         assertAll(
                 () -> assertThat(rankingRepository.findByName(SEUNGPANG)).isEqualTo(0L),

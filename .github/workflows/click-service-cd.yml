@@ -11,7 +11,7 @@ env:
   DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
   REGION: ${{ secrets.REGION }}
   WORKSTATION_IMAGE: click-service
-  VERSION: '1.0.2'
+  VERSION: '1.1.0'
   IMAGE: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.DOCKER_REPO }}/click-service
   REDIS_HOST: ${{secrets.REDIS_HOST}}
   REDIS_PORT: ${{secrets.REDIS_PORT}}
@@ -20,6 +20,7 @@ env:
   DATASOURCE_PASSWORD: ${{secrets.DB_PASSWORD}}
   GRAFANA_ADMIN_USER: ${{ secrets.GRAFANA_ADMIN_USER }}
   GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
+  BUKET_NAME: ${{ secrets.BUKET_NAME }}
 
 jobs:
   build:
@@ -57,6 +58,11 @@ jobs:
           cluster_name: autopilot-cluster-1
           location: ${{ env.REGION }}
 
+      - name: Write credentials file
+        run: |
+          mkdir -p click-service/src/main/resources/secrets
+          echo '${{ secrets.GCE_SA_KEY }}' > click-service/src/main/resources/secrets/credentials.json
+
       - name: Docker auth
         run: |-
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
@@ -75,6 +81,4 @@ jobs:
           sed "s,\${image},${{ env.IMAGE }},g" ./click-service/resources.yaml > deployment.yaml
           kubectl apply -f ./deployment.yaml
           kubectl apply -f ./click-service/hpa.yaml
-
-
 

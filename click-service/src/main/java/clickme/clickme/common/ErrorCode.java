@@ -10,6 +10,8 @@ public enum ErrorCode {
     ENTITY_NOT_FOUND(400, "C003", " Entity Not Found"),
     INTERNAL_SERVER_ERROR(500, "C004", "Server Error"),
     INVALID_TYPE_VALUE(400, "C005", " Invalid Type Value"),
+
+    SVG_CONVERSION_FAILED(500, "SVG001", "Failed to convert GIF to SVG"),
     ;
 
     private final int status;
