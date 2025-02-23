@@ -18,9 +18,7 @@ env:
   DATASOURCE_URL: ${{secrets.DB_URL}}
   DATASOURCE_USERNAME: ${{secrets.DB_USERNAME}}
   DATASOURCE_PASSWORD: ${{secrets.DB_PASSWORD}}
-  GRAFANA_ADMIN_USER: ${{ secrets.GRAFANA_ADMIN_USER }}
-  GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
-  BUKET_NAME: ${{ secrets.BUKET_NAME }}
+  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
 
 jobs:
   build:

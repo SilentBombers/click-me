@@ -13,10 +13,10 @@ configurations {
 
 jib {
 	from {
-		image = "asia-northeast3-docker.pkg.dev/regal-station-443123-m2/clickme/ffmpeg-base:latest"
+		image = "asia-northeast3-docker.pkg.dev/high-acre-451812-e6/clickme/ffmpeg-base:latest"
 	}
 	to {
-		image = "asia-northeast3-docker.pkg.dev/regal-station-443123-m2/clickme/click-service:latest"
+		image = "asia-northeast3-docker.pkg.dev/high-acre-451812-e6/clickme/click-service:latest"
 	}
 	container {
 		jvmFlags = ["-Xms258m", "-Xmx1024m"]
@@ -26,7 +26,7 @@ jib {
 				'DATASOURCE_URL': System.getenv('DATASOURCE_URL'),
 				'DATASOURCE_USERNAME': System.getenv('DATASOURCE_USERNAME'),
 				'DATASOURCE_PASSWORD': System.getenv('DATASOURCE_PASSWORD'),
-				'BUKET_NAME': System.getenv('BUKET_NAME'),
+				'BUCKET_NAME': System.getenv('BUCKET_NAME'),
 				'SPRING_PROFILES_ACTIVE': 'prod',
 				'GOOGLE_APPLICATION_CREDENTIALS': '/app/resources/secrets/credentials.json'
 		]
