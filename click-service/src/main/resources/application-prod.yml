@@ -60,4 +60,7 @@ management:
 
 gcp:
   storage:
-    bucket-name: ${BUKET_NAME}
+    bucket-name: ${BUCKET_NAME}
+
+environment:
+  GOOGLE_APPLICATION_CREDENTIALS: '/app/resources/credentials.json'

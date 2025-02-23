@@ -53,8 +53,8 @@ jobs:
       - id: 'get-credentials'
         uses: google-github-actions/get-gke-credentials@v1
         with:
-          cluster_name: cluster-1
-          location: ${{ env.REGION }}-a
+          cluster_name: autopilot-cluster-1
+          location: ${{ env.REGION }}
 
       - name: Docker auth
         run: |-
