@@ -27,7 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SvgImageService {
 
-    private static final String BUCKET_NAME = "clickme-test";
+    private static final String BUCKET_NAME = "clickme-test2";
 
     private final RankingRepository rankingRepository;
     private final DailyClickRepository dailyClickRepository;
