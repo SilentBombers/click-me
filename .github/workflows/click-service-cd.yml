@@ -18,6 +18,7 @@ env:
   DATASOURCE_URL: ${{secrets.DB_URL}}
   DATASOURCE_USERNAME: ${{secrets.DB_USERNAME}}
   DATASOURCE_PASSWORD: ${{secrets.DB_PASSWORD}}
+  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
 
 jobs:
   build:
@@ -52,16 +53,13 @@ jobs:
       - id: 'get-credentials'
         uses: google-github-actions/get-gke-credentials@v1
         with:
-          cluster_name: cluster-1
-          location: ${{ env.REGION }}-a
+          cluster_name: autopilot-cluster-1
+          location: ${{ env.REGION }}
 
       - name: Write credentials file
         run: |
-          mkdir -p secrets
-          echo '${{ secrets.GCE_SA_KEY }}' > secrets/credentials.json
-
-      - name: Set GOOGLE_APPLICATION_CREDENTIALS
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/secrets/credentials.json" >> $GITHUB_ENV
+          mkdir -p click-service/src/main/resources/secrets
+          echo '${{ secrets.GCE_SA_KEY }}' > click-service/src/main/resources/secrets/credentials.json
 
       - name: Docker auth
         run: |-
