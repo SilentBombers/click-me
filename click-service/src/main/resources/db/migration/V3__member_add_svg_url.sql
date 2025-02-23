@@ -1,0 +1,1 @@
+ALTER TABLE member ADD COLUMN svg_url varchar(255) DEFAULT NULL;
