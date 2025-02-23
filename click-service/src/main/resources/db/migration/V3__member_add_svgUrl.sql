@@ -1,1 +1,0 @@
-ALTER TABLE member ADD COLUMN svgUrl varchar(255) DEFAULT NULL;
