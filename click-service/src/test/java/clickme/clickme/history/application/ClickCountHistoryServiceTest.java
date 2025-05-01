@@ -1,5 +1,6 @@
 package clickme.clickme.history.application;
 
+import clickme.clickme.TestGcsConfig;
 import clickme.clickme.history.application.dto.ClickCountHistoriesResponse;
 import clickme.clickme.history.application.dto.ClickCountHistoryResponse;
 import clickme.clickme.history.domain.ClickCountHistory;
@@ -7,12 +8,16 @@ import clickme.clickme.history.domain.ClickCountHistoryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Import(TestGcsConfig.class)
+@ActiveProfiles("test")
 class ClickCountHistoryServiceTest {
 
     @Autowired
