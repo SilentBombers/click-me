@@ -1,5 +1,6 @@
 package clickme.clickme.ranking.application;
 
+import clickme.clickme.TestGcsConfig;
 import clickme.clickme.common.EntityNotFoundException;
 import clickme.clickme.ranking.domain.Member;
 import clickme.clickme.ranking.domain.MemberRepository;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -18,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(TestGcsConfig.class)
+@ActiveProfiles("test")
 class RankingServiceTest {
 
     private static final String SEUNGPANG = "seungpang";
