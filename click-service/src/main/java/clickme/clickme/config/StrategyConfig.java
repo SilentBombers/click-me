@@ -26,7 +26,7 @@ public class StrategyConfig {
             final SvgDocumentFactory svgDocumentFactory,
             final SvgDocumentManipulator svgDocumentManipulator,
             final Storage storage,
-            @Value("${gcs.storage.bucket-name}") final String bucketName,
+            @Value("${gcp.storage.bucket-name}") final String bucketName,
             final MemberRepository memberRepository
     ) {
         return new GcsSvgGenerationStrategy(svgDocumentFactory, svgDocumentManipulator, storage, bucketName, memberRepository);
