@@ -13,10 +13,10 @@ configurations {
 
 jib {
 	from {
-		image = "asia-northeast3-docker.pkg.dev/high-acre-451812-e6/clickme/ffmpeg-base:latest"
+		image = "asia-northeast3-docker.pkg.dev/keen-hope-460206-t1/clickme/ffmpeg-base:latest"
 	}
 	to {
-		image = "asia-northeast3-docker.pkg.dev/high-acre-451812-e6/clickme/click-service:latest"
+		image = "asia-northeast3-docker.pkg.dev/keen-hope-460206-t1/clickme/click-service:latest"
 	}
 	container {
 		jvmFlags = ["-Xms258m", "-Xmx1024m"]

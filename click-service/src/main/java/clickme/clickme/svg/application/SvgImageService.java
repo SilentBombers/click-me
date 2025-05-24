@@ -7,13 +7,10 @@ import clickme.clickme.ranking.domain.MemberRepository;
 import clickme.clickme.ranking.domain.RankingRepository;
 import clickme.clickme.svg.application.exception.SvgException;
 import clickme.clickme.svg.domain.count.Count;
-import clickme.clickme.svg.domain.document.SvgDocumentFactory;
-import clickme.clickme.svg.domain.document.SvgDocumentManipulator;
 import clickme.clickme.svg.domain.document.SvgTransformer;
 import clickme.clickme.svg.domain.document.strategy.DefaultSvgGenerationStrategy;
 import clickme.clickme.svg.domain.document.strategy.GcsSvgGenerationStrategy;
 import clickme.clickme.svg.domain.document.strategy.SvgGenerationStrategy;
-import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +24,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SvgImageService {
 
-    private static final String BUCKET_NAME = "clickme-test";
-
     private final RankingRepository rankingRepository;
     private final DailyClickRepository dailyClickRepository;
-    private final SvgDocumentFactory svgDocumentFactory;
-    private final SvgDocumentManipulator svgDocumentManipulator;
     private final MemberRepository memberRepository;
-    private final Storage storage;
     private final SvgTransformer svgTransformer;
+    private final DefaultSvgGenerationStrategy defaultSvgGenerationStrategy;
+    private final GcsSvgGenerationStrategy gcsSvgGenerationStrategy;
 
     public String generateClickableSvgImage(final String name) {
         try {
@@ -51,9 +45,9 @@ public class SvgImageService {
     private SvgGenerationStrategy chooseStrategy(String name) {
         final Optional<String> foundSvgImage = memberRepository.findSvgImageName(name);
         if (foundSvgImage.isPresent()) {
-            return new GcsSvgGenerationStrategy(svgDocumentFactory, svgDocumentManipulator, storage, BUCKET_NAME, memberRepository);
+            return gcsSvgGenerationStrategy;
         } else {
-            return new DefaultSvgGenerationStrategy(svgDocumentFactory, svgDocumentManipulator);
+            return defaultSvgGenerationStrategy;
         }
     }
 
